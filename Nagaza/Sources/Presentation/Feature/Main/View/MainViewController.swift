@@ -13,6 +13,7 @@ final class MainViewController: UIViewController, Alertable {
     
     private let textField = UITextField()
     private let label = UILabel()
+    private let button = UIButton()
     
     private let disposeBag = DisposeBag()
     
@@ -38,6 +39,16 @@ final class MainViewController: UIViewController, Alertable {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+        
+        view.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16)
+        ])
+        button.setTitle("테스트", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(cancelSubscribe), for: .touchUpInside)
     }
     
     // MARK: Input
@@ -45,9 +56,13 @@ final class MainViewController: UIViewController, Alertable {
         viewModel.textDidChange(text: textField.text)
     }
     
+    @objc private func cancelSubscribe() {
+        disposeBag.cancelSubscribe()
+    }
+    
     // MARK: Output
     private func bindViewModel() {
-        viewModel.textFieldText.subscribe(on: self)
+        viewModel.textFieldText.subscribe(on: self, disposeBag: disposeBag)
             .onNext { [weak self] text in
                 if let number = Int(text ?? "") {
                      let squared = number * number
@@ -60,9 +75,9 @@ final class MainViewController: UIViewController, Alertable {
                      }
                  } else {
                      self?.label.text = "숫자를 입력하세요"
-                 }            }
-            .disposedBy(disposeBag)
-        
+                 }
+                
+            }
     }
 }
 
