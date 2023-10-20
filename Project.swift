@@ -120,7 +120,7 @@ final class BaseProjectFactory: ProjectFactory {
             
             Target(name: "\(projectName)UITests",
                    platform: .iOS,
-                   prgoduct: .uiTests,
+                   product: .uiTests,
                    bundleId: "\(bundleID).UITests",
                    infoPlist: .extendingDefault(with: infoPlist),
                    sources: ["\(projectName)UITests/**"],

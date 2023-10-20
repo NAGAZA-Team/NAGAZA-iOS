@@ -136,9 +136,7 @@ final class Subscription<Value> {
         
         let disposable = observable.observe(on: observer) { event in
             if case .next(let value) = event {
-                if case .next(let value) = event {
-                    onNext(value)
-                }
+                onNext(value)
             }
         }.removeDisposable(for: observer)
         

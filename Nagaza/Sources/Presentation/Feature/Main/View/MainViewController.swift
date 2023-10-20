@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainViewController: UIViewController {
+final class MainViewController: UIViewController, Alertable {
     
     private var viewModel: MainViewModelProtocol = MainViewModel()
     
@@ -52,7 +52,9 @@ final class MainViewController: UIViewController {
                 if let number = Int(text ?? "") {
                      let squared = number * number
                      if squared > 100000000000 {
-                         self?.label.text = "작은 숫자를 입력하세요"
+                         self?.label.text = "숫자를 입력하세요"
+                         self?.showAlert(title: "넘모 높아용", message: nil)
+                         self?.textField.text = "0"
                      } else {
                          self?.label.text = "\(squared)"
                      }
