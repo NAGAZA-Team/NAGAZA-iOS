@@ -42,7 +42,7 @@ final class BaseProjectFactory: ProjectFactory {
         .external(name: "Lottie"),
         .external(name: "Moya"),
         .external(name: "SnapKit"),
-        .external(name: "Then")
+        .external(name: "Then"),
     ]
     
     let infoPlist: [String: InfoPlist.Value] = [
@@ -85,13 +85,13 @@ final class BaseProjectFactory: ProjectFactory {
     )
     
     let resourceSynthesizers: [ResourceSynthesizer] = [
-        .custom(
-            name: "Lottie",
-            parser: .json,
-            extensions: ["lottie"]
-        ),
+//        .custom(
+//            name: "Lottie",
+//            parser: .json,
+//            extensions: ["lottie"]
+//        ),
         .assets(),
-        .fonts(),
+        .fonts()
     ]
     
     func generateTarget() -> [Target] {
@@ -144,6 +144,4 @@ let project = Project(name: factory.projectName,
                       organizationName: factory.organizationName,
                       settings: factory.projectSettings,
                       targets: factory.generateTarget(),
-                      resourceSynthesizers: factory.resourceSynthesizers
-)
-
+                      resourceSynthesizers: factory.resourceSynthesizers)
