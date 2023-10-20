@@ -87,6 +87,7 @@ final class Observable<Value> {
     
     func subscribe(
         on observer: AnyObject,
+        disposeBag: DisposeBag,
         onNext: ((Value) -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
         onCompleted: (() -> Void)? = nil
@@ -94,6 +95,7 @@ final class Observable<Value> {
         return Subscription(
             observable: self,
             observer: observer,
+            disposeBag: disposeBag,
             onNext: onNext,
             onError: onError,
             onCompleted: onCompleted
@@ -105,17 +107,19 @@ final class Subscription<Value> {
     
     private let observable: Observable<Value>
     private weak var observer: AnyObject?
-    private var disposeBag: DisposeBag?
-    
+    private let disposeBag: DisposeBag
+
     init(
            observable: Observable<Value>,
            observer: AnyObject,
+           disposeBag: DisposeBag,
            onNext: ((Value) -> Void)? = nil,
            onError: ((Error) -> Void)? = nil,
            onCompleted: (() -> Void)? = nil
        ) {
            self.observable = observable
            self.observer = observer
+           self.disposeBag = disposeBag
            
            if let onNext = onNext {
                self.onNext(onNext)
@@ -140,7 +144,7 @@ final class Subscription<Value> {
             }
         }.removeDisposable(for: observer)
         
-        disposeBag?.add(disposable)
+        disposeBag.add(disposable)
         return self
     }
     
@@ -154,7 +158,7 @@ final class Subscription<Value> {
              }
          }.removeDisposable(for: observer)
          
-         disposeBag?.add(disposable)
+         disposeBag.add(disposable)
          return self
      }
      
@@ -168,13 +172,9 @@ final class Subscription<Value> {
              }
          }.removeDisposable(for: observer)
 
-         disposeBag?.add(disposable)
+         disposeBag.add(disposable)
          return self
      }
-    
-    func disposedBy(_ bag: DisposeBag) {
-        self.disposeBag = bag
-    }
 }
 
 
@@ -191,7 +191,7 @@ extension Subscription {
              }
          }.removeDisposable(for: observer)
         
-        disposeBag?.add(disposable)
+        disposeBag.add(disposable)
         
         return self
     }
@@ -202,8 +202,7 @@ extension Subscription {
     ) -> Subscription<T> {
         
         let transformedObservable = Observable<T>(transform(self.observable.value))
-        let transformedSubscription = transformedObservable.subscribe(on: observer!)
-
+        
         observable.observe(on: observer!) { event in
             switch event {
             case .next(let value):
@@ -214,6 +213,8 @@ extension Subscription {
                 transformedObservable.onCompleted()
             }
         }
+        
+        let transformedSubscription = transformedObservable.subscribe(on: observer!, disposeBag: self.disposeBag)
         
         return transformedSubscription
     }
