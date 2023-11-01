@@ -32,7 +32,7 @@ final class BaseProjectFactory: ProjectFactory {
     let projectName: String = "Nagaza"
     let organizationName: String = ""
     let bundleID: String = "com.scc.nagaza"
-    let targetVersion: String = "14.0"
+    let targetVersion: String = "15.0"
     
     let dependencies: [TargetDependency] = [
         .external(name: "FirebaseCrashlytics"),
@@ -40,6 +40,10 @@ final class BaseProjectFactory: ProjectFactory {
         .external(name: "KakaoSDKAuth"),
         .external(name: "KakaoSDKUser"),
         .external(name: "Lottie"),
+        .external(name: "RxSwift"),
+        .external(name: "RxGesture"),
+        .external(name: "RxDataSources"),
+        .external(name: "RxMoya"),
         .external(name: "Moya"),
         .external(name: "SnapKit"),
         .external(name: "Then"),
@@ -64,13 +68,13 @@ final class BaseProjectFactory: ProjectFactory {
         "App Transport Security Settings": ["Allow Arbitrary Loads": true],
         "Privacy - Photo Library Additions Usage Description": "프로필 사진 촬영을 위해서 권한 설정",
         "NSAppTransportSecurity": ["NSAllowsArbitraryLoads": true],
-        //    "UIAppFonts": [
-        //      "Item 0": "Pretendard-Medium.otf",
-        //      "Item 1": "Pretendard-Regular.otf",
-        //      "Item 2": "Pretendard-SemiBold.otf",
-        //      "Item 3": "Pretendard-Bold.otf",
-        //      "Item 4": "Pretendard-ExtraBold.otf"
-        //    ],
+        "UIAppFonts": [
+          "Item 0": "SpoqaHanSansNeo-Bold.ttf",
+          "Item 1": "SpoqaHanSansNeo-Light.ttf",
+          "Item 2": "SpoqaHanSansNeo-Medium.ttf",
+          "Item 3": "SpoqaHanSansNeo-Regular.ttf",
+          "Item 4": "SpoqaHanSansNeo-Thin.ttf"
+        ],
         "UIUserInterfaceStyle": "Light"
     ]
     
