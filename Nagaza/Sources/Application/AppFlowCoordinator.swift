@@ -20,7 +20,35 @@ final class AppFlowCoordinator {
     }
     
     func start() {
-        // 일단 대기
-        // 여기서 로그인 or 메인으로 갈지 분기 처리
+        let splashViewController = SplashViewController()
+        self.navigationController.pushViewController(splashViewController, animated: false)
+        
+        // TODO: 토큰 임시 설정
+        Keychain.shared.set("test", forKey: .accessToken)
+        
+        // TODO: 토큰 삭제
+//        Keychain.shared.delete(.accessToken)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            if let _ = Keychain.shared.get(.accessToken) {
+                self?.showTabBar()
+            } else {
+                self?.showLogin()
+            }
+        }
+    }
+}
+
+extension AppFlowCoordinator {
+    func showTabBar() {
+        let tabBarSceneDIContainer = appDIContainer.makeTabBarSceneDIContainer()
+        let flow = tabBarSceneDIContainer.makeTabBarCoordinator()
+        flow.start()
+    }
+    
+    func showLogin() {
+        let LoginDIContainer = appDIContainer.makeLoginSceneDIContainer()
+        let flow = LoginDIContainer.makeTabBarFlowCoordinator()
+        flow.start()
     }
 }

@@ -7,15 +7,12 @@
 
 import Foundation
 
-final class AppDIContainer {
-    lazy var appConfiguration = AppConfigration()
+struct AppDIContainer {
+    func makeTabBarSceneDIContainer() -> TabBarDIContainer {
+        return TabBarDIContainer()
+    }
     
- 
-    // MARK: Network ...
-    
-    
-    // MARK: Scenes ...
-    func makeSceneDIContainer() {
-        
+    func makeLoginSceneDIContainer() -> LoginDIContainer {
+        return LoginDIContainer()
     }
 }
