@@ -7,12 +7,29 @@
 
 import UIKit
 
-final class MapViewController: UIViewController {
+final class MapViewController: NagazaBaseViewController {
+    let mapView = MapView()
+    let viewModel: MapViewModel
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
-        view.addSubview(MapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300)))
+    init(viewModel: MapViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func bindViewModel() {
+        let viewWillAppearTrigger = self.rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
+        
+        let input = MapViewModel.Input(viewWillAppearTrigger: viewWillAppearTrigger)
+        
+        let output = viewModel.transform(input: input)
+        
+        output.maps
+            .drive()
+            .disposed(by: disposeBag)
     }
 }
 
@@ -21,7 +38,8 @@ import SwiftUI
 
 struct MapViewControllerPreview: PreviewProvider {
     static var previews: some View {
-        let viewController = MapViewController()
+        let viewModel = MapViewModel()
+        let viewController = MapViewController(viewModel: viewModel)
         return viewController.toPreView()
     }
 }

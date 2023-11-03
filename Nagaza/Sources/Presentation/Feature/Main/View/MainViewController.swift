@@ -6,25 +6,24 @@
 //
 
 import UIKit
+import RxSwift
 
-final class MainViewController: UIViewController, Alertable {
+final class MainViewController: NagazaBaseViewController, Alertable {
     
     private var viewModel: MainViewModelProtocol = MainViewModel()
     
     private let textField = UITextField()
     private let label = UILabel()
     private let button = UIButton()
-    
-    private let disposeBag = DisposeBag()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
+        makeUI()
         bindViewModel()
     }
     
-    private func setupUI() {
+    override func makeUI() {
         textField.borderStyle = .roundedRect
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
@@ -48,7 +47,6 @@ final class MainViewController: UIViewController, Alertable {
         ])
         button.setTitle("테스트", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(cancelSubscribe), for: .touchUpInside)
     }
     
     // MARK: Input
@@ -56,28 +54,9 @@ final class MainViewController: UIViewController, Alertable {
         viewModel.textDidChange(text: textField.text)
     }
     
-    @objc private func cancelSubscribe() {
-        disposeBag.cancelSubscribe()
-    }
-    
     // MARK: Output
-    private func bindViewModel() {
-        viewModel.textFieldText.subscribe(on: self, disposeBag: disposeBag)
-            .onNext { [weak self] text in
-                if let number = Int(text ?? "") {
-                     let squared = number * number
-                     if squared > 100000000000 {
-                         self?.label.text = "숫자를 입력하세요"
-                         self?.showAlert(title: "넘모 높아용", message: nil)
-                         self?.textField.text = "0"
-                     } else {
-                         self?.label.text = "\(squared)"
-                     }
-                 } else {
-                     self?.label.text = "숫자를 입력하세요"
-                 }
-                
-            }
+    override func bindViewModel() {
+        
     }
 }
 

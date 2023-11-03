@@ -5,37 +5,24 @@
 //  Created by 전성훈 on 2023/10/20.
 //
 
-import Foundation
+import RxSwift
+import RxCocoa
 
-/// 화면 전환 등 액션, coordinator에서 직접 주입
-struct MapViewModelActions {
-    
-}
-
-protocol MapViewModelInput {
-    
-}
-
-protocol MapViewModelOutput {
-    
-}
-
-typealias MapViewModelProtocol = MapViewModelInput & MapViewModelOutput
-
-final class MapViewModel: MapViewModelProtocol {
-    private let actions: MapViewModelActions?
-    
-    // MARK: Output
-    
-    // 의존성 주입
-    init(
-        actions: MapViewModelActions? = nil
-    ) {
-        self.actions = actions
+final class MapViewModel: ViewModelType {
+    struct Input {
+        let viewWillAppearTrigger: Driver<Void>
     }
-}
-
-// MARK: Input
-extension MapViewModel {
     
+    struct Output {
+        let maps: Driver<String>
+    }
+    
+    func transform(input: Input) -> Output {
+        let maps = input.viewWillAppearTrigger
+            .flatMapLatest { _ in
+                Driver.just("hello world")
+            }.asDriver(onErrorJustReturn: "hi")
+        
+        return Output(maps: maps)
+    }
 }

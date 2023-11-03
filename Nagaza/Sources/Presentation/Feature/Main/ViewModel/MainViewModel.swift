@@ -18,7 +18,7 @@ protocol MainViewModelInput {
 }
 
 protocol MainViewModelOutput {
-    var textFieldText: Observable<String?> { get }
+//    var textFieldText: Observable<String?> { get }
 }
 
 typealias MainViewModelProtocol = MainViewModelInput & MainViewModelOutput
@@ -29,7 +29,7 @@ final class MainViewModel: MainViewModelProtocol {
     
     // MARK: Output
     
-    let textFieldText: Observable<String?> = Observable(nil)
+//    let textFieldText: Observable<String?> = Observable(nil)
 
     /// 의존성 주입
     init(
@@ -46,6 +46,6 @@ extension MainViewModel {
     }
     
     func textDidChange(text: String?) {
-        textFieldText.value = text
+//        textFieldText.value = text
     }
 }
