@@ -17,7 +17,11 @@ final class MapDIContainer {
 }
 
 extension MapDIContainer: MapCoordinatorDependencies {
+    func makeMapViewModel() -> MapViewModel {
+        return MapViewModel()
+    }
+    
     func makeMapViewController() -> MapViewController {
-        return MapViewController()
+        return MapViewController(viewModel: self.makeMapViewModel())
     }
 }

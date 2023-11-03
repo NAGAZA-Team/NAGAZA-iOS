@@ -12,7 +12,7 @@ protocol BaseTargetType: TargetType { }
 
 extension BaseTargetType {
     var baseURL: URL {
-        return URL(string: "http://tht-talk.store/")!
+        return URL(string: "http://www.nagaza.xyz/")!
     }
     
     var headers: [String: String]? {
