@@ -7,8 +7,16 @@
 
 import UIKit
 
-final class AppFlowCoordinator {
+final class AppFlowCoordinator: Coordinator {
+    var type: CoordinatorType { .app }
+    
+    var childCoordinators: [Coordinator] = []
+    
+    weak var finishDelegate: CoordinatorFinishDelegate? = nil
+    weak var tabBarDelegate: TabBarDelegate? = nil
+    
     var navigationController: UINavigationController
+    
     private let appDIContainer: AppDIContainer
     
     init(
@@ -23,13 +31,7 @@ final class AppFlowCoordinator {
         let splashViewController = SplashViewController()
         self.navigationController.pushViewController(splashViewController, animated: false)
         
-        // TODO: 토큰 임시 설정
-        Keychain.shared.set("test", forKey: .accessToken)
-        
-        // TODO: 토큰 삭제
-//        Keychain.shared.delete(.accessToken)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             if let _ = Keychain.shared.get(.accessToken) {
                 self?.showTabBar()
             } else {
@@ -41,14 +43,69 @@ final class AppFlowCoordinator {
 
 extension AppFlowCoordinator {
     func showTabBar() {
-        let tabBarSceneDIContainer = appDIContainer.makeTabBarSceneDIContainer()
-        let flow = tabBarSceneDIContainer.makeTabBarCoordinator()
-        flow.start()
+        let tabBarController = NagazaTabBarController()
+        let tabBarFlowCoordinator = TabBarFlowCoordinator(
+            navigationController: navigationController,
+            tabBarController: tabBarController
+        )
+        
+        let mainSceneDIContaier = appDIContainer.makeMainSceneDIContainer()
+        let mainFlow = mainSceneDIContaier.makeMainFlowCoordinator(navigationController: UINavigationController())
+        
+        let mapSceneDIContaier = appDIContainer.makeMapSceneDIContainer()
+        let mapFlow = mapSceneDIContaier.makeMapFlowCoordinator(navigationController: UINavigationController())
+        
+        let reviewSceneDIContaier = appDIContainer.makeReviewSceneDIContainer()
+        let reviewFlow = reviewSceneDIContaier.makeReviewFlowCoordinator(navigationController: UINavigationController())
+        
+        let myPageSceneDIContaier = appDIContainer.makeMyPageSceneDIContainer()
+        let myPageFlow = myPageSceneDIContaier.makeMyPageFlowCoordinator(navigationController: UINavigationController())
+      
+        tabBarFlowCoordinator.setupTabs(with: [
+            mainFlow,
+            mapFlow,
+            reviewFlow,
+            myPageFlow
+        ])
+        
+        tabBarFlowCoordinator.finishDelegate = self
+        tabBarFlowCoordinator.start()
+        
+        childCoordinators.append(tabBarFlowCoordinator)
     }
     
     func showLogin() {
-        let LoginDIContainer = appDIContainer.makeLoginSceneDIContainer()
-        let flow = LoginDIContainer.makeTabBarFlowCoordinator()
+        let loginSceneDIContainer = appDIContainer.makeLoginSceneDIContainer()
+        let flow = loginSceneDIContainer.makeLoginFlowCoordinator(navigationController: navigationController)
+        
+        flow.finishDelegate = self
         flow.start()
+        
+        childCoordinators.append(flow)
+    }
+}
+
+extension AppFlowCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        childCoordinators = childCoordinators.filter({ $0.type != childCoordinator.type })
+        
+        switch childCoordinator.type {
+        case .tab:
+            navigationController.viewControllers.removeAll()
+
+            // TODO: 토큰 삭제
+            Keychain.shared.delete(.accessToken)
+
+            showLogin()
+        case .login:
+            navigationController.viewControllers.removeAll()
+
+            // TODO: 토큰 임시 설정
+            Keychain.shared.set("test", forKey: .accessToken)
+
+            showTabBar()
+        default:
+            break
+        }
     }
 }
