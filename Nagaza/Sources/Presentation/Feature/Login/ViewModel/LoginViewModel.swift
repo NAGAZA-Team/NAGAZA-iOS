@@ -9,11 +9,11 @@ import Foundation
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
 struct LoginViewModelActions {
-    
+    let showTabBar: () -> Void
 }
 
 protocol LoginViewModelInput {
-    
+    func didTappedLogin()
 }
 
 protocol LoginViewModelOutput {
@@ -23,12 +23,12 @@ protocol LoginViewModelOutput {
 typealias LoginViewModelProtocol = LoginViewModelInput & LoginViewModelOutput
 
 final class LoginViewModel: LoginViewModelProtocol {
-    private let actions: LoginViewModelActions?
+    private let actions: LoginViewModelActions!
     
     // MARK: Output
     
     init(
-        actions: LoginViewModelActions? = nil
+        actions: LoginViewModelActions
     ) {
         self.actions = actions
     }
@@ -36,5 +36,7 @@ final class LoginViewModel: LoginViewModelProtocol {
 
 // MARK: Input
 extension LoginViewModel {
-    
+    func didTappedLogin() {
+        actions?.showTabBar()
+    }
 }
