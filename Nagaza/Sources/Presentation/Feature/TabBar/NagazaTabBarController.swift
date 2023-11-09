@@ -26,10 +26,10 @@ enum TabBarType: CaseIterable {
     
     var icon: UIImage {
         switch self {
-        case .home: return NagazaAsset.Images.home.image
-        case .map: return NagazaAsset.Images.pin.image
-        case .review: return NagazaAsset.Images.pen.image
-        case .myPage: return NagazaAsset.Images.setting.image
+        case .home: return NagazaAsset.Images.home.image.withRenderingMode(.alwaysTemplate)
+        case .map: return NagazaAsset.Images.pin.image.withRenderingMode(.alwaysTemplate)
+        case .review: return NagazaAsset.Images.pen.image.withRenderingMode(.alwaysTemplate)
+        case .myPage: return NagazaAsset.Images.setting.image.withRenderingMode(.alwaysTemplate)
         }
     }
 }
@@ -38,7 +38,7 @@ protocol TabBarDelegate: AnyObject {
     func shouldHideTabBar(_ hide: Bool)
 }
 
-final class NagazaTabBarController: UIViewController, TabBarDelegate {
+final class NagazaTabBarController: NagazaBaseViewController {
     
     private lazy var viewControllers: [UIViewController] = []
     
@@ -52,34 +52,21 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
         return view
     }()
     
-    var selectedIndex = 0 {
+    var selectedIndex: Int = 0 {
         willSet {
-            previewsIndex = selectedIndex
+            previousIndex = selectedIndex
         }
         didSet {
             updateView()
         }
     }
     
-    private var previewsIndex = 0
+    private var previousIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTabBar()
-    }
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        print("TabBar Init")
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("TabBar Deinit")
     }
     
     func setViewControllers(
@@ -91,7 +78,6 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
         self.viewControllers = viewControllers
         
         setupButtons(with: types)
-        updateView()
     }
     
     private func setupTabBar() {
@@ -100,7 +86,7 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
         tabBarView.snp.makeConstraints {
             $0.bottom.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(self.view.bounds.height / 10)
+            $0.height.equalTo(90)
         }
     }
     
@@ -108,9 +94,8 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
         let buttonWidth = view.bounds.width / CGFloat(types.count)
         
         for (index, type) in types.enumerated() {
-            let button = TabBarButton()
+            let button = TabBarButton(tabBarType: type)
             button.tag = index
-            button.setupButton(title: type.title, image: type.icon)
             button.addTarget(self, action: #selector(tabBarButtonTapped(_:)), for: .touchUpInside)
             
             tabBarView.addSubview(button)
@@ -132,7 +117,7 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
     }
     
     private func deleteView() {
-        let previousVC = viewControllers[previewsIndex]
+        let previousVC = viewControllers[previousIndex]
         previousVC.willMove(toParent: nil)
         previousVC.view.removeFromSuperview()
         previousVC.removeFromParent()
@@ -154,6 +139,9 @@ final class NagazaTabBarController: UIViewController, TabBarDelegate {
     @objc private func tabBarButtonTapped(_ sender: TabBarButton) {
         selectedIndex = sender.tag
     }
+}
+
+extension NagazaTabBarController: TabBarDelegate {
     
     func shouldHideTabBar(_ hide: Bool) {
         tabBarView.isHidden = hide
