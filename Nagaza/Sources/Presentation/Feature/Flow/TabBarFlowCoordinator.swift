@@ -77,7 +77,6 @@ extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
 
         switch childCoordinator.type {
         case .home:
-
             self.finish()
         default:
             break

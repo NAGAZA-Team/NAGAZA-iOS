@@ -8,7 +8,7 @@
 import UIKit
 
 protocol LoginFlowCoordinatorDependencies {
-    func makeLoginViewController(actinos: LoginViewModelActions) -> LoginViewController
+    func makeLoginViewController(actions: LoginViewModelActions) -> LoginViewController
 }
 
 final class LoginFlowCoordinator: Coordinator {
@@ -39,7 +39,7 @@ final class LoginFlowCoordinator: Coordinator {
     
     func start() {
         let actions = LoginViewModelActions(showTabBar: showTabBar)
-        let vc = dependencies.makeLoginViewController(actinos: actions)
+        let vc = dependencies.makeLoginViewController(actions: actions)
         
         navigationController.pushViewController(vc, animated: false)
         navigationController.setNavigationBarHidden(true, animated: false)

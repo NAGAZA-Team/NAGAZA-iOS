@@ -10,8 +10,8 @@ import UIKit
 final class LoginSceneDIContainer: LoginFlowCoordinatorDependencies {
     
     
-    func makeLoginViewController(actinos: LoginViewModelActions) -> LoginViewController {
-        LoginViewController.create(with: makeLoginViewModel(actions: actinos))
+    func makeLoginViewController(actions: LoginViewModelActions) -> LoginViewController {
+        LoginViewController.create(with: makeLoginViewModel(actions: actions))
     }
     
     private func makeLoginViewModel(actions: LoginViewModelActions) -> LoginViewModel {
