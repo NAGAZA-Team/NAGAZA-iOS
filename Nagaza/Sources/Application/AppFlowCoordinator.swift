@@ -50,16 +50,24 @@ extension AppFlowCoordinator {
         )
         
         let mainSceneDIContaier = appDIContainer.makeMainSceneDIContainer()
-        let mainFlow = mainSceneDIContaier.makeMainFlowCoordinator(navigationController: UINavigationController())
+        let mainFlow = mainSceneDIContaier.makeMainFlowCoordinator(
+            navigationController: UINavigationController()
+        )
         
         let mapSceneDIContaier = appDIContainer.makeMapSceneDIContainer()
-        let mapFlow = mapSceneDIContaier.makeMapFlowCoordinator(navigationController: UINavigationController())
+        let mapFlow = mapSceneDIContaier.makeMapFlowCoordinator(
+            navigationController: UINavigationController()
+        )
         
         let reviewSceneDIContaier = appDIContainer.makeReviewSceneDIContainer()
-        let reviewFlow = reviewSceneDIContaier.makeReviewFlowCoordinator(navigationController: UINavigationController())
+        let reviewFlow = reviewSceneDIContaier.makeReviewFlowCoordinator(
+            navigationController: UINavigationController()
+        )
         
         let myPageSceneDIContaier = appDIContainer.makeMyPageSceneDIContainer()
-        let myPageFlow = myPageSceneDIContaier.makeMyPageFlowCoordinator(navigationController: UINavigationController())
+        let myPageFlow = myPageSceneDIContaier.makeMyPageFlowCoordinator(
+            navigationController: UINavigationController()
+        )
       
         tabBarFlowCoordinator.setupTabs(with: [
             mainFlow,
@@ -76,12 +84,14 @@ extension AppFlowCoordinator {
     
     func showLogin() {
         let loginSceneDIContainer = appDIContainer.makeLoginSceneDIContainer()
-        let flow = loginSceneDIContainer.makeLoginFlowCoordinator(navigationController: navigationController)
+        let loginFlow = loginSceneDIContainer.makeLoginFlowCoordinator(
+            navigationController: navigationController
+        )
         
-        flow.finishDelegate = self
-        flow.start()
+        loginFlow.finishDelegate = self
+        loginFlow.start()
         
-        childCoordinators.append(flow)
+        childCoordinators.append(loginFlow)
     }
 }
 

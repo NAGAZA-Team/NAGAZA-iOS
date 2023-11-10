@@ -17,7 +17,7 @@ final class TabBarFlowCoordinator: Coordinator {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var tabBarDelegate: TabBarDelegate? = nil
     
-    private var tabBarController: NagazaTabBarController
+    private weak var tabBarVC: NagazaTabBarController!
     
     init(
         navigationController: UINavigationController,
@@ -25,7 +25,7 @@ final class TabBarFlowCoordinator: Coordinator {
     ) {
         print("TabBar Flow Init")
         self.navigationController = navigationController
-        self.tabBarController = tabBarController
+        self.tabBarVC = tabBarController
     }
     
     deinit {
@@ -33,12 +33,13 @@ final class TabBarFlowCoordinator: Coordinator {
     }
     
     func start() {
-        tabBarController.selectedIndex = 0
+        tabBarVC.selectedIndex = 0
+        
+        navigationController.pushViewController(tabBarVC, animated: false)
+        navigationController.setNavigationBarHidden(true, animated: false)
     }
     
     func setupTabs(with coordinators: [Coordinator]) {
-        navigationController.pushViewController(tabBarController, animated: false)
-        navigationController.setNavigationBarHidden(true, animated: false)
         
         var tabs: [TabBarType] = []
         
@@ -57,7 +58,7 @@ final class TabBarFlowCoordinator: Coordinator {
             }
             
             coordinator.finishDelegate = self
-            coordinator.tabBarDelegate = tabBarController
+            coordinator.tabBarDelegate = tabBarVC
             
             coordinator.start()
 
@@ -66,20 +67,13 @@ final class TabBarFlowCoordinator: Coordinator {
         
         let viewControllers = coordinators.map { $0.navigationController }
 
-        tabBarController.setViewControllers(viewControllers, with: tabs)
+        tabBarVC.setViewControllers(viewControllers, with: tabs)
     }
 }
 
 // MARK: Logout 버튼 클릭 시 tabBar Flow Coordinator도 같이 삭제
 extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        childCoordinators = childCoordinators.filter({ $0.type != childCoordinator.type })
-
-        switch childCoordinator.type {
-        case .home:
-            self.finish()
-        default:
-            break
-        }
+        self.finish()
     }
 }

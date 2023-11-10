@@ -23,6 +23,7 @@ protocol ReviewViewModelOutput {
 typealias ReviewViewModelProtocol = ReviewViewModelInput & ReviewViewModelOutput
 
 final class ReviewViewModel: ReviewViewModelProtocol {
+    
     private let actions: ReviewViewModelActions!
     
     // MARK: Output

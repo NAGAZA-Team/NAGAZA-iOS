@@ -23,6 +23,7 @@ protocol MyPageViewModelOutput {
 typealias MyPageViewModelProtocol = MyPageViewModelInput & MyPageViewModelOutput
 
 final class MyPageViewModel: MyPageViewModelProtocol {
+    
     private let actions: MyPageViewModelActions!
     
     // MARK: Output
