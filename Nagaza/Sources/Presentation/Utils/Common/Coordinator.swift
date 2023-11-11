@@ -21,10 +21,9 @@ protocol Coordinator: AnyObject {
 }
 
 extension Coordinator {
+    
     func finish() {
-        
-        if !childCoordinators.isEmpty {
-            childCoordinators.forEach { $0.navigationController.viewControllers.removeAll() }
+        childCoordinators.forEach { $0.navigationController.viewControllers.removeAll()
         }
         
         navigationController.viewControllers.removeAll()

@@ -17,7 +17,7 @@ final class TabBarFlowCoordinator: Coordinator {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var tabBarDelegate: TabBarDelegate? = nil
     
-    private weak var tabBarVC: NagazaTabBarController!
+    private var tabBarVC: NagazaTabBarController!
     
     init(
         navigationController: UINavigationController,
