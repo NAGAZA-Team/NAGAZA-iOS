@@ -40,12 +40,16 @@ final class MainFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = MainViewModelActions(logoutTest: { [weak self] in self?.finish() })
+        let actions = MainViewModelActions(logoutTest: logoutTest)
         let vc = dependencies.makeMainViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
         mainVC = vc
+    }
+    
+    private func logoutTest() {
+        self.finish()
     }
 }
