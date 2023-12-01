@@ -7,11 +7,11 @@
 
 import UIKit
 
-protocol MainFlowCoordinaterDependencies {
-    func makeMainViewController(actions: MainViewModelActions) -> MainViewController
+protocol HomeFlowCoordinaterDependencies {
+    func makeMainViewController(actions: MainViewModelActions) -> HomeViewController
 }
 
-final class MainFlowCoordinator: Coordinator {
+final class HomeFlowCoordinator: Coordinator {
     var type: CoordinatorType { .home }
     
     var childCoordinators: [Coordinator] = []
@@ -21,22 +21,16 @@ final class MainFlowCoordinator: Coordinator {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var tabBarDelegate: TabBarDelegate?
     
-    private let dependencies: MainFlowCoordinaterDependencies!
+    private let dependencies: HomeFlowCoordinaterDependencies!
     
-    private weak var mainVC: MainViewController?
+    private weak var mainVC: HomeViewController?
     
     init(
         navigationController: UINavigationController,
-        dependencies: MainFlowCoordinaterDependencies
+        dependencies: HomeFlowCoordinaterDependencies
     ) {
         self.navigationController = navigationController
         self.dependencies = dependencies
-        
-        print("Main FlowCoordinator Init")
-    }
-    
-    deinit {
-        print("Main FlowCoordinator Deinit")
     }
     
     func start() {

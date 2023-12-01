@@ -7,20 +7,20 @@
 
 import UIKit
 
-final class MainSceneDIContainer: MainFlowCoordinaterDependencies {
+final class MainSceneDIContainer: HomeFlowCoordinaterDependencies {
     
-    func makeMainViewController(actions: MainViewModelActions) -> MainViewController {
-        MainViewController.create(with: makeMainViewModel(actions: actions))
+    func makeMainViewController(actions: MainViewModelActions) -> HomeViewController {
+        HomeViewController.create(with: makeMainViewModel(actions: actions))
     }
     
-    private func makeMainViewModel(actions: MainViewModelActions) -> MainViewModel {
-        MainViewModel(actions: actions)
+    private func makeMainViewModel(actions: MainViewModelActions) -> HomeViewModel {
+        HomeViewModel(actions: actions)
     }
     
     func makeMainFlowCoordinator(
         navigationController: UINavigationController
-    ) -> MainFlowCoordinator {
-        MainFlowCoordinator(
+    ) -> HomeFlowCoordinator {
+        HomeFlowCoordinator(
             navigationController: navigationController,
             dependencies: self
         )

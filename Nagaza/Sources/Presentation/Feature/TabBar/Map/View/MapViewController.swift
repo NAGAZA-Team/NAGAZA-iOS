@@ -28,9 +28,6 @@ final class MapViewController: NagazaBaseViewController {
 //        fatalError("init(coder:) has not been implemented")
 //    }
     
-    deinit {
-        print("Map Deinit")
-    }
     
     override func bindViewModel() {
         let viewWillAppearTrigger = self.rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()

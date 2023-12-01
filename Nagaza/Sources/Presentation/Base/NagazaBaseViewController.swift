@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 import RxSwift
 
 class NagazaBaseViewController: UIViewController {
@@ -17,6 +18,12 @@ class NagazaBaseViewController: UIViewController {
         navigationSetting()
         makeUI()
         bindViewModel()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        adjustLayoutAfterRendering()
     }
     
     /// Set up Navigation Bar
@@ -37,6 +44,9 @@ class NagazaBaseViewController: UIViewController {
     
     /// call in super viewDidLoad
     func makeUI() { }
+        
+    /// call in super viewDidLayoutSubviews
+    func adjustLayoutAfterRendering() { }
     
     /// call in super viewDidLoad
     func bindViewModel() { }
