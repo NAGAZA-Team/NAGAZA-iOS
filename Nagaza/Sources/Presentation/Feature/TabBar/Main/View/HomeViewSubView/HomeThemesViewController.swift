@@ -72,7 +72,7 @@ final class HomeThemesViewController: NagazaBaseViewController {
             collectionViewContainer
         ])
         
-        tBhemeLabel.snp.makeConstraints {
+        themeLabel.snp.makeConstraints {
             $0.top.equalTo(view.snp.top).inset(13)
             $0.leading.equalTo(view.snp.leading)
         }
