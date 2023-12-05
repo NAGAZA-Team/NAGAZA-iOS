@@ -9,8 +9,6 @@ import UIKit
 
 import SnapKit
 
-let tabBarHeight: CGFloat = 56
-
 enum TabBarType: CaseIterable {
     case home
     case map
@@ -41,6 +39,8 @@ protocol TabBarDelegate: AnyObject {
 }
 
 final class NagazaTabBarController: NagazaBaseViewController {
+    let tabBarHeight: CGFloat = 56
+    
     private lazy var viewControllers: [UIViewController] = []
     
     private lazy var buttons: [TabBarButton] = []
@@ -66,7 +66,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
     private var previousIndex = 0
     
     override func makeUI() {
-        setupTabBar()
+        view.addSubview(tabBarView)
     }
     
     override func adjustLayoutAfterRendering() {
@@ -74,28 +74,18 @@ final class NagazaTabBarController: NagazaBaseViewController {
         setupButtons(with: types)
     }
 
-    func setViewControllers(
-        _ viewControllers: [UIViewController],
-        with types: [TabBarType]
-    ) {
+    func setViewControllers(_ viewControllers: [UIViewController],
+                            with types: [TabBarType]) {
         guard viewControllers.count == types.count else { return }
         
         self.viewControllers = viewControllers
         self.types = types
     }
     
-    private func setupTabBar() {
-        view.addSubview(tabBarView)
-        
-        tabBarView.snp.makeConstraints {
-            $0.bottom.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
-        }
-    }
-    
     private func updateTabBarHeight() {
         tabBarView.snp.makeConstraints {
-            $0.height.equalTo(tabBarHeight + view.safeAreaInsets.bottom)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(tabBarHeight)
         }
     }
     
@@ -113,14 +103,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
                 $0.width.equalTo(buttonWidth)
-                
-                let viewBottom = view.safeAreaInsets.bottom
-                var inset: CGFloat = 0
-                if viewBottom > 0 {
-                    inset = viewBottom / 2
-                }
-                
-                $0.height.equalTo(tabBarHeight + inset)
+                $0.height.equalTo(tabBarHeight)
             }
         }
     }
@@ -158,7 +141,6 @@ final class NagazaTabBarController: NagazaBaseViewController {
 }
 
 extension NagazaTabBarController: TabBarDelegate {
-    
     func shouldHideTabBar(_ hide: Bool) {
         tabBarView.isHidden = hide
     }

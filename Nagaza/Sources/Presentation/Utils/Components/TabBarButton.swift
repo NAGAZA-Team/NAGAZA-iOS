@@ -14,7 +14,6 @@ final class TabBarButton: UIButton {
         var config = defaultButtonConfig()
         config.attributedTitle = AttributedString(tabBarType.title, attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.ngaCaption3M]))
         config.image = tabBarType.icon
-        config.imagePadding = 4
         
         configuration = config
         
@@ -39,6 +38,8 @@ final class TabBarButton: UIButton {
         config.cornerStyle = .capsule
         config.baseBackgroundColor = .clear
         config.imagePlacement = .top
+        config.imagePadding = 4
+        config.contentInsets = .init(top: 5, leading: 0, bottom: 0, trailing: 0)
         return config
     }
 }
