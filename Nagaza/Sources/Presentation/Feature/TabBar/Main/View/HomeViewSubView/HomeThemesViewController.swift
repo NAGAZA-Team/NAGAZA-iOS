@@ -14,10 +14,14 @@ final class HomeThemesViewController: NagazaBaseViewController {
     private var viewModel: HomeViewModel!
     
     private var themesCollectionViewController: HomeThemesCollectionViewController?
-    
+
     private lazy var themeLabel: UILabel = {
         let label = UILabel()
-        
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .ngaSubTitle2M
+        // TODO: 변경 예정
+        label.textColor = .black
         label.text = "테스트입니다."
         
         return label
@@ -25,6 +29,10 @@ final class HomeThemesViewController: NagazaBaseViewController {
     
     private lazy var pushButton: UIButton = {
         let btn = UIButton()
+        
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        // TODO: 변경 예정
+        btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         
         return btn
     }()
@@ -49,8 +57,30 @@ final class HomeThemesViewController: NagazaBaseViewController {
         return vc
     }
     
+    override func adjustLayoutAfterRendering() {
+        collectionViewContainer.snp.makeConstraints {
+            $0.top.equalTo(themeLabel.snp.bottom).offset(13)
+            $0.leading.equalTo(view.snp.leading)
+            $0.bottom.equalTo(view.snp.bottom)
+            $0.trailing.equalTo(view.snp.trailing)
+        }
+    }
     override func makeUI() {
+        view.addSubviews([
+            themeLabel,
+            pushButton,
+            collectionViewContainer
+        ])
         
+        themeLabel.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top).inset(13)
+            $0.leading.equalTo(view.snp.leading)
+        }
+        
+        pushButton.snp.makeConstraints {
+            $0.centerY.equalTo(themeLabel.snp.centerY)
+            $0.trailing.equalTo(view.snp.trailing).inset(16)
+        }
     }
     
     override func bindViewModel() {

@@ -12,6 +12,8 @@ import RxSwift
 class NagazaBaseViewController: UIViewController {
     var disposeBag = DisposeBag()
     
+    private var afterViewDidLoad = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -23,7 +25,10 @@ class NagazaBaseViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        adjustLayoutAfterRendering()
+        if afterViewDidLoad {
+            afterViewDidLoad.toggle()
+            adjustLayoutAfterRendering()
+        }
     }
     
     /// Set up Navigation Bar

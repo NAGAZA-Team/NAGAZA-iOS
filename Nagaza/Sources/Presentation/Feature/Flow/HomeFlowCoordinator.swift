@@ -37,7 +37,7 @@ final class HomeFlowCoordinator: Coordinator {
         let actions = MainViewModelActions(logoutTest: logoutTest)
         let vc = dependencies.makeMainViewController(actions: actions)
         
-        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
         mainVC = vc

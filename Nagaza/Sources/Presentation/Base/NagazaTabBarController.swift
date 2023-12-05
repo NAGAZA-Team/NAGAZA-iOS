@@ -9,6 +9,8 @@ import UIKit
 
 import SnapKit
 
+let tabBarHeight: CGFloat = 56
+
 enum TabBarType: CaseIterable {
     case home
     case map
@@ -39,11 +41,11 @@ protocol TabBarDelegate: AnyObject {
 }
 
 final class NagazaTabBarController: NagazaBaseViewController {
-    
     private lazy var viewControllers: [UIViewController] = []
     
     private lazy var buttons: [TabBarButton] = []
-    
+    private var types: [TabBarType] = []
+
     private lazy var tabBarView: UIView = {
         let view = UIView()
         
@@ -63,16 +65,15 @@ final class NagazaTabBarController: NagazaBaseViewController {
     
     private var previousIndex = 0
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    override func makeUI() {
         setupTabBar()
     }
     
-    deinit {
-        print("TabBar Deinit")
+    override func adjustLayoutAfterRendering() {
+        updateTabBarHeight()
+        setupButtons(with: types)
     }
-    
+
     func setViewControllers(
         _ viewControllers: [UIViewController],
         with types: [TabBarType]
@@ -80,8 +81,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
         guard viewControllers.count == types.count else { return }
         
         self.viewControllers = viewControllers
-        
-        setupButtons(with: types)
+        self.types = types
     }
     
     private func setupTabBar() {
@@ -90,7 +90,12 @@ final class NagazaTabBarController: NagazaBaseViewController {
         tabBarView.snp.makeConstraints {
             $0.bottom.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(90)
+        }
+    }
+    
+    private func updateTabBarHeight() {
+        tabBarView.snp.makeConstraints {
+            $0.height.equalTo(tabBarHeight + view.safeAreaInsets.bottom)
         }
     }
     
@@ -107,8 +112,15 @@ final class NagazaTabBarController: NagazaBaseViewController {
             
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
-                $0.top.bottom.equalToSuperview()
                 $0.width.equalTo(buttonWidth)
+                
+                let viewBottom = view.safeAreaInsets.bottom
+                var inset: CGFloat = 0
+                if viewBottom > 0 {
+                    inset = viewBottom / 2
+                }
+                
+                $0.height.equalTo(tabBarHeight + inset)
             }
         }
     }
