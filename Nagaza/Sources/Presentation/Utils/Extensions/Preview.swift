@@ -9,7 +9,6 @@
 import SwiftUI
 
 extension UIViewController {
-    
     private struct Preview: UIViewControllerRepresentable {
         let viewController: UIViewController
         
@@ -26,7 +25,6 @@ extension UIViewController {
 }
 
 extension UIView {
-    
     private struct Preview: UIViewRepresentable {
         let view: UIView
 //        init(_ builder: @escaping () -> UIView) {

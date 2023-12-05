@@ -69,6 +69,10 @@ final class NagazaTabBarController: NagazaBaseViewController {
         setupTabBar()
     }
     
+    deinit {
+        print("TabBar Deinit")
+    }
+    
     func setViewControllers(
         _ viewControllers: [UIViewController],
         with types: [TabBarType]
