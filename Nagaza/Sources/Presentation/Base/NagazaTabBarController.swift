@@ -38,9 +38,7 @@ protocol TabBarDelegate: AnyObject {
     func shouldHideTabBar(_ hide: Bool)
 }
 
-final class NagazaTabBarController: NagazaBaseViewController {
-    let tabBarHeight: CGFloat = 56
-    
+final class NagazaTabBarController: NagazaBaseViewController {    
     private lazy var viewControllers: [UIViewController] = []
     
     private lazy var buttons: [TabBarButton] = []
@@ -48,9 +46,13 @@ final class NagazaTabBarController: NagazaBaseViewController {
 
     private lazy var tabBarView: UIView = {
         let view = UIView()
-        
         view.backgroundColor = .white
-        
+        return view
+    }()
+    
+    private lazy var bottomInsetView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
         return view
     }()
     
@@ -67,11 +69,13 @@ final class NagazaTabBarController: NagazaBaseViewController {
     
     override func makeUI() {
         view.addSubview(tabBarView)
+        
+        updateTabBarHeight()
+        setupButtons(with: types)
     }
     
     override func adjustLayoutAfterRendering() {
-        updateTabBarHeight()
-        setupButtons(with: types)
+        setupBottomInsetView()
     }
 
     func setViewControllers(_ viewControllers: [UIViewController],
@@ -85,7 +89,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
     private func updateTabBarHeight() {
         tabBarView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(tabBarHeight)
+            $0.height.equalTo(NagazaSize.tabBarHeight)
         }
     }
     
@@ -103,8 +107,17 @@ final class NagazaTabBarController: NagazaBaseViewController {
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
                 $0.width.equalTo(buttonWidth)
-                $0.height.equalTo(tabBarHeight)
+                $0.height.equalTo(NagazaSize.tabBarHeight)
             }
+        }
+    }
+    
+    private func setupBottomInsetView() {
+        view.addSubview(bottomInsetView)
+        
+        bottomInsetView.snp.makeConstraints {
+            $0.top.equalTo(tabBarView.snp.bottom)
+            $0.leading.bottom.trailing.equalToSuperview()
         }
     }
     

@@ -23,7 +23,7 @@ final class HomeViewController: NagazaBaseViewController {
     private var sfThemesViewController: HomeThemesViewController?
     private var rRatedThemesViewController: HomeThemesViewController?
     
-    private lazy var scrollView = UIScrollView()
+    private lazy var scrollView = NagazaBaseScrollView()
     
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
