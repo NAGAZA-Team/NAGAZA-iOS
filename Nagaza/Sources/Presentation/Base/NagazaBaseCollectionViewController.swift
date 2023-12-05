@@ -11,7 +11,9 @@ import RxSwift
 
 class NagazaBaseCollectionViewController: UICollectionViewController{
     var disposeBag = DisposeBag()
-    
+
+    private var afterViewDidLoad = true
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -23,7 +25,10 @@ class NagazaBaseCollectionViewController: UICollectionViewController{
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        adjustLayoutAfterRendering()
+        if afterViewDidLoad {
+            afterViewDidLoad.toggle()
+            adjustLayoutAfterRendering()
+        }
     }
     
     /// call in super viewDidLoad
