@@ -1,15 +1,15 @@
 //
-//  NagazaBaseCollectionViewController.swift
+//  NagazaBaseTableViewController.swift
 //  Nagaza
 //
-//  Created by 전성훈 on 2023/12/01.
+//  Created by 전성훈 on 2023/12/05.
 //
 
 import UIKit
 
 import RxSwift
 
-class NagazaBaseCollectionViewController: UICollectionViewController{
+class NagazaBaseTableViewController: UICollectionViewController{
     var disposeBag = DisposeBag()
 
     private var afterViewDidLoad = true

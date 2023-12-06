@@ -9,6 +9,7 @@ import Foundation
 
 struct ThemeCollectionItemViewModel: Equatable {
     let themePosterImagePath: String?
+    let isNew: Bool
     let isHeart: Bool
     let title: String
     let branch: String

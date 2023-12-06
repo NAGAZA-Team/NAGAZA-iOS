@@ -41,8 +41,8 @@ final class LoginFlowCoordinator: Coordinator {
         let actions = LoginViewModelActions(showTabBar: showTabBar)
         let vc = dependencies.makeLoginViewController(actions: actions)
         
-        navigationController.pushViewController(vc, animated: false)
         navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.pushViewController(vc, animated: false)
 
         loginVC = vc
     }

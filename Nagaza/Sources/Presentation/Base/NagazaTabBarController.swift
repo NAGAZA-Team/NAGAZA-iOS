@@ -38,17 +38,21 @@ protocol TabBarDelegate: AnyObject {
     func shouldHideTabBar(_ hide: Bool)
 }
 
-final class NagazaTabBarController: NagazaBaseViewController {
-    
+final class NagazaTabBarController: NagazaBaseViewController {    
     private lazy var viewControllers: [UIViewController] = []
     
     private lazy var buttons: [TabBarButton] = []
-    
+    private var types: [TabBarType] = []
+
     private lazy var tabBarView: UIView = {
         let view = UIView()
-        
         view.backgroundColor = .white
-        
+        return view
+    }()
+    
+    private lazy var bottomInsetView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
         return view
     }()
     
@@ -63,34 +67,29 @@ final class NagazaTabBarController: NagazaBaseViewController {
     
     private var previousIndex = 0
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func makeUI() {
+        view.addSubview(tabBarView)
         
-        setupTabBar()
-    }
-    
-    deinit {
-        print("TabBar Deinit")
-    }
-    
-    func setViewControllers(
-        _ viewControllers: [UIViewController],
-        with types: [TabBarType]
-    ) {
-        guard viewControllers.count == types.count else { return }
-        
-        self.viewControllers = viewControllers
-        
+        updateTabBarHeight()
         setupButtons(with: types)
     }
     
-    private func setupTabBar() {
-        view.addSubview(tabBarView)
+    override func adjustLayoutAfterRendering() {
+        setupBottomInsetView()
+    }
+
+    func setViewControllers(_ viewControllers: [UIViewController],
+                            with types: [TabBarType]) {
+        guard viewControllers.count == types.count else { return }
         
+        self.viewControllers = viewControllers
+        self.types = types
+    }
+    
+    private func updateTabBarHeight() {
         tabBarView.snp.makeConstraints {
-            $0.bottom.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(90)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(NagazaSize.tabBarHeight)
         }
     }
     
@@ -107,9 +106,18 @@ final class NagazaTabBarController: NagazaBaseViewController {
             
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
-                $0.top.bottom.equalToSuperview()
                 $0.width.equalTo(buttonWidth)
+                $0.height.equalTo(NagazaSize.tabBarHeight)
             }
+        }
+    }
+    
+    private func setupBottomInsetView() {
+        view.addSubview(bottomInsetView)
+        
+        bottomInsetView.snp.makeConstraints {
+            $0.top.equalTo(tabBarView.snp.bottom)
+            $0.leading.bottom.trailing.equalToSuperview()
         }
     }
     
@@ -146,7 +154,6 @@ final class NagazaTabBarController: NagazaBaseViewController {
 }
 
 extension NagazaTabBarController: TabBarDelegate {
-    
     func shouldHideTabBar(_ hide: Bool) {
         tabBarView.isHidden = hide
     }
