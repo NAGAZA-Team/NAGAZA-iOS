@@ -130,9 +130,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
     
     private func deleteView() {
         let previousVC = viewControllers[previousIndex]
-        previousVC.willMove(toParent: nil)
-        previousVC.view.removeFromSuperview()
-        previousVC.removeFromParent()
+        previousVC.remove()
     }
     
     private func setupView() {
@@ -142,7 +140,8 @@ final class NagazaTabBarController: NagazaBaseViewController {
         view.insertSubview(selectedVC.view, belowSubview: tabBarView)
         
         selectedVC.view.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(tabBarView.snp.top)
         }
         
         selectedVC.didMove(toParent: self)

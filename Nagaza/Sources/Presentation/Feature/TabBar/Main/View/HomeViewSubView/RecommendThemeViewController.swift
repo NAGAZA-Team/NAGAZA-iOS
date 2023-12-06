@@ -17,10 +17,16 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var heartIcon: UIButton = {
         let btn = UIButton()
         
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(heartTapped(_:)), for: .touchUpInside)
-        btn.setImage(UIImage(systemName: "heart"), for: .normal)
-        btn.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        btn.addTarget(self,
+                      action: #selector(heartTapped(_:)),
+                      for: .touchUpInside
+        )
+        btn.setImage(UIImage(systemName: "heart"),
+                     for: .normal
+        )
+        btn.setImage(UIImage(systemName: "heart.fill"),
+                     for: .selected
+        )
         
         return btn
     }()
@@ -28,7 +34,6 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .lightGray
         imageView.layer.cornerRadius = 10
         imageView.layer.shadowOpacity = 0.5
@@ -42,7 +47,6 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var userNameLabel: UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaH3Sb
         label.textColor = .black
         label.text = "테스트님"
@@ -53,7 +57,6 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var recommendLabel: UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaSubTitle1R
         label.textColor = .black
         label.text = "오늘의 추천테마를 즐겨보세요!"
@@ -64,7 +67,6 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var labelStackView: UIStackView = {
         let stackView = UIStackView()
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.spacing = 4
@@ -75,8 +77,9 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     private lazy var pushButton: UIButton = {
         let btn = UIButton()
         
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        btn.setImage(UIImage(systemName: "chevron.right"),
+                     for: .normal
+        )
         
         return btn
     }()

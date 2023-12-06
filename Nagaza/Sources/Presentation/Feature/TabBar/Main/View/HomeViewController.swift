@@ -23,7 +23,7 @@ final class HomeViewController: NagazaBaseViewController {
     private var sfThemesViewController: HomeThemesViewController?
     private var rRatedThemesViewController: HomeThemesViewController?
     
-    private lazy var scrollView = NagazaBaseScrollView()
+    private lazy var scrollView = UIScrollView()
     
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
@@ -32,8 +32,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let recommended = recommendedThemeViewController {
             add(child: recommended, container: view)
-            view.addSubview(recommended.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             recommended.view.backgroundColor = .clear
         }
         
@@ -47,8 +45,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let horror = horrorThemesViewController {
             add(child: horror, container: view)
-            view.addSubview(horror.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             horror.view.backgroundColor = .clear
         }
         
@@ -62,8 +58,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let fantasy = fantasyThemesViewController {
             add(child: fantasy, container: view)
-            view.addSubview(fantasy.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             fantasy.view.backgroundColor = .clear
         }
         
@@ -77,8 +71,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let suspense = suspenseThemesViewController {
             add(child: suspense, container: view)
-            view.addSubview(suspense.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             suspense.view.backgroundColor = .clear
         }
         
@@ -92,8 +84,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let comic = comicThemesViewController {
             add(child: comic, container: view)
-            view.addSubview(comic.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             comic.view.backgroundColor = .clear
         }
         
@@ -107,8 +97,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let drama = dramaThemesViewController {
             add(child: drama, container: view)
-            view.addSubview(drama.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             drama.view.backgroundColor = .clear
         }
         
@@ -122,8 +110,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let sf = sfThemesViewController {
             add(child: sf, container: view)
-            view.addSubview(sf.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             sf.view.backgroundColor = .clear
         }
         
@@ -137,8 +123,6 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let rRated = rRatedThemesViewController {
             add(child: rRated, container: view)
-            view.addSubview(rRated.view)
-            view.translatesAutoresizingMaskIntoConstraints = false
             rRated.view.backgroundColor = .clear
         }
         
