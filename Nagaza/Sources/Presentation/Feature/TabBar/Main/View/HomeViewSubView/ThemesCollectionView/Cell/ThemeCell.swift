@@ -18,7 +18,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 10
         imageView.backgroundColor = .lightGray
         imageView.layer.cornerRadius = 10
@@ -33,7 +32,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var newIcon: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
     }()
@@ -41,7 +39,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var heartButton: UIButton = {
         let btn = UIButton()
         
-        btn.translatesAutoresizingMaskIntoConstraints = false
         
         return btn
     }()
@@ -49,7 +46,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaP1Sb
         label.textColor = .black
         
@@ -59,7 +55,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var branchLabel: UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaCaption1M
         label.textColor = .gray
         
@@ -69,7 +64,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var starIcon: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
     }()
@@ -77,7 +71,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var ratedLabel: UILabel = {
         let label = UILabel()
         
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaCaption1M
         label.textColor = .gray
         
@@ -87,7 +80,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var starAndRatedStackView: UIStackView = {
         let stackView = UIStackView()
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = 2
         stackView.distribution = .fill
@@ -99,15 +91,12 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var categoryIcon: UIImageView = {
         let imageView = UIImageView()
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         return imageView
     }()
     
     private lazy var ratedAndCategoryStackView: UIStackView = {
         let stackView = UIStackView()
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
     
@@ -117,7 +106,6 @@ final class ThemeCell: UICollectionViewCell {
     private lazy var textStackView: UIStackView = {
         let stackView = UIStackView()
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 2
         stackView.alignment = .leading

@@ -18,7 +18,6 @@ final class HomeThemesViewController: NagazaBaseViewController {
     private lazy var themeLabel: UILabel = {
         let label = UILabel()
 
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .ngaSubTitle2M
         // TODO: 변경 예정
         label.textColor = .black
@@ -30,7 +29,6 @@ final class HomeThemesViewController: NagazaBaseViewController {
     private lazy var pushButton: UIButton = {
         let btn = UIButton()
         
-        btn.translatesAutoresizingMaskIntoConstraints = false
         // TODO: 변경 예정
         btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         
@@ -44,7 +42,6 @@ final class HomeThemesViewController: NagazaBaseViewController {
         
         if let themes = themesCollectionViewController {
             add(child: themes, container: view)
-            view.addSubview(themes.view)
         }
         
         return view

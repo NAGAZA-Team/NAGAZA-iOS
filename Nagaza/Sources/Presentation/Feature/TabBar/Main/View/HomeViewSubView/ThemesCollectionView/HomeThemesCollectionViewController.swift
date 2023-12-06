@@ -50,11 +50,13 @@ final class HomeThemesCollectionViewController: NagazaBaseCollectionViewControll
             forCellWithReuseIdentifier: ThemeCell.identifier
         )
         
-        items.bind(to: collectionView.rx.items(cellIdentifier: ThemeCell.identifier, cellType: ThemeCell.self)) { (row, element, cell) in 
+        items.bind(to: collectionView.rx.items(
+            cellIdentifier: ThemeCell.identifier,
+            cellType: ThemeCell.self)
+        ) { (row, element, cell) in
             
             cell.fill(with: element)
-        }
-        .disposed(by: disposeBag)
+        }.disposed(by: disposeBag)
     }
     
     private func setupCollectionViewLayout() {
