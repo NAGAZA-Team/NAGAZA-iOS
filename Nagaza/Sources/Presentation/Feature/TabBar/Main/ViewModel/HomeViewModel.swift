@@ -37,8 +37,8 @@ final class HomeViewModel: ViewModelType {
             .map { point -> CGFloat in
                 let y = point.y
                 switch y {
-                case 70...310:
-                    return (y - 70) / (310 - 70)
+                case 0...310:
+                    return (y - 0) / (310 - 0)
                 case 310...:
                     return 1
                 default:

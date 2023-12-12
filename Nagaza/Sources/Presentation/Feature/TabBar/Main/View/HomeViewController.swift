@@ -258,7 +258,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         navBarAppearance.shadowColor = nil
         
-        let isDarkMode = alpha <= 0.5
+        let isDarkMode = alpha <= 0.3
         
         let titleColor = isDarkMode ?
             NagazaAsset.Colors.white.color :
