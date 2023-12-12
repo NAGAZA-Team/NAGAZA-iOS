@@ -27,7 +27,7 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
-                
+        
         recommendedThemeViewController = RecommendThemeViewController.create(with: viewModel)
         
         if let recommended = recommendedThemeViewController {
@@ -136,8 +136,22 @@ final class HomeViewController: NagazaBaseViewController {
         return vc
     }
     
+    override func navigationSetting() {
+        super.navigationSetting()
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.backgroundColor = NagazaAsset.Colors.black.color
+        navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M, .foregroundColor: NagazaAsset.Colors.white.color]
+        navigationItem.scrollEdgeAppearance = navBarAppearance
+        
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.map.image, style: .plain, target: nil, action: nil)
+        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.search.image, style: .plain, target: nil, action: nil)
+        
+        navigationItem.title = "홈"
+        navigationItem.leftBarButtonItem = mapButtonItem
+        navigationItem.rightBarButtonItem = searchButtonItem
+    }
+    
     override func makeUI() {
-        self.navigationController?.navigationItem.title = "테스트"
         view.addSubview(scrollView)
         
         scrollView.snp.makeConstraints {
@@ -176,7 +190,7 @@ final class HomeViewController: NagazaBaseViewController {
             $0.width.equalTo(scrollView.frameLayoutGuide.snp.width).inset(12)
             $0.leading.equalTo(scrollView.snp.leading).inset(24)
             $0.height.equalTo(255)
-
+            
         }
         
         suspenseContainer.snp.makeConstraints {
@@ -218,7 +232,29 @@ final class HomeViewController: NagazaBaseViewController {
     
     // MARK: Output
     override func bindViewModel() {
+        let contentOffset = scrollView.rx.contentOffset.asDriver()
         
+        let input = HomeViewModel.Input(contentOffset: contentOffset)
+        
+        let output = viewModel.transform(input: input)
+        
+        output.isScrolled
+            .drive(self.rx.isScrolled)
+            .disposed(by: disposeBag)
+    }
+}
+
+extension Reactive where Base: HomeViewController {
+    var isScrolled: Binder<Bool> {
+        return Binder(self.base) { base, value in
+            if value {
+                base.navigationItem.leftBarButtonItem?.tintColor = NagazaAsset.Colors.selected.color
+                base.navigationItem.rightBarButtonItem?.tintColor = NagazaAsset.Colors.selected.color
+            } else {
+                base.navigationItem.leftBarButtonItem?.tintColor = NagazaAsset.Colors.white.color
+                base.navigationItem.rightBarButtonItem?.tintColor = NagazaAsset.Colors.white.color
+            }
+        }
     }
 }
 

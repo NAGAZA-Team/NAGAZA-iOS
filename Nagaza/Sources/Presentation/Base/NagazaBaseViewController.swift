@@ -33,15 +33,13 @@ class NagazaBaseViewController: UIViewController {
     
     /// Set up Navigation Bar
     func navigationSetting() {
-        navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.backIndicatorImage = NagazaAsset.Images.chevron.image
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = NagazaAsset.Images.chevron.image
         navigationController?.navigationBar.tintColor = .white
         
         let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.titlePositionAdjustment.horizontal = -CGFloat.greatestFiniteMagnitude
-//        navBarAppearance.titleTextAttributes = [.font: UIFont.thtH4Sb, .foregroundColor: NagazaAsset.Color.neutral50.color]
-//        navBarAppearance.backgroundColor = NagazaAsset.Color.neutral700.color
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M, .foregroundColor: NagazaAsset.Colors.black.color]
         navBarAppearance.shadowColor = nil
         navigationItem.standardAppearance = navBarAppearance
         navigationItem.scrollEdgeAppearance = navBarAppearance
@@ -49,7 +47,7 @@ class NagazaBaseViewController: UIViewController {
     
     /// call in super viewDidLoad
     func makeUI() { }
-        
+    
     /// call in super viewDidLayoutSubviews
     func adjustLayoutAfterRendering() { }
     

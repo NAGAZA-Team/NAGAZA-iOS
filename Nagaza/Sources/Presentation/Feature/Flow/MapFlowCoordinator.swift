@@ -28,9 +28,9 @@ final class MapFlowCoordinator: Coordinator {
     init(
         navigationController: UINavigationController,
         dependencies: MapFlowCoordinaterDependencies) {
-        self.navigationController = navigationController
-        self.dependencies = dependencies
-    }
+            self.navigationController = navigationController
+            self.dependencies = dependencies
+        }
     
     deinit {
         print("Map Flow Deinit")
@@ -40,7 +40,7 @@ final class MapFlowCoordinator: Coordinator {
         let actions = MapViewModelActions()
         let vc = dependencies.makeMapViewController(actions: actions)
         
-        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
         mapVC = vc
