@@ -138,15 +138,17 @@ final class HomeViewController: NagazaBaseViewController {
     override func navigationSetting() {
         super.navigationSetting()
         
-        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.map.image,
-                                            style: .plain,
-                                            target: nil,
-                                            action: nil
+        let mapButtonItem = UIBarButtonItem(
+            image: NagazaAsset.Images.map.image,
+            style: .plain,
+            target: nil,
+            action: nil
         )
-        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.search.image,
-                                               style: .plain,
-                                               target: nil,
-                                               action: nil
+        let searchButtonItem = UIBarButtonItem(
+            image: NagazaAsset.Images.search.image,
+            style: .plain,
+            target: nil,
+            action: nil
         )
         
         navigationItem.title = "홈"
@@ -243,67 +245,47 @@ final class HomeViewController: NagazaBaseViewController {
         
         let output = viewModel.transform(input: input)
         
-        output.isScrolled
-            .drive(self.rx.isScrolled)
+        output.alphaValue
+            .drive(self.rx.dynamicAlpha)
             .disposed(by: disposeBag)
     }
-    
-    func configureNavigationBar(for scrolled: HomeViewScrolled) {
+
+    func updateNavigationBarAppearance(with alpha: CGFloat) {
         let navBarAppearance = UINavigationBarAppearance()
         
-        scrollView.backgroundColor = scrolled == .reset ? .black : .white
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = .white.withAlphaComponent(alpha)
         
-        // TODO: 하단 스크롤 시 애니메이션 적용, statusBar 색상 변경,
+        navBarAppearance.shadowColor = nil
         
-        UIView.animate(withDuration: 0.2) {
-            switch scrolled {
-            case .reset:
-                navBarAppearance.configureWithTransparentBackground()
-                navBarAppearance.backgroundColor = .clear
+        let isDarkMode = alpha <= 0.5
+        
+        let titleColor = isDarkMode ?
+            NagazaAsset.Colors.white.color :
+            NagazaAsset.Colors.black.color
+        let buttonColor = isDarkMode ? 
+            NagazaAsset.Colors.white.color :
+            NagazaAsset.Colors.selected.color
+        
+        navBarAppearance.titleTextAttributes = [
+            .font: UIFont.ngaH3M,
+            .foregroundColor: titleColor
+        ]
                 
-            case .start:
-                // 중간 색 불러올 예정
-                
-                navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = .clear
-
-            case .coverRecommendTheme:
-                navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = .clear
-            }
-            
-            navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M,
-                                                    .foregroundColor: self.textColor(for: scrolled)
-            ]
-            
-            navBarAppearance.shadowColor = nil
-            
-            self.navigationItem.standardAppearance = navBarAppearance
-            self.navigationItem.scrollEdgeAppearance = navBarAppearance
-            self.updateBarButtonItemsColor(for: scrolled)
-        }
-    }
-    
-    private func textColor(for scrolled: HomeViewScrolled) -> UIColor {
-        switch scrolled {
-        case .reset:
-            return NagazaAsset.Colors.white.color
-        case .start, .coverRecommendTheme:
-            return NagazaAsset.Colors.black.color
-        }
-    }
-    
-    private func updateBarButtonItemsColor(for scrolled: HomeViewScrolled) {
-        let color = (scrolled == .reset) ? NagazaAsset.Colors.white.color : NagazaAsset.Colors.selected.color
-        navigationItem.leftBarButtonItem?.tintColor = color
-        navigationItem.rightBarButtonItem?.tintColor = color
+        navigationItem.leftBarButtonItem?.tintColor = buttonColor
+        navigationItem.rightBarButtonItem?.tintColor = buttonColor
+        
+        self.navigationItem.standardAppearance = navBarAppearance
+        self.navigationItem.scrollEdgeAppearance = navBarAppearance
+        
+        scrollView.backgroundColor = isDarkMode ? .black : .white
     }
 }
 
 extension Reactive where Base: HomeViewController {
-    var isScrolled: Binder<HomeViewScrolled> {
-        return Binder(self.base) { base, scrolledState in
-            base.configureNavigationBar(for: scrolledState)
+    var dynamicAlpha: Binder<CGFloat> {
+        return Binder(self.base) { base, alpha in
+            base.updateNavigationBarAppearance(with: alpha)
         }
     }
 }

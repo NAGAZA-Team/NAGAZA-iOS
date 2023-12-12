@@ -139,22 +139,32 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     }
     
     override func adjustLayoutAfterRendering() {
-        let gradientHeight = view.bounds.height / 3
+        let gradientHeight = view.bounds.height / 2
         
-        let topGradientFrame = CGRect(x: 0,
-                                      y: 0,
-                                      width: view.bounds.width,
-                                      height: gradientHeight)
+        let topGradientFrame = CGRect(
+            x: 0,
+            y: 0,
+            width: view.bounds.width,
+            height: gradientHeight
+        )
         recommandThemeBackgroundTopGradientView.frame = topGradientFrame
-        recommandThemeBackgroundTopGradientView.makeGradient(colors: [.black, UIColor(white: 0, alpha: 0)])
+        recommandThemeBackgroundTopGradientView.makeGradient(colors: [
+            .black,
+            UIColor(white: 0, alpha: 0)
+        ])
         
-        let bottomGradientFrame = CGRect(x: 0,
-                                         y: view.bounds.height - gradientHeight,
-                                         width: view.bounds.width,
-                                         height: gradientHeight)
+        let bottomGradientFrame = CGRect(
+            x: 0,
+            y: view.bounds.height - gradientHeight,
+            width: view.bounds.width,
+            height: gradientHeight
+        )
         recommandThemeBackgroundBottomGradientView.frame = bottomGradientFrame
         recommandThemeBackgroundBottomGradientView.backgroundColor = .clear
-        recommandThemeBackgroundBottomGradientView.makeGradient(colors: [UIColor(white: 1, alpha: 0), .white])
+        recommandThemeBackgroundBottomGradientView.makeGradient(colors: [
+            UIColor(white: 1, alpha: 0),
+            .white
+        ])
     }
     
     override func bindViewModel() {

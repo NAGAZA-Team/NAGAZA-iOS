@@ -14,12 +14,6 @@ struct MainViewModelActions {
     let logoutTest: () -> Void
 }
 
-enum HomeViewScrolled {
-    case reset
-    case start
-    case coverRecommendTheme
-}
-
 final class HomeViewModel: ViewModelType {
     
     private let actions: MainViewModelActions!
@@ -29,7 +23,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     struct Output {
-        let isScrolled: Driver<HomeViewScrolled>
+        let alphaValue: Driver<CGFloat>
     }
     
     init(
@@ -39,19 +33,20 @@ final class HomeViewModel: ViewModelType {
     }
     
     func transform(input: Input) -> Output {
-        let isScrolled = input.contentOffset
-            .map { point -> HomeViewScrolled in
-                switch point.y {
-                case ...70:
-                    return .reset
+        let alphaValue = input.contentOffset
+            .map { point -> CGFloat in
+                let y = point.y
+                switch y {
                 case 70...310:
-                    return .start
+                    return (y - 70) / (310 - 70)
+                case 310...:
+                    return 1
                 default:
-                    return .coverRecommendTheme
+                    return 0
                 }
             }
         
-        return Output(isScrolled: isScrolled)
+        return Output(alphaValue: alphaValue)
     }
 }
 
