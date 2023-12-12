@@ -14,6 +14,12 @@ struct MainViewModelActions {
     let logoutTest: () -> Void
 }
 
+enum HomeViewScrolled {
+    case reset
+    case start
+    case coverRecommendTheme
+}
+
 final class HomeViewModel: ViewModelType {
     
     private let actions: MainViewModelActions!
@@ -23,7 +29,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     struct Output {
-        let isScrolled: Driver<Bool>
+        let isScrolled: Driver<HomeViewScrolled>
     }
     
     init(
@@ -34,15 +40,22 @@ final class HomeViewModel: ViewModelType {
     
     func transform(input: Input) -> Output {
         let isScrolled = input.contentOffset
-            .map { point in
-                return point.y > 0
+            .map { point -> HomeViewScrolled in
+                switch point.y {
+                case ...70:
+                    return .reset
+                case 70...310:
+                    return .start
+                default:
+                    return .coverRecommendTheme
+                }
             }
         
         return Output(isScrolled: isScrolled)
     }
 }
 
-// MARK: Input
+// MARK: Coordinator Actions
 extension HomeViewModel {
     func logoutTest() {
         actions.logoutTest()

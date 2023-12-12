@@ -25,14 +25,15 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var scrollView = UIScrollView()
     
+    private lazy var gradientView = UIView()
+    
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
         
         recommendedThemeViewController = RecommendThemeViewController.create(with: viewModel)
-        
+        view.backgroundColor = .white
         if let recommended = recommendedThemeViewController {
             add(child: recommended, container: view)
-            recommended.view.backgroundColor = .clear
         }
         
         return view
@@ -45,7 +46,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let horror = horrorThemesViewController {
             add(child: horror, container: view)
-            horror.view.backgroundColor = .clear
+            horror.view.backgroundColor = .white
         }
         
         return view
@@ -58,7 +59,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let fantasy = fantasyThemesViewController {
             add(child: fantasy, container: view)
-            fantasy.view.backgroundColor = .clear
+            fantasy.view.backgroundColor = .white
         }
         
         return view
@@ -71,7 +72,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let suspense = suspenseThemesViewController {
             add(child: suspense, container: view)
-            suspense.view.backgroundColor = .clear
+            suspense.view.backgroundColor = .white
         }
         
         return view
@@ -84,7 +85,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let comic = comicThemesViewController {
             add(child: comic, container: view)
-            comic.view.backgroundColor = .clear
+            comic.view.backgroundColor = .white
         }
         
         return view
@@ -97,7 +98,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let drama = dramaThemesViewController {
             add(child: drama, container: view)
-            drama.view.backgroundColor = .clear
+            drama.view.backgroundColor = .white
         }
         
         return view
@@ -110,7 +111,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let sf = sfThemesViewController {
             add(child: sf, container: view)
-            sf.view.backgroundColor = .clear
+            sf.view.backgroundColor = .white
         }
         
         return view
@@ -123,7 +124,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let rRated = rRatedThemesViewController {
             add(child: rRated, container: view)
-            rRated.view.backgroundColor = .clear
+            rRated.view.backgroundColor = .white
         }
         
         return view
@@ -138,13 +139,17 @@ final class HomeViewController: NagazaBaseViewController {
     
     override func navigationSetting() {
         super.navigationSetting()
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.backgroundColor = NagazaAsset.Colors.black.color
-        navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M, .foregroundColor: NagazaAsset.Colors.white.color]
-        navigationItem.scrollEdgeAppearance = navBarAppearance
         
-        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.map.image, style: .plain, target: nil, action: nil)
-        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.search.image, style: .plain, target: nil, action: nil)
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.map.image,
+                                            style: .plain,
+                                            target: nil,
+                                            action: nil
+        )
+        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.search.image,
+                                               style: .plain,
+                                               target: nil,
+                                               action: nil
+        )
         
         navigationItem.title = "홈"
         navigationItem.leftBarButtonItem = mapButtonItem
@@ -152,7 +157,9 @@ final class HomeViewController: NagazaBaseViewController {
     }
     
     override func makeUI() {
-        view.addSubview(scrollView)
+        view.addSubviews([
+            scrollView
+        ])
         
         scrollView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
@@ -230,7 +237,7 @@ final class HomeViewController: NagazaBaseViewController {
         }
     }
     
-    // MARK: Output
+    // MARK: Binding
     override func bindViewModel() {
         let contentOffset = scrollView.rx.contentOffset.asDriver()
         
@@ -242,18 +249,88 @@ final class HomeViewController: NagazaBaseViewController {
             .drive(self.rx.isScrolled)
             .disposed(by: disposeBag)
     }
+    
+    override func adjustLayoutAfterRendering() {
+        
+        gradientView.frame = .init(x: 0,
+                                   y: 0,
+                                   width: scrollView.bounds.width,
+                                   height: 510
+        )
+                
+        // 중간 색을 불러올 예정
+        let middleColor = UIColor.systemPink
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = gradientView.bounds
+        gradientLayer.colors = [UIColor.black.cgColor,
+                                middleColor.withAlphaComponent(0.5).cgColor,
+                                UIColor.white.cgColor
+        ]
+        gradientLayer.locations = [0.0, 0.1, 1.0]
+        
+        gradientView.layer.insertSublayer(gradientLayer, at: 0)
+        
+        recommendedThemeViewController?.view.insertSubview(gradientView, at: 0)
+    }
+
+    func configureNavigationBar(for scrolled: HomeViewScrolled) {
+        let navBarAppearance = UINavigationBarAppearance()
+        
+        scrollView.backgroundColor = scrolled == .reset ? .black : .white
+        
+        UIView.animate(withDuration: 0.2) {
+            switch scrolled {
+            case .reset:
+                navBarAppearance.configureWithTransparentBackground()
+                navBarAppearance.backgroundColor = .black
+                self.gradientView.alpha = 1
+
+            case .start:
+                // 중간 색 불러올 예정
+                let middleColor = UIColor.systemPink
+                
+                navBarAppearance.configureWithOpaqueBackground()
+                navBarAppearance.backgroundColor = middleColor.withAlphaComponent(0.1)
+                self.gradientView.alpha = 0.8
+
+            case .coverRecommendTheme:
+                navBarAppearance.configureWithOpaqueBackground()
+                navBarAppearance.backgroundColor = UIColor.white
+                self.gradientView.alpha = 0
+            }
+            
+            navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M,
+                                                    .foregroundColor: self.textColor(for: scrolled)
+            ]
+            
+            navBarAppearance.shadowColor = nil
+            
+            self.navigationItem.standardAppearance = navBarAppearance
+            self.navigationItem.scrollEdgeAppearance = navBarAppearance
+            self.updateBarButtonItemsColor(for: scrolled)
+        }
+    }
+    
+    private func textColor(for scrolled: HomeViewScrolled) -> UIColor {
+        switch scrolled {
+        case .reset:
+            return NagazaAsset.Colors.white.color
+        case .start, .coverRecommendTheme:
+            return NagazaAsset.Colors.black.color
+        }
+    }
+    
+    private func updateBarButtonItemsColor(for scrolled: HomeViewScrolled) {
+        let color = (scrolled == .reset) ? NagazaAsset.Colors.white.color : NagazaAsset.Colors.selected.color
+        navigationItem.leftBarButtonItem?.tintColor = color
+        navigationItem.rightBarButtonItem?.tintColor = color
+    }
 }
 
 extension Reactive where Base: HomeViewController {
-    var isScrolled: Binder<Bool> {
-        return Binder(self.base) { base, value in
-            if value {
-                base.navigationItem.leftBarButtonItem?.tintColor = NagazaAsset.Colors.selected.color
-                base.navigationItem.rightBarButtonItem?.tintColor = NagazaAsset.Colors.selected.color
-            } else {
-                base.navigationItem.leftBarButtonItem?.tintColor = NagazaAsset.Colors.white.color
-                base.navigationItem.rightBarButtonItem?.tintColor = NagazaAsset.Colors.white.color
-            }
+    var isScrolled: Binder<HomeViewScrolled> {
+        return Binder(self.base) { base, scrolledState in
+            base.configureNavigationBar(for: scrolledState)
         }
     }
 }
