@@ -45,6 +45,14 @@ class NagazaBaseViewController: UIViewController {
         navigationItem.scrollEdgeAppearance = navBarAppearance
     }
     
+    func getNavigationBarPlusSafeAreaInset() -> CGFloat {
+        let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
+        let statusBarHeight = UIApplication.shared.statusBarFrame.height
+        let topInset = view.safeAreaInsets.top
+        let totalHeight = statusBarHeight + navigationBarHeight + topInset
+        return totalHeight
+    }
+    
     /// call in super viewDidLoad
     func makeUI() { }
     

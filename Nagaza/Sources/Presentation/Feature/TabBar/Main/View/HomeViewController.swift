@@ -25,13 +25,11 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var scrollView = UIScrollView()
     
-    private lazy var gradientView = UIView()
-    
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
         
         recommendedThemeViewController = RecommendThemeViewController.create(with: viewModel)
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         if let recommended = recommendedThemeViewController {
             add(child: recommended, container: view)
         }
@@ -157,13 +155,13 @@ final class HomeViewController: NagazaBaseViewController {
     }
     
     override func makeUI() {
-        view.addSubviews([
-            scrollView
-        ])
+        view.backgroundColor = .black
+        
+        view.addSubview(scrollView)
         
         scrollView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.top.equalTo(view.snp.top)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
@@ -179,9 +177,9 @@ final class HomeViewController: NagazaBaseViewController {
         ])
         
         recommendedContainer.snp.makeConstraints {
-            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
+            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(-getNavigationBarPlusSafeAreaInset())
             $0.width.equalTo(scrollView.frameLayoutGuide.snp.width)
-            $0.height.equalTo(510)
+            $0.height.equalTo(510 + getNavigationBarPlusSafeAreaInset())
         }
         
         horrorContainer.snp.makeConstraints {
@@ -250,53 +248,28 @@ final class HomeViewController: NagazaBaseViewController {
             .disposed(by: disposeBag)
     }
     
-    override func adjustLayoutAfterRendering() {
-        
-        gradientView.frame = .init(x: 0,
-                                   y: 0,
-                                   width: scrollView.bounds.width,
-                                   height: 510
-        )
-                
-        // 중간 색을 불러올 예정
-        let middleColor = UIColor.systemPink
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = gradientView.bounds
-        gradientLayer.colors = [UIColor.black.cgColor,
-                                middleColor.withAlphaComponent(0.5).cgColor,
-                                UIColor.white.cgColor
-        ]
-        gradientLayer.locations = [0.0, 0.1, 1.0]
-        
-        gradientView.layer.insertSublayer(gradientLayer, at: 0)
-        
-        recommendedThemeViewController?.view.insertSubview(gradientView, at: 0)
-    }
-
     func configureNavigationBar(for scrolled: HomeViewScrolled) {
         let navBarAppearance = UINavigationBarAppearance()
         
         scrollView.backgroundColor = scrolled == .reset ? .black : .white
         
+        // TODO: 하단 스크롤 시 애니메이션 적용, statusBar 색상 변경,
+        
         UIView.animate(withDuration: 0.2) {
             switch scrolled {
             case .reset:
                 navBarAppearance.configureWithTransparentBackground()
-                navBarAppearance.backgroundColor = .black
-                self.gradientView.alpha = 1
-
+                navBarAppearance.backgroundColor = .clear
+                
             case .start:
                 // 중간 색 불러올 예정
-                let middleColor = UIColor.systemPink
                 
                 navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = middleColor.withAlphaComponent(0.1)
-                self.gradientView.alpha = 0.8
+                navBarAppearance.backgroundColor = .clear
 
             case .coverRecommendTheme:
                 navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = UIColor.white
-                self.gradientView.alpha = 0
+                navBarAppearance.backgroundColor = .clear
             }
             
             navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M,
@@ -334,15 +307,15 @@ extension Reactive where Base: HomeViewController {
         }
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-struct MainViewControllerPreview: PreviewProvider {
-    static var previews: some View {
-        let viewController = HomeViewController()
-        return viewController.toPreView()
-    }
-}
-#endif
+//
+//#if DEBUG
+//
+//import SwiftUI
+//
+//struct MainViewControllerPreview: PreviewProvider {
+//    static var previews: some View {
+//        let viewController = HomeViewController()
+//        return viewController.toPreView()
+//    }
+//}
+//#endif
