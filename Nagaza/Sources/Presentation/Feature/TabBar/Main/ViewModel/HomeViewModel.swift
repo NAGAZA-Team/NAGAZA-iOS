@@ -18,12 +18,35 @@ final class HomeViewModel: ViewModelType {
     
     private let actions: MainViewModelActions!
     
+    enum ScrollOffsetState {
+        case top(value: Double)
+        case bottom
+        
+        init(rawValue: Double) {
+            switch rawValue {
+            case -CGFloat.greatestFiniteMagnitude..<CGFloat.windowFrameheight / 3:
+                self = .top(value: rawValue)
+            default:
+                self = .bottom
+            }
+        }
+        
+        var alpha: Double {
+            switch self {
+            case .top(let value):
+                return value / (CGFloat.windowFrameheight / 3)
+            default:
+                return 1
+            }
+        }
+    }
+    
     struct Input {
         let contentOffset: Driver<CGPoint>
     }
     
     struct Output {
-        let alphaValue: Driver<CGFloat>
+        let scrollOffsetState: Driver<ScrollOffsetState>
     }
     
     init(
@@ -33,20 +56,10 @@ final class HomeViewModel: ViewModelType {
     }
     
     func transform(input: Input) -> Output {
-        let alphaValue = input.contentOffset
-            .map { point -> CGFloat in
-                let y = point.y
-                switch y {
-                case 0...310:
-                    return (y - 0) / (310 - 0)
-                case 310...:
-                    return 1
-                default:
-                    return 0
-                }
-            }
+        let scrollOffsetState = input.contentOffset
+            .map { ScrollOffsetState(rawValue: $0.y) }
         
-        return Output(alphaValue: alphaValue)
+        return Output(scrollOffsetState: scrollOffsetState)
     }
 }
 

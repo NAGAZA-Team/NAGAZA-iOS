@@ -89,7 +89,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
     private func updateTabBarHeight() {
         tabBarView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(NagazaSize.tabBarHeight)
+            $0.height.equalTo(CGFloat.tabBarHeight)
         }
     }
     
@@ -107,7 +107,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
                 $0.width.equalTo(buttonWidth)
-                $0.height.equalTo(NagazaSize.tabBarHeight)
+                $0.height.equalTo(CGFloat.tabBarHeight)
             }
         }
     }

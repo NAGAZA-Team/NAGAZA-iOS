@@ -114,12 +114,9 @@ final class RecommendThemeViewController: NagazaBaseViewController {
         ])
         
         posterImageView.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top).offset(getNavigationBarPlusSafeAreaInset())
-            $0.centerX.equalTo(view.snp.centerX)
-            
-            // TODO: 좌우 마진 40
-            $0.width.equalTo(310)
-            $0.height.equalTo(445)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(40).priority(.high)
+            $0.bottom.equalToSuperview().inset(50).priority(.high)
         }
         
         heartIcon.snp.makeConstraints {

@@ -162,9 +162,7 @@ final class HomeViewController: NagazaBaseViewController {
         view.addSubview(scrollView)
         
         scrollView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.top.equalTo(view.snp.top)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            $0.top.leading.bottom.trailing.equalToSuperview()
         }
         
         scrollView.addSubviews([
@@ -179,9 +177,8 @@ final class HomeViewController: NagazaBaseViewController {
         ])
         
         recommendedContainer.snp.makeConstraints {
-            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(-getNavigationBarPlusSafeAreaInset())
-            $0.width.equalTo(scrollView.frameLayoutGuide.snp.width)
-            $0.height.equalTo(510 + getNavigationBarPlusSafeAreaInset())
+            $0.top.leading.trailing.width.equalTo(scrollView)
+            $0.height.equalTo(CGFloat.windowFrameheight / 2)
         }
         
         horrorContainer.snp.makeConstraints {
@@ -245,20 +242,20 @@ final class HomeViewController: NagazaBaseViewController {
         
         let output = viewModel.transform(input: input)
         
-        output.alphaValue
-            .drive(self.rx.dynamicAlpha)
+        output.scrollOffsetState
+            .drive(self.rx.scrollOffsetState)
             .disposed(by: disposeBag)
     }
 
-    func updateNavigationBarAppearance(with alpha: CGFloat) {
+    func updateNavigationBarAppearance(with state: HomeViewModel.ScrollOffsetState) {
         let navBarAppearance = UINavigationBarAppearance()
         
         navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.backgroundColor = .white.withAlphaComponent(alpha)
+        navBarAppearance.backgroundColor = .white.withAlphaComponent(state.alpha)
         
         navBarAppearance.shadowColor = nil
         
-        let isDarkMode = alpha <= 0.3
+        let isDarkMode = state.alpha <= 0.3
         
         let titleColor = isDarkMode ?
             NagazaAsset.Colors.white.color :
@@ -283,12 +280,13 @@ final class HomeViewController: NagazaBaseViewController {
 }
 
 extension Reactive where Base: HomeViewController {
-    var dynamicAlpha: Binder<CGFloat> {
-        return Binder(self.base) { base, alpha in
-            base.updateNavigationBarAppearance(with: alpha)
+    var scrollOffsetState: Binder<HomeViewModel.ScrollOffsetState> {
+        return Binder(self.base) { base, state in
+            base.updateNavigationBarAppearance(with: state)
         }
     }
 }
+
 //
 //#if DEBUG
 //
