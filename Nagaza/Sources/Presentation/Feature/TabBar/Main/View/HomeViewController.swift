@@ -27,12 +27,11 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
-                
-        recommendedThemeViewController = RecommendThemeViewController.create(with: viewModel)
         
+        recommendedThemeViewController = RecommendThemeViewController.create(with: viewModel)
+        view.backgroundColor = .clear
         if let recommended = recommendedThemeViewController {
             add(child: recommended, container: view)
-            recommended.view.backgroundColor = .clear
         }
         
         return view
@@ -45,7 +44,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let horror = horrorThemesViewController {
             add(child: horror, container: view)
-            horror.view.backgroundColor = .clear
+            horror.view.backgroundColor = .white
         }
         
         return view
@@ -58,7 +57,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let fantasy = fantasyThemesViewController {
             add(child: fantasy, container: view)
-            fantasy.view.backgroundColor = .clear
+            fantasy.view.backgroundColor = .white
         }
         
         return view
@@ -71,7 +70,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let suspense = suspenseThemesViewController {
             add(child: suspense, container: view)
-            suspense.view.backgroundColor = .clear
+            suspense.view.backgroundColor = .white
         }
         
         return view
@@ -84,7 +83,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let comic = comicThemesViewController {
             add(child: comic, container: view)
-            comic.view.backgroundColor = .clear
+            comic.view.backgroundColor = .white
         }
         
         return view
@@ -97,7 +96,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let drama = dramaThemesViewController {
             add(child: drama, container: view)
-            drama.view.backgroundColor = .clear
+            drama.view.backgroundColor = .white
         }
         
         return view
@@ -110,7 +109,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let sf = sfThemesViewController {
             add(child: sf, container: view)
-            sf.view.backgroundColor = .clear
+            sf.view.backgroundColor = .white
         }
         
         return view
@@ -123,7 +122,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         if let rRated = rRatedThemesViewController {
             add(child: rRated, container: view)
-            rRated.view.backgroundColor = .clear
+            rRated.view.backgroundColor = .white
         }
         
         return view
@@ -136,14 +135,34 @@ final class HomeViewController: NagazaBaseViewController {
         return vc
     }
     
+    override func navigationSetting() {
+        super.navigationSetting()
+        
+        let mapButtonItem = UIBarButtonItem(
+            image: NagazaAsset.Images.map.image,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        let searchButtonItem = UIBarButtonItem(
+            image: NagazaAsset.Images.search.image,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        
+        navigationItem.title = "홈"
+        navigationItem.leftBarButtonItem = mapButtonItem
+        navigationItem.rightBarButtonItem = searchButtonItem
+    }
+    
     override func makeUI() {
-        self.navigationController?.navigationItem.title = "테스트"
+        view.backgroundColor = .black
+        
         view.addSubview(scrollView)
         
         scrollView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            $0.top.leading.bottom.trailing.equalToSuperview()
         }
         
         scrollView.addSubviews([
@@ -158,9 +177,8 @@ final class HomeViewController: NagazaBaseViewController {
         ])
         
         recommendedContainer.snp.makeConstraints {
-            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
-            $0.width.equalTo(scrollView.frameLayoutGuide.snp.width)
-            $0.height.equalTo(510)
+            $0.top.leading.trailing.width.equalTo(scrollView)
+            $0.height.equalTo(CGFloat.windowFrameheight / 2)
         }
         
         horrorContainer.snp.makeConstraints {
@@ -176,7 +194,7 @@ final class HomeViewController: NagazaBaseViewController {
             $0.width.equalTo(scrollView.frameLayoutGuide.snp.width).inset(12)
             $0.leading.equalTo(scrollView.snp.leading).inset(24)
             $0.height.equalTo(255)
-
+            
         }
         
         suspenseContainer.snp.makeConstraints {
@@ -216,20 +234,68 @@ final class HomeViewController: NagazaBaseViewController {
         }
     }
     
-    // MARK: Output
+    // MARK: Binding
     override func bindViewModel() {
+        let contentOffset = scrollView.rx.contentOffset.asDriver()
         
+        let input = HomeViewModel.Input(contentOffset: contentOffset)
+        
+        let output = viewModel.transform(input: input)
+        
+        output.scrollOffsetState
+            .drive(self.rx.scrollOffsetState)
+            .disposed(by: disposeBag)
+    }
+
+    func updateNavigationBarAppearance(with state: HomeViewModel.ScrollOffsetState) {
+        let navBarAppearance = UINavigationBarAppearance()
+        
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = .white.withAlphaComponent(state.alpha)
+        
+        navBarAppearance.shadowColor = nil
+        
+        let isDarkMode = state.alpha <= 0.3
+        
+        let titleColor = isDarkMode ?
+            NagazaAsset.Colors.white.color :
+            NagazaAsset.Colors.black.color
+        let buttonColor = isDarkMode ? 
+            NagazaAsset.Colors.white.color :
+            NagazaAsset.Colors.selected.color
+        
+        navBarAppearance.titleTextAttributes = [
+            .font: UIFont.ngaH3M,
+            .foregroundColor: titleColor
+        ]
+                
+        navigationItem.leftBarButtonItem?.tintColor = buttonColor
+        navigationItem.rightBarButtonItem?.tintColor = buttonColor
+        
+        self.navigationItem.standardAppearance = navBarAppearance
+        self.navigationItem.scrollEdgeAppearance = navBarAppearance
+        
+        scrollView.backgroundColor = isDarkMode ? .black : .white
     }
 }
 
-#if DEBUG
-
-import SwiftUI
-
-struct MainViewControllerPreview: PreviewProvider {
-    static var previews: some View {
-        let viewController = HomeViewController()
-        return viewController.toPreView()
+extension Reactive where Base: HomeViewController {
+    var scrollOffsetState: Binder<HomeViewModel.ScrollOffsetState> {
+        return Binder(self.base) { base, state in
+            base.updateNavigationBarAppearance(with: state)
+        }
     }
 }
-#endif
+
+//
+//#if DEBUG
+//
+//import SwiftUI
+//
+//struct MainViewControllerPreview: PreviewProvider {
+//    static var previews: some View {
+//        let viewController = HomeViewController()
+//        return viewController.toPreView()
+//    }
+//}
+//#endif

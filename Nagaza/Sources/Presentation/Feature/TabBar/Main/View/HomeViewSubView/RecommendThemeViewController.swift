@@ -14,6 +14,9 @@ import SnapKit
 final class RecommendThemeViewController: NagazaBaseViewController {
     private var viewModel: HomeViewModel!
     
+    let recommandThemeBackgroundTopGradientView = UIView()
+    let recommandThemeBackgroundBottomGradientView = UIView()
+    
     private lazy var heartIcon: UIButton = {
         let btn = UIButton()
         
@@ -92,12 +95,18 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     }
     
     override func makeUI() {
+        // TODO: 이미지에 따른 추천 색상으로 변경
+        let middleColor = UIColor.systemPink
+        view.backgroundColor = middleColor
+        
         labelStackView.addArrangedSubviews([
             userNameLabel,
             recommendLabel
         ])
         
         view.addSubviews([
+            recommandThemeBackgroundTopGradientView,
+            recommandThemeBackgroundBottomGradientView,
             posterImageView,
             heartIcon,
             labelStackView,
@@ -105,9 +114,9 @@ final class RecommendThemeViewController: NagazaBaseViewController {
         ])
         
         posterImageView.snp.makeConstraints {
-            $0.center.equalTo(view.snp.center)
-            $0.width.equalTo(310)
-            $0.height.equalTo(445)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(40).priority(.high)
+            $0.bottom.equalToSuperview().inset(50).priority(.high)
         }
         
         heartIcon.snp.makeConstraints {
@@ -124,6 +133,35 @@ final class RecommendThemeViewController: NagazaBaseViewController {
             $0.trailing.equalTo(posterImageView.snp.trailing).inset(16)
             $0.centerY.equalTo(labelStackView.snp.centerY)
         }
+    }
+    
+    override func adjustLayoutAfterRendering() {
+        let gradientHeight = view.bounds.height / 2
+        
+        let topGradientFrame = CGRect(
+            x: 0,
+            y: 0,
+            width: view.bounds.width,
+            height: gradientHeight
+        )
+        recommandThemeBackgroundTopGradientView.frame = topGradientFrame
+        recommandThemeBackgroundTopGradientView.makeGradient(colors: [
+            .black,
+            UIColor(white: 0, alpha: 0)
+        ])
+        
+        let bottomGradientFrame = CGRect(
+            x: 0,
+            y: view.bounds.height - gradientHeight,
+            width: view.bounds.width,
+            height: gradientHeight
+        )
+        recommandThemeBackgroundBottomGradientView.frame = bottomGradientFrame
+        recommandThemeBackgroundBottomGradientView.backgroundColor = .clear
+        recommandThemeBackgroundBottomGradientView.makeGradient(colors: [
+            UIColor(white: 1, alpha: 0),
+            .white
+        ])
     }
     
     override func bindViewModel() {
