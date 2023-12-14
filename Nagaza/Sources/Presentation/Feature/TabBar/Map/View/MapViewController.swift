@@ -31,9 +31,9 @@ final class MapViewController: NagazaBaseViewController {
         super.navigationSetting()
         navigationItem.title = "맵"
         navigationController?.navigationBar.backgroundColor = .black
-        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.map.image, style: .plain, target: nil, action: nil)
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image, style: .plain, target: nil, action: nil)
         
-        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.search.image, style: .plain, target: nil, action: nil)
+        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icSearchGray.image, style: .plain, target: nil, action: nil)
         
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
