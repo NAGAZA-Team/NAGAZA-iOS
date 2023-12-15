@@ -139,13 +139,13 @@ final class HomeViewController: NagazaBaseViewController {
         super.navigationSetting()
         
         let mapButtonItem = UIBarButtonItem(
-            image: NagazaAsset.Images.map.image,
+            image: NagazaAsset.Images.icMapGray.image,
             style: .plain,
             target: nil,
             action: nil
         )
         let searchButtonItem = UIBarButtonItem(
-            image: NagazaAsset.Images.search.image,
+            image: NagazaAsset.Images.icSearchGray.image,
             style: .plain,
             target: nil,
             action: nil
@@ -262,7 +262,7 @@ final class HomeViewController: NagazaBaseViewController {
             NagazaAsset.Colors.black.color
         let buttonColor = isDarkMode ? 
             NagazaAsset.Colors.white.color :
-            NagazaAsset.Colors.selected.color
+            NagazaAsset.Colors.gray3.color
         
         navBarAppearance.titleTextAttributes = [
             .font: UIFont.ngaH3M,

@@ -20,11 +20,11 @@ final class TabBarButton: UIButton {
         configurationUpdateHandler = { button in
             switch self.state {
             case .selected:
-                button.configuration?.imageColorTransformer = UIConfigurationColorTransformer({ _ in NagazaAsset.Colors.orange.color })
-                button.configuration?.attributedTitle?.foregroundColor = NagazaAsset.Colors.selected.color
+                button.configuration?.imageColorTransformer = UIConfigurationColorTransformer({ _ in NagazaAsset.Colors.mainOrange.color })
+                button.configuration?.attributedTitle?.foregroundColor = NagazaAsset.Colors.mainOrange.color
             default:
-                button.configuration?.imageColorTransformer = UIConfigurationColorTransformer({ _ in NagazaAsset.Colors.normal.color })
-                button.configuration?.attributedTitle?.foregroundColor = NagazaAsset.Colors.normal.color
+                button.configuration?.imageColorTransformer = UIConfigurationColorTransformer({ _ in NagazaAsset.Colors.gray5.color })
+                button.configuration?.attributedTitle?.foregroundColor = NagazaAsset.Colors.gray5.color
             }
         }
     }
