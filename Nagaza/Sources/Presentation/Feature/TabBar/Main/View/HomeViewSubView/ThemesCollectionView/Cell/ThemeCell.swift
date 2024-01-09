@@ -13,7 +13,7 @@ import RxSwift
 final class ThemeCell: UICollectionViewCell {
     static let identifier = String(describing: ThemeCell.self)
     
-    private var viewModel: ThemeCollectionItemViewModel!
+    private var model: Room?
     
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
@@ -25,6 +25,7 @@ final class ThemeCell: UICollectionViewCell {
         imageView.layer.shadowColor = UIColor.black.cgColor
         imageView.layer.shadowRadius = 5
         imageView.layer.shadowOffset = CGSize(width: 4, height: 4)
+        imageView.clipsToBounds = true
         
         return imageView
     }()
@@ -120,6 +121,14 @@ final class ThemeCell: UICollectionViewCell {
         makeUI()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.titleLabel.text = nil
+        self.branchLabel.text = nil
+        self.ratedLabel.text = nil
+        self.posterImageView.image = nil
+    }
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
@@ -149,20 +158,18 @@ final class ThemeCell: UICollectionViewCell {
         ])
         
         posterImageView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalTo(contentView.snp.leading).inset(1)
-            $0.trailing.equalTo(contentView.snp.trailing).inset(2)
+            $0.top.leading.trailing.equalToSuperview()
             $0.height.equalTo(146)
         }
         
         newIcon.snp.makeConstraints {
-            $0.leading.equalTo(posterImageView.snp.leading).inset(5)
-            $0.bottom.equalTo(posterImageView.snp.bottom).inset(6)
+            $0.leading.equalTo(posterImageView).inset(5)
+            $0.bottom.equalTo(posterImageView).inset(6)
         }
         
         heartButton.snp.makeConstraints {
-            $0.trailing.equalTo(posterImageView.snp.trailing).inset(5)
-            $0.bottom.equalTo(posterImageView.snp.bottom).inset(5)
+            $0.trailing.equalTo(posterImageView).inset(5)
+            $0.bottom.equalTo(posterImageView).inset(5)
         }
         
         textStackView.snp.makeConstraints {
@@ -171,17 +178,19 @@ final class ThemeCell: UICollectionViewCell {
         }
     }
     
-    func fill(with viewModel: ThemeCollectionItemViewModel) {
-        self.viewModel = viewModel
+    func bind(with model: Room) {
+        self.model = model
         
         updateInfo()
         updatePosterImage()
     }
     
     private func updateInfo() {
-        self.titleLabel.text = viewModel.title
-        self.branchLabel.text = viewModel.branch
-        self.ratedLabel.text = String(viewModel.rated)
+        guard let model = model else { return }
+        self.titleLabel.text = model.name
+        self.branchLabel.text = model.area
+        self.ratedLabel.text = String(model.total)
+        self.posterImageView.loadImage(from: model.imageUrlString)
     }
     
     private func updatePosterImage() {
