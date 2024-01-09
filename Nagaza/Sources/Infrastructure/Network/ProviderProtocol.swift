@@ -47,6 +47,7 @@ extension ProviderProtocol {
     func request<D: Decodable>(type: D.Type, target: Target) -> Single<D> {
         provider.rx.request(target)
             .map(type)
+            .debug() // TODO: API 나오기 전 임시
     }
     
     func requestWithNoContent(target: Target) -> Single<Void> {
