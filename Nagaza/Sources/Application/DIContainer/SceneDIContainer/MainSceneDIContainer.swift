@@ -1,5 +1,5 @@
 //
-//  MainSceneDIContainer.swift
+//  HomeSceneDIContainer.swift
 //  Nagaza
 //
 //  Created by 전성훈 on 2023/11/07.
@@ -7,17 +7,25 @@
 
 import UIKit
 
-final class MainSceneDIContainer: HomeFlowCoordinaterDependencies {
+final class HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
     
-    func makeMainViewController(actions: MainViewModelActions) -> HomeViewController {
-        HomeViewController.create(with: makeMainViewModel(actions: actions))
+    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController {
+        return HomeViewController.create(with: makeHomeViewModel(actions: actions))
     }
     
-    private func makeMainViewModel(actions: MainViewModelActions) -> HomeViewModel {
-        HomeViewModel(actions: actions)
+    private func makeHomeUseCase() -> HomeRepositoryInterface {
+        return HomeRepository(
+            isStub: true,
+            sampleStatusCode: 200,
+            customEndpointClosure: nil
+        )
     }
     
-    func makeMainFlowCoordinator(
+    private func makeHomeViewModel(actions: HomeViewModelActions) -> HomeViewModel {
+        return HomeViewModel(homeUseCase: makeHomeUseCase(), actions: actions)
+    }
+    
+    func makeHomeFlowCoordinator(
         navigationController: UINavigationController
     ) -> HomeFlowCoordinator {
         HomeFlowCoordinator(
