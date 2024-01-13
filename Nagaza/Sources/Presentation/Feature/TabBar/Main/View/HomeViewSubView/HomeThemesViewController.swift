@@ -13,36 +13,14 @@ import RxSwift
 final class HomeThemesViewController: NagazaBaseViewController {
     private var viewModel: HomeViewModel!
     
-    private var themesCollectionViewController: HomeThemesCollectionViewController?
-
-    private lazy var themeLabel: UILabel = {
-        let label = UILabel()
-
-        label.font = .ngaSubTitle2M
-        // TODO: 변경 예정
-        label.textColor = .black
-        label.text = "테스트입니다."
-        
-        return label
-    }()
-    
-    private lazy var pushButton: UIButton = {
-        let btn = UIButton()
-        
-        // TODO: 변경 예정
-        btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        
-        return btn
+    lazy var themesCollectionViewController: HomeThemesCollectionViewController = {
+        let vc = HomeThemesCollectionViewController.create(with: viewModel)
+        return vc
     }()
     
     private lazy var collectionViewContainer: UIView = {
         let view = UIView()
-        
-        themesCollectionViewController =  HomeThemesCollectionViewController.create(with: viewModel)
-        
-        if let themes = themesCollectionViewController {
-            add(child: themes, container: view)
-        }
+        add(child: themesCollectionViewController, container: view)
         
         return view
     }()
@@ -54,29 +32,10 @@ final class HomeThemesViewController: NagazaBaseViewController {
         return vc
     }
     
-    override func adjustLayoutAfterRendering() {
-        collectionViewContainer.snp.makeConstraints {
-            $0.top.equalTo(themeLabel.snp.bottom).offset(13)
-            $0.leading.equalTo(view.snp.leading)
-            $0.bottom.equalTo(view.snp.bottom)
-            $0.trailing.equalTo(view.snp.trailing)
-        }
-    }
     override func makeUI() {
-        view.addSubviews([
-            themeLabel,
-            pushButton,
-            collectionViewContainer
-        ])
-        
-        themeLabel.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top).inset(13)
-            $0.leading.equalTo(view.snp.leading)
-        }
-        
-        pushButton.snp.makeConstraints {
-            $0.centerY.equalTo(themeLabel.snp.centerY)
-            $0.trailing.equalTo(view.snp.trailing).inset(16)
+        view.addSubview(collectionViewContainer)
+        collectionViewContainer.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     

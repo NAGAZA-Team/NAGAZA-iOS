@@ -36,40 +36,10 @@ final class HomeThemesCollectionViewController: NagazaBaseCollectionViewControll
     
     override func makeUI() {
         setupCollectionView()
-        setupCollectionViewLayout()
-
     }
     
     private func setupCollectionView() {
-        collectionView.delegate = nil
-        collectionView.dataSource = nil
-        collectionView.showsHorizontalScrollIndicator = false
-        
-        collectionView.register(
-            ThemeCell.self,
-            forCellWithReuseIdentifier: ThemeCell.identifier
-        )
-        
-        items.bind(to: collectionView.rx.items(
-            cellIdentifier: ThemeCell.identifier,
-            cellType: ThemeCell.self)
-        ) { (row, element, cell) in
-            
-            cell.fill(with: element)
-        }.disposed(by: disposeBag)
-    }
-    
-    private func setupCollectionViewLayout() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        
-        let spacing: CGFloat = 16
-        
-        layout.itemSize = CGSize(width: 103, height: 207)
-        layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
-        
-        collectionView.setCollectionViewLayout(layout, animated: false)
+        collectionView.isScrollEnabled = false
     }
     
     override func bindViewModel() {

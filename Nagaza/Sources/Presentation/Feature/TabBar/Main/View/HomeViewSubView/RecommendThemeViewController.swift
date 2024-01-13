@@ -14,8 +14,8 @@ import SnapKit
 final class RecommendThemeViewController: NagazaBaseViewController {
     private var viewModel: HomeViewModel!
     
-    let recommandThemeBackgroundTopGradientView = UIView()
-    let recommandThemeBackgroundBottomGradientView = UIView()
+    lazy var recommandThemeBackgroundTopGradientView = UIView()
+    lazy var recommandThemeBackgroundBottomGradientView = UIView()
     
     private lazy var heartIcon: UIButton = {
         let btn = UIButton()
