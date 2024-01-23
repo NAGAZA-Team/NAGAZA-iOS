@@ -17,7 +17,7 @@ class NagazaBaseView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// Set up configuration of view and add subviews
+    /// Set up constraints of view and add subviews
     func makeUI() { }
 }
 
