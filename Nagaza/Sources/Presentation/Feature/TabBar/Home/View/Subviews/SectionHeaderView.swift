@@ -44,8 +44,7 @@ final class SectionHeaderView: UICollectionReusableView {
         ])
         
         themeLabel.snp.makeConstraints {
-            $0.leading.equalTo(self).inset(16)
-            $0.centerY.equalTo(self)
+            $0.leading.centerY.equalTo(self)
         }
         
         pushButton.snp.makeConstraints {
