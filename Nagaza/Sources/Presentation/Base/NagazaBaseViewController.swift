@@ -45,12 +45,12 @@ class NagazaBaseViewController: UIViewController {
         navigationItem.scrollEdgeAppearance = navBarAppearance
     }
     
-    /// call in super viewDidLoad
+    /// Set up constraints of view and add subviews
     func makeUI() { }
     
-    /// call in super viewDidLayoutSubviews
+    /// Adjust layout after rendering
     func adjustLayoutAfterRendering() { }
     
-    /// call in super viewDidLoad
+    /// Data binding between view and model
     func bindViewModel() { }
 }

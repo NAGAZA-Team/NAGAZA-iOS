@@ -39,18 +39,11 @@ enum HomeSectionType: Int {
     }
 }
 
-struct ElementKind {
-    static let badge = "badge-element-kind"
-    static let background = "background-element-kind"
-    static let sectionHeader = "section-header-element-kind"
-    static let sectionFooter = "section-footer-element-kind"
-    static let layoutHeader = "layout-header-element-kind"
-    static let layoutFooter = "layout-footer-element-kind"
-}
-
 final class HomeViewController: NagazaBaseViewController {
+    private let themesViewEstimatedHeight: CGFloat = 260
+    private let themesViewGroupCount = 7
+    
     private var viewModel: HomeViewModel!
-    private var collectionViewEstimatedHeight: CGFloat = 260
     
     private var dataSource: UICollectionViewDiffableDataSource<HomeSectionType, Room>? = nil
     
@@ -59,8 +52,8 @@ final class HomeViewController: NagazaBaseViewController {
         return vc
     }()
     
-    private lazy var themesViewController: HomeThemesViewController = {
-        let vc = HomeThemesViewController.create(with: viewModel)
+    private lazy var themesViewController: HomeThemesCollectionViewController = {
+        let vc = HomeThemesCollectionViewController.create(with: viewModel)
         return vc
     }()
     
@@ -92,7 +85,6 @@ final class HomeViewController: NagazaBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureDataSource()
-        self.configureCollectionView()
     }
     
     override func navigationSetting() {
@@ -131,7 +123,7 @@ final class HomeViewController: NagazaBaseViewController {
         themesContainer.snp.makeConstraints {
             $0.top.equalTo(recommendedContainer.snp.bottom)
             $0.leading.trailing.width.bottom.equalTo(scrollView)
-            $0.height.equalTo(collectionViewEstimatedHeight * 7)
+            $0.height.equalTo(themesViewEstimatedHeight * CGFloat(themesViewGroupCount))
         }
     }
     
@@ -147,8 +139,7 @@ final class HomeViewController: NagazaBaseViewController {
         let output = viewModel.transform(input: input)
         
         output.roomsList
-            .drive(with: self, onNext: { [weak self] this, roomslist in
-                guard let self = self else { return }
+            .drive(with: self, onNext: { this, roomslist in
                 var snapshot = NSDiffableDataSourceSnapshot<HomeSectionType, Room>()
                 snapshot.appendSections([.horror, .fantasy, .suspense, .comic, .drama, .sf, .rRtated])
                 for (index, list) in roomslist.enumerated() {
@@ -169,12 +160,6 @@ final class HomeViewController: NagazaBaseViewController {
                     case .rRtated:
                         snapshot.appendItems(list, toSection: .rRtated)
                     }
-                    
-                    let collectionView = self.themesViewController.themesCollectionViewController.collectionView
-                    collectionView?.collectionViewLayout = getLayout(
-                        groupCount: roomslist.count,
-                        listCount: list.count
-                    )
                     this.dataSource?.apply(snapshot)
                 }
             })
@@ -238,78 +223,16 @@ extension HomeViewController {
             supplementaryView.themeLabel.text = sectionType.title
         }
         
-        dataSource = UICollectionViewDiffableDataSource<HomeSectionType, Room>(collectionView: themesViewController.themesCollectionViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<HomeSectionType, Room>(collectionView: themesViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             return collectionView.dequeueConfiguredReusableCell(using: roomCellRegistraition, for: indexPath, item: itemIdentifier)
         })
         
         dataSource?.supplementaryViewProvider = { (view, kind, index) in
-            return self.themesViewController.themesCollectionViewController.collectionView.dequeueConfiguredReusableSupplementary(
+            return self.themesViewController.collectionView.dequeueConfiguredReusableSupplementary(
                 using: headerRegistration,
                 for: index
             )
         }
-    }
-    
-    private func configureCollectionView() {
-        let collectionView = self.themesViewController.themesCollectionViewController.collectionView
-        collectionView?.dataSource = dataSource
-    }
-    
-    private func getLayout(groupCount: Int, listCount: Int) -> UICollectionViewCompositionalLayout {
-        
-        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex: Int,
-                                                                        layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .estimated(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 16,
-                bottom: 0,
-                trailing: 0
-            )
-            
-            let totalItemWidth = 100 * listCount
-            let totelSpacingWidth = 24 * 2 + 16 * listCount - 1
-            let collectionViewEstimatedHeight = self?.collectionViewEstimatedHeight ?? 0
-            let sectionHeaderHeight: CGFloat = collectionViewEstimatedHeight == 0 ? 0 : 45
-            
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .absolute(CGFloat(totalItemWidth + totelSpacingWidth)),
-                heightDimension: .absolute(collectionViewEstimatedHeight - sectionHeaderHeight)
-            )
-            
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: groupSize,
-                subitem: item,
-                count: listCount
-            )
-            
-            let headerFooterSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(45))
-            
-            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerFooterSize,
-                elementKind: ElementKind.sectionHeader,
-                alignment: .top
-            )
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 8,
-                bottom: 0,
-                trailing: 24
-            )
-            section.boundarySupplementaryItems = [sectionHeader]
-            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-            return section
-        }
-        return layout
     }
 }
 
