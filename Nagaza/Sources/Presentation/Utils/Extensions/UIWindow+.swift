@@ -17,6 +17,6 @@ extension UIWindow {
     }
     
     static var safeAreaInsetBottom: CGFloat {
-        return (UIWindow.keyWindow?.safeAreaInsets.bottom ?? 0)
+        return UIWindow.keyWindow?.safeAreaInsets.bottom ?? 0
     }
 }

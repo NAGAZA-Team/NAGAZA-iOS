@@ -26,10 +26,10 @@ enum TabBarType: CaseIterable {
     
     var icon: UIImage {
         switch self {
-        case .home: return NagazaAsset.Images.home.image.withRenderingMode(.alwaysTemplate)
-        case .map: return NagazaAsset.Images.pin.image.withRenderingMode(.alwaysTemplate)
-        case .review: return NagazaAsset.Images.pen.image.withRenderingMode(.alwaysTemplate)
-        case .myPage: return NagazaAsset.Images.setting.image.withRenderingMode(.alwaysTemplate)
+        case .home: return NagazaAsset.Images.icHomeGray.image.withRenderingMode(.alwaysTemplate)
+        case .map: return NagazaAsset.Images.icMapGray.image.withRenderingMode(.alwaysTemplate)
+        case .review: return NagazaAsset.Images.icPenGray.image.withRenderingMode(.alwaysTemplate)
+        case .myPage: return NagazaAsset.Images.icPersonGray.image.withRenderingMode(.alwaysTemplate)
         }
     }
 }
@@ -89,7 +89,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
     private func updateTabBarHeight() {
         tabBarView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(NagazaSize.tabBarHeight)
+            $0.height.equalTo(CGFloat.tabBarHeight)
         }
     }
     
@@ -107,7 +107,7 @@ final class NagazaTabBarController: NagazaBaseViewController {
             button.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(buttonWidth * CGFloat(index))
                 $0.width.equalTo(buttonWidth)
-                $0.height.equalTo(NagazaSize.tabBarHeight)
+                $0.height.equalTo(CGFloat.tabBarHeight)
             }
         }
     }

@@ -45,8 +45,6 @@ final class MapView: UIView {
     }
     
     func setup() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        
         self.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()

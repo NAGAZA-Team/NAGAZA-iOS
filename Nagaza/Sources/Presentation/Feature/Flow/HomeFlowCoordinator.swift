@@ -1,5 +1,5 @@
 //
-//  MainViewFlowCoordinator.swift
+//  HomeFlowCoordinaterDependencies.swift
 //  Nagaza
 //
 //  Created by 전성훈 on 2023/10/20.
@@ -8,7 +8,7 @@
 import UIKit
 
 protocol HomeFlowCoordinaterDependencies {
-    func makeMainViewController(actions: MainViewModelActions) -> HomeViewController
+    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
 }
 
 final class HomeFlowCoordinator: Coordinator {
@@ -23,7 +23,7 @@ final class HomeFlowCoordinator: Coordinator {
     
     private let dependencies: HomeFlowCoordinaterDependencies!
     
-    private weak var mainVC: HomeViewController?
+    private weak var homeVC: HomeViewController?
     
     init(
         navigationController: UINavigationController,
@@ -34,13 +34,13 @@ final class HomeFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = MainViewModelActions(logoutTest: logoutTest)
-        let vc = dependencies.makeMainViewController(actions: actions)
+        let actions = HomeViewModelActions(logoutTest: logoutTest)
+        let vc = dependencies.makeHomeViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
-        mainVC = vc
+        homeVC = vc
     }
     
     private func logoutTest() {

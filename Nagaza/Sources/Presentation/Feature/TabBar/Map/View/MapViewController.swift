@@ -19,6 +19,26 @@ final class MapViewController: NagazaBaseViewController {
         return vc
     }
     
+    override func loadView() {
+        view = mapView
+    }
+    
+    override func makeUI() {
+        
+    }
+    
+    override func navigationSetting() {
+        super.navigationSetting()
+        navigationItem.title = "맵"
+        navigationController?.navigationBar.backgroundColor = .black
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image, style: .plain, target: nil, action: nil)
+        
+        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icSearchGray.image, style: .plain, target: nil, action: nil)
+        
+        navigationItem.leftBarButtonItem = mapButtonItem
+        navigationItem.rightBarButtonItem = searchButtonItem
+    }
+    
 //    init(viewModel: MapViewModel) {
 //        self.viewModel = viewModel
 //        super.init(nibName: nil, bundle: nil)

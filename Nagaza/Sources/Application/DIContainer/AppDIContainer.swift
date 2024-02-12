@@ -14,8 +14,8 @@ final class AppDIContainer {
         return LoginSceneDIContainer()
     }
     
-    func makeMainSceneDIContainer() -> MainSceneDIContainer {
-        return MainSceneDIContainer()
+    func makeHomeSceneDIContainer() -> HomeSceneDIContainer {
+        return HomeSceneDIContainer()
     }
     
     func makeMapSceneDIContainer() -> MapSceneDIContainer {

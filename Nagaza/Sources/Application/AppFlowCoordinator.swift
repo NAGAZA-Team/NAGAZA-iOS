@@ -49,8 +49,8 @@ extension AppFlowCoordinator {
             tabBarController: tabBarController
         )
         
-        let mainSceneDIContaier = appDIContainer.makeMainSceneDIContainer()
-        let mainFlow = mainSceneDIContaier.makeMainFlowCoordinator(
+        let HomeSceneDIContaier = appDIContainer.makeHomeSceneDIContainer()
+        let HomeFlow = HomeSceneDIContaier.makeHomeFlowCoordinator(
             navigationController: UINavigationController()
         )
         
@@ -70,7 +70,7 @@ extension AppFlowCoordinator {
         )
       
         tabBarFlowCoordinator.setupTabs(with: [
-            mainFlow,
+            HomeFlow,
             mapFlow,
             reviewFlow,
             myPageFlow
