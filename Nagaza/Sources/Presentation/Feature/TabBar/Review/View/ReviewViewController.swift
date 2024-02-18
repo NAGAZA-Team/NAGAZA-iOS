@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class ReviewViewController: UIViewController {
+import SnapKit
+
+final class ReviewViewController: NagazaBaseViewController {
     
     private var viewModel: ReviewViewModel!
     
@@ -18,19 +20,37 @@ final class ReviewViewController: UIViewController {
         return vc
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .green
+    private lazy var tabBarView: FilterTopView = {
+        let vc = FilterTopView.create(with: viewModel)
+        return vc
+    }()
+    
+    private lazy var tabBarContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        add(child: tabBarView, container: view)
+        return view
+    }()
+    
+    override func makeUI() {
+        view.addSubview(tabBarContainer)
+        
+        tabBarContainer.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.left.equalTo(view.snp.left)
+            make.right.equalTo(view.snp.right)
+            make.height.equalTo(100)
+        }
     }
 }
-
-#if DEBUG
-import SwiftUI
-
-struct ReviewViewControllerPreview: PreviewProvider {
-    static var previews: some View {
-        let viewController = ReviewViewController()
-        return viewController.toPreView()
-    }
-}
-#endif
+//
+//#if DEBUG
+//import SwiftUI
+//
+//struct ReviewViewControllerPreview: PreviewProvider {
+//    static var previews: some View {
+//        let viewController = ReviewViewController()
+//        return viewController.toPreView()
+//    }
+//}
+//#endif
