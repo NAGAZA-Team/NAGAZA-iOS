@@ -7,53 +7,30 @@
 
 import UIKit
 import SnapKit
+import MapKit
 
-final class MapView: UIView {
-    
-    let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.backgroundColor = .orange
-        return stackView
+final class MapView: NagazaBaseView {
+    lazy var mapView: MKMapView = {
+        let mapView = MKMapView()
+        if #available(iOS 16.0, *) {
+            mapView.preferredConfiguration = MKStandardMapConfiguration()
+        } else {
+            
+        }
+//        mapView.region = .init(center: .init(latitude: 37.564214, longitude: 127.001699), span: .init())
+        mapView.showsUserLocation = true
+        return mapView
     }()
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "우아아아아"
-        return label
-    }()
-    
-    let subLabel: UILabel = {
-        let label = UILabel()
-        label.text = "우아아아아"
-        return label
-    }()
-    
-    init() {
-        super.init(frame: .zero)
-        setup()
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setup() {
-        self.addSubview(stackView)
-        stackView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
+    override func makeUI() {
+        self.addSubview(mapView)
+        mapView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        stackView.addArrangedSubviews([
-            titleLabel, subLabel
-        ])
+        print(mapView.userLocation.location,
+              mapView.userLocation.coordinate,
+              mapView.userLocation.isUpdating)
     }
 }
 
