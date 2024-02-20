@@ -22,20 +22,13 @@ final class MapViewController: NagazaBaseViewController {
     
     override func loadView() {
         super.loadView()
+        navigationController?.navigationBar.isHidden = true
         view = mapView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDelegate()
-        
-//        let locationManager = CLLocationManager()
-//        
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.distanceFilter = kCLDistanceFilterNone
-//        locationManager.startUpdatingLocation()
-//        mapView.mapView.showsUserLocation = true
         locationManagerDidChangeAuthorization()
     }
     
@@ -59,6 +52,7 @@ extension MapViewController {
     
     private func locationManagerDidChangeAuthorization() {
         let manager = CLLocationManager()
+        
         switch manager.authorizationStatus {
         case .authorizedWhenInUse:  // Location services are available.
 //            enableLocationFeatures()
@@ -72,7 +66,6 @@ extension MapViewController {
             
         case .notDetermined:        // Authorization not determined yet.
             manager.requestWhenInUseAuthorization()
-        
             print("notDetermined")
             break
             
@@ -85,8 +78,8 @@ extension MapViewController {
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         let region = MKCoordinateRegion(center: userLocation.coordinate,
-                                        latitudinalMeters: 1000,
-                                        longitudinalMeters: 1000)
+                                        latitudinalMeters: 500,
+                                        longitudinalMeters: 500)
         mapView.region = region
     }
 }
