@@ -42,24 +42,22 @@ enum Region: Int {
     
     var cities: [String] {
         switch self {
+        case .nationwide:
+            return ["전국 전체"]
         case .seoul:
-            return ["강남", "건대", "홍대", "신촌", "대학로", "강북", "신림", "기타"]
+            return ["서울 전체", "강남", "건대", "홍대", "신촌", "대학로", "강북", "신림", "기타"]
         case .gyeonggi:
-            return ["인천", "부천", "일산", "수원", "안양", "기타"]
+            return ["경기도 전체", "인천", "부천", "일산", "수원", "안양", "기타"]
         case .chungcheong:
-            return ["대전", "천안", "청주", "기타"]
+            return ["충남 전체", "대전", "천안", "청주", "기타"]
         case .busanUlsanGyeongnam:
-            return ["대구", "부산", "기타"]
+            return ["경상도 전체", "대구", "부산", "기타"]
         case .jeolla:
-            return ["광주", "전주", "기타"]
+            return ["전라도 전체", "광주", "전주", "기타"]
         case .gangwon:
-            return ["강원"]
+            return ["강원 전체", "강원"]
         case .jeju:
-            return ["제주"]
-        default:
-            return []
-        }
-        
+            return ["제주 전체", "제주"]
     }
     
 //    enum Seoul: String {
