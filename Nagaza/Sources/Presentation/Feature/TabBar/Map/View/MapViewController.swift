@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 final class MapViewController: NagazaBaseViewController {
     let mapView = MapView()
@@ -20,34 +21,23 @@ final class MapViewController: NagazaBaseViewController {
     }
     
     override func loadView() {
+        super.loadView()
         view = mapView
     }
     
-    override func makeUI() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupDelegate()
         
+//        let locationManager = CLLocationManager()
+//        
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.distanceFilter = kCLDistanceFilterNone
+//        locationManager.startUpdatingLocation()
+//        mapView.mapView.showsUserLocation = true
+        locationManagerDidChangeAuthorization()
     }
-    
-    override func navigationSetting() {
-        super.navigationSetting()
-        navigationItem.title = "맵"
-        navigationController?.navigationBar.backgroundColor = .black
-        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image, style: .plain, target: nil, action: nil)
-        
-        let searchButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icSearchGray.image, style: .plain, target: nil, action: nil)
-        
-        navigationItem.leftBarButtonItem = mapButtonItem
-        navigationItem.rightBarButtonItem = searchButtonItem
-    }
-    
-//    init(viewModel: MapViewModel) {
-//        self.viewModel = viewModel
-//        super.init(nibName: nil, bundle: nil)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     
     override func bindViewModel() {
         let viewWillAppearTrigger = self.rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
@@ -59,6 +49,45 @@ final class MapViewController: NagazaBaseViewController {
         output.maps
             .drive()
             .disposed(by: disposeBag)
+    }
+}
+
+extension MapViewController {
+    private func setupDelegate() {
+        mapView.mapView.delegate = self
+    }
+    
+    private func locationManagerDidChangeAuthorization() {
+        let manager = CLLocationManager()
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:  // Location services are available.
+//            enableLocationFeatures()
+            print("authorizedWhenInUse")
+            break
+            
+        case .restricted, .denied:  // Location services currently unavailable.
+//            disableLocationFeatures()
+            print("restricted or denied")
+            break
+            
+        case .notDetermined:        // Authorization not determined yet.
+            manager.requestWhenInUseAuthorization()
+        
+            print("notDetermined")
+            break
+            
+        default:
+            break
+        }
+    }
+}
+
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        let region = MKCoordinateRegion(center: userLocation.coordinate,
+                                        latitudinalMeters: 1000,
+                                        longitudinalMeters: 1000)
+        mapView.region = region
     }
 }
 
