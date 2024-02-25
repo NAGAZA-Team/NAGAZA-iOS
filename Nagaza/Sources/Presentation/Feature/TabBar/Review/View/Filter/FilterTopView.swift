@@ -10,15 +10,7 @@ import UIKit
 import SnapKit
 
 final class FilterTopView: NagazaBaseView {
-//
-//    private var viewModel: ReviewViewModel!
-//    
-//    static func create(with viewModel: ReviewViewModel) -> FilterTopView {
-//        let vc = FilterTopView()
-//        vc.viewModel = viewModel
-//        return vc
-//    }
-//    
+    
     private var filterTitleCollectionView: FilterTitleCollectionView = {
         let view = FilterTitleCollectionView()
         return view

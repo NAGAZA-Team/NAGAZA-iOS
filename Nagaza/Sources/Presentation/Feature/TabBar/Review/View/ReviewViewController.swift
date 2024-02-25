@@ -19,19 +19,47 @@ final class ReviewViewController: NagazaBaseViewController {
         return vc
     }
     
-    private var tabBarView = FilterTopView()
+    private let tabBarView = FilterTopView()
+    private let reviewTableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .clear
+        tableView.register(ReviewCell.self, forCellReuseIdentifier: "ReviewCell")
+        return tableView
+    }()
     
     override func makeUI() {
-        tabBarView.backgroundColor = .red
-        view.addSubview(tabBarView)
+        reviewTableView.delegate = self
+        reviewTableView.dataSource = self
+        
+        view.addSubviews([tabBarView, reviewTableView])
         
         tabBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.equalTo(view.snp.left)
             make.right.equalTo(view.snp.right)
-            make.height.equalTo(100)
+        }
+        
+        reviewTableView.snp.makeConstraints { make in
+            make.top.equalTo(tabBarView.snp.bottom)
+            make.horizontalEdges.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
+}
+
+extension ReviewViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = reviewTableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as? ReviewCell else { return UITableViewCell() }
+        print("!!?")
+        cell.setCollectionViewHeight()
+        return cell
+    }
+    
+    
 }
 //
 //#if DEBUG
