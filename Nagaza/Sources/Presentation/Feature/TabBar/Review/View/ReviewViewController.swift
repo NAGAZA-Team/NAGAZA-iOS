@@ -16,26 +16,16 @@ final class ReviewViewController: NagazaBaseViewController {
     static func create(with viewModel: ReviewViewModel) -> ReviewViewController {
         let vc = ReviewViewController()
         vc.viewModel = viewModel
-        
         return vc
     }
     
-    private lazy var tabBarView: FilterTopView = {
-        let vc = FilterTopView.create(with: viewModel)
-        return vc
-    }()
-    
-    private lazy var tabBarContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        add(child: tabBarView, container: view)
-        return view
-    }()
+    private var tabBarView = FilterTopView()
     
     override func makeUI() {
-        view.addSubview(tabBarContainer)
+        tabBarView.backgroundColor = .red
+        view.addSubview(tabBarView)
         
-        tabBarContainer.snp.makeConstraints { make in
+        tabBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.equalTo(view.snp.left)
             make.right.equalTo(view.snp.right)

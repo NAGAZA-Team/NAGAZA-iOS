@@ -9,16 +9,16 @@ import UIKit
 
 import SnapKit
 
-final class FilterTopView: NagazaBaseViewController {
-    
-    private var viewModel: ReviewViewModel!
-    
-    static func create(with viewModel: ReviewViewModel) -> FilterTopView {
-        let vc = FilterTopView()
-        vc.viewModel = viewModel
-        return vc
-    }
-    
+final class FilterTopView: NagazaBaseView {
+//
+//    private var viewModel: ReviewViewModel!
+//    
+//    static func create(with viewModel: ReviewViewModel) -> FilterTopView {
+//        let vc = FilterTopView()
+//        vc.viewModel = viewModel
+//        return vc
+//    }
+//    
     private var filterTitleCollectionView: FilterTitleCollectionView = {
         let view = FilterTitleCollectionView()
         return view
@@ -82,7 +82,7 @@ final class FilterTopView: NagazaBaseViewController {
     }()
     
     override func makeUI() {
-        view.addSubview(stackView)
+        addSubview(stackView)
         stackView.addArrangedSubviews([filterTitleCollectionView,
                                        filterContentsView,
                                        buttonStackView
@@ -92,10 +92,7 @@ final class FilterTopView: NagazaBaseViewController {
         applyButton.addSubview(applyButtonLabel)
         
         stackView.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top)
-            make.left.equalTo(view.snp.left)
-            make.right.equalTo(view.snp.right)
-            make.bottom.equalTo(view.snp.bottom)
+            make.edges.equalToSuperview()
         }
         
         filterTitleCollectionView.snp.makeConstraints { make in
@@ -112,15 +109,13 @@ final class FilterTopView: NagazaBaseViewController {
         
         resetButtonLabel.snp.makeConstraints { make in
             make.top.equalTo(resetButton.snp.top).offset(12)
-            make.left.equalTo(resetButton.snp.left)
-            make.right.equalTo(resetButton.snp.right)
+            make.horizontalEdges.equalTo(resetButton)
             make.bottom.equalTo(resetButton.snp.bottom).offset(-12)
         }
         
         applyButtonLabel.snp.makeConstraints { make in
             make.top.equalTo(applyButton.snp.top).offset(12)
-            make.left.equalTo(applyButton.snp.left)
-            make.right.equalTo(applyButton.snp.right)
+            make.horizontalEdges.equalTo(applyButton)
             make.bottom.equalTo(applyButton.snp.bottom).offset(-12)
         }
     }
