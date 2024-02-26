@@ -14,7 +14,7 @@ enum Region: Int {
     case seoul
     case gyeonggi
     case chungcheong
-    case busanUlsanGyeongnam
+    case gyeongsang
     case jeolla
     case gangwon
     case jeju
@@ -29,7 +29,7 @@ enum Region: Int {
             return "경기도"
         case .chungcheong:
             return "충청도"
-        case .busanUlsanGyeongnam:
+        case .gyeongsang:
             return "경상도"
         case .jeolla:
             return "전라도"
@@ -50,70 +50,14 @@ enum Region: Int {
             return ["경기도 전체", "인천", "부천", "일산", "수원", "안양", "기타"]
         case .chungcheong:
             return ["충남 전체", "대전", "천안", "청주", "기타"]
-        case .busanUlsanGyeongnam:
+        case .gyeongsang:
             return ["경상도 전체", "대구", "부산", "기타"]
         case .jeolla:
             return ["전라도 전체", "광주", "전주", "기타"]
         case .gangwon:
-            return ["강원 전체", "강원"]
+            return ["강원 전체"]
         case .jeju:
-            return ["제주 전체", "제주"]
+            return ["제주 전체"]
         }
-        
-        //    enum Seoul: String {
-        //        case gangnam = "강남"
-        //        case kondae = "건대"
-        //        case hongdae = "홍대"
-        //        case sinchon = "신촌"
-        //        case daehakro = "대학로"
-        //        case gangbuk = "강북"
-        //        case sillim = "신림"
-        //        case others = "기타"
-        //    }
-        //
-        //    enum Gyenggi: String {
-        //        case incheon = "인천"
-        //        case bucheon = "부천"
-        //        case ilsand = "일산"
-        //        case suwon = "수원"
-        //        case anyang = "안양"
-        //        case others = "기타"
-        //    }
-        //
-        //    enum Chungcheong: String {
-        //        case daejeon = "대전"
-        //        case cheonan = "천안"
-        //        case cheongju = "청주"
-        //        case others = "기타"
-        //    }
-        //
-        //    enum Gyeongsang: String {
-        //          case daegu = "대구"
-        //          case busan = "부산"
-        //          case others = "기타"
-        //      }
-        //
-        //    enum Jeolla: String {
-        //        case gwangju = "광주"
-        //        case jeonju = "전주"
-        //        case others = "기타"
-        //    }
-        //
-        //    enum Gangwon: String {
-        //        case gangwon = "강원"
-        //    }
-        //
-        //    enum Jeju: String {
-        //        case jeju = "제주"
-        //    }
-        
-        //    /// 단순 Log - 삭제 예정
-        //    static func fullPath(main: Region, sub: String?) -> String {
-        //        if let subRegin = sub {
-        //            return "\(main.rawValue) -> \(subRegin)"
-        //        } else {
-        //            return main.rawValue
-        //        }
-        //    }
     }
 }
