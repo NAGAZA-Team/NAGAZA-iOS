@@ -196,6 +196,14 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        afterViewLayout = true
+    }
+    
+    private var afterViewLayout: Bool = true
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -203,6 +211,11 @@ final class ReviewCell: UITableViewCell {
                                                                      left: 0,
                                                                      bottom: 0,
                                                                      right: 0))
+        
+        if afterViewLayout {
+            setCollectionViewHeight()
+            afterViewLayout.toggle()
+        }
     }
     
     override init(style: UITableViewCell.CellStyle,
@@ -358,6 +371,8 @@ final class ReviewCell: UITableViewCell {
         setCollectionViewHeight()
     }
     
+    
+    
     var dataList: [String] = ["성공", "힌트1개", "4명", "난이도 보통", "활동성 보통", "스토리 보통", "장치80%", "장치80%", "장치80%"]
     
     var collectionViewHeight: Constraint!
@@ -395,7 +410,6 @@ final class ReviewCell: UITableViewCell {
         let height = CGFloat(count) * itemHeight + CGFloat((count - 1) * 10)
         
         collectionViewHeight.update(offset: height)
-        contentView.layoutIfNeeded()
     }
 
 }

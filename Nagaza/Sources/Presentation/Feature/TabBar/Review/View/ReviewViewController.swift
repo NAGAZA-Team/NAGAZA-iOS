@@ -36,7 +36,7 @@ final class ReviewViewController: NagazaBaseViewController {
         tabBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.equalTo(view.snp.left)
-            make.right.equalTo(view.snp.right)
+            make.right.equalTo(view.snp.right) 
         }
         
         reviewTableView.snp.makeConstraints { make in
