@@ -17,7 +17,7 @@ struct RegionFilterViewModelActions {
 final class RegionFilterViewModel: ViewModelType {
     private let actions: RegionFilterViewModelActions!
     
-    private var mainRegions: [(Region, Bool)] = [
+    var mainRegions: [(Region, Bool)] = [
         (.nationwide, true),
         (.seoul, false),
         (.gyeonggi, false),
@@ -26,8 +26,11 @@ final class RegionFilterViewModel: ViewModelType {
         (.jeolla, false),
         (.gangwon, false),
         (.jeju, false)
-    ]
-    
+    ] {
+        didSet {
+            print(mainRegions)
+        }
+    }
     struct Input {
         let mainRegionSelection: Driver<Int>
         let subRegionSelection: Driver<String>

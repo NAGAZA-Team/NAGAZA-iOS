@@ -53,6 +53,7 @@ final class MainRegionTableViewCell: UITableViewCell {
     }
     
     func bind(region: String, isSelected: Bool) {
+        print(region, "Test", isSelected)
         regionLabel.text = region
         
         self.backgroundColor = isSelected ? NagazaAsset.Colors.white.color : NagazaAsset.Colors.gray8.color

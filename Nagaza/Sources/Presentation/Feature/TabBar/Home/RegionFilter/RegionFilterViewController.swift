@@ -87,7 +87,7 @@ final class RegionFilterViewController: NagazaBaseViewController {
     
     override func bindViewModel() {
         let mainRegionSelected = mainRegionTableView.rx.itemSelected
-             .map { 
+             .map {
                 return $0.row
              }
              .asDriver(onErrorJustReturn: 0)
@@ -105,12 +105,13 @@ final class RegionFilterViewController: NagazaBaseViewController {
                 cellType: SubRegionTableViewCell.self)
             ) { index, region, cell in
                 cell.bind(region: region, count: "500")
+                
             }
             .disposed(by: disposeBag)
         
         output.reloadMainRegions
             .drive(onNext: { [weak self] _ in
-                self?.mainRegionTableView.reloadData()
+//                self?.mainRegionTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }

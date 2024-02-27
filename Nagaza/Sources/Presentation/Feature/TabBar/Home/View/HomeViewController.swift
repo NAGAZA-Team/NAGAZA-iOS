@@ -93,9 +93,10 @@ final class HomeViewController: NagazaBaseViewController {
         let mapButtonItem = UIBarButtonItem(
             image: NagazaAsset.Images.icMapGray.image,
             style: .plain,
-            target: nil,
-            action: nil
+            target: self,
+            action: #selector(test(_:))
         )
+        
         let searchButtonItem = UIBarButtonItem(
             image: NagazaAsset.Images.icSearchGray.image,
             style: .plain,
@@ -106,6 +107,16 @@ final class HomeViewController: NagazaBaseViewController {
         navigationItem.title = "홈"
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
+    }
+    
+    @objc private func test(_ sender: UIButton) {
+        print("Test")
+        let action = RegionFilterViewModelActions()
+        let viewModel = RegionFilterViewModel(actions: action)
+        
+        let VC = RegionFilterViewController.create(with: viewModel)
+        
+        self.present(VC, animated: true)
     }
     
     override func makeUI() {
