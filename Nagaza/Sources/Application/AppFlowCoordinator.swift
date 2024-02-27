@@ -33,7 +33,10 @@ final class AppFlowCoordinator: Coordinator {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             if let _ = Keychain.shared.get(.accessToken) {
-                self?.showTabBar()
+                // If the user has an access token
+//                self?.showTabBar()
+                // TODO: - delete after implement sns login
+                self?.showLogin()
             } else {
                 self?.showLogin()
             }
