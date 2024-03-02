@@ -8,13 +8,13 @@
 import UIKit
 
 final class RatingView: NagazaBaseView {
-    let starImageView: UIImageView = {
+    private let starImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = NagazaAsset.Images.icStar.image
         return imageView
     }()
     
-    let ratingLabel: UILabel = {
+    private let ratingLabel: UILabel = {
         let label = UILabel()
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 16)
         label.textColor = NagazaAsset.Colors.gray3.color
@@ -27,29 +27,24 @@ final class RatingView: NagazaBaseView {
     }
     
     override func makeUI() {
-        initSubviews()
+        setup()
         initConstraints()
     }
     
-    private func initSubviews() {
+    private func setup() {
         addSubviews([starImageView,
-                    ratingLabel])
+                     ratingLabel])
     }
     
     private func initConstraints() {
         starImageView.snp.makeConstraints { make in
-            make.top.equalTo(snp.top)
-            make.left.equalTo(snp.left)
-            make.right.equalTo(ratingLabel.snp.left).offset(-3)
-            make.bottom.equalTo(snp.bottom)
-            make.width.equalTo(15)
-            make.height.equalTo(15)
+            make.top.leading.bottom.equalToSuperview()
+            make.trailing.equalTo(ratingLabel.snp.leading).offset(-3)
+            make.size.equalTo(15)
         }
         
         ratingLabel.snp.makeConstraints { make in
-            make.top.equalTo(snp.top)
-            make.right.equalTo(snp.right)
-            make.bottom.equalTo(snp.bottom)
+            make.top.trailing.bottom.equalToSuperview()
         }
     }
 }

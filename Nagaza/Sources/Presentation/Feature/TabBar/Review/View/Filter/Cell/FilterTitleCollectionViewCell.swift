@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 
 final class FilterTitleCollectionViewCell: UICollectionViewCell {
+    static let identifier = "FilterTitleCollectionViewCell"
+    
     static func fittingSize(availableHeight: CGFloat, name: String?) -> CGSize {
         let cell = FilterTitleCollectionViewCell()
         cell.configure(name: name)
@@ -23,23 +25,21 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
         titleLabel.text = name
     }
     
-    static let identifier = "FilterTitleCollectionViewCell"
-    
-    let contentsView: UIView = {
+    private let contentsView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         view.layer.cornerRadius = 10
         return view
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = NagazaAsset.Colors.gray3.color
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 10)
         return label
     }()
     
-    let arrowImageView: UIImageView = {
+    private let arrowImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = NagazaAsset.Images.icArrowBottomGray.image
         return imageView
@@ -48,7 +48,8 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentsView.backgroundColor = NagazaAsset.Colors.gray8.color
-        initSubviews()
+        
+        setup()
         initConstraints()
     }
     
@@ -56,8 +57,7 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func initSubviews() {
-        
+    private func setup() {
         contentView.addSubview(contentsView)
         contentsView.addSubviews([titleLabel,
                                   arrowImageView])
@@ -65,21 +65,19 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
     
     private func initConstraints() {
         contentsView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView)
+            make.edges.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(contentsView.snp.top).offset(5)
-            make.left.equalTo(contentsView.snp.left).offset(12)
-            make.right.equalTo(arrowImageView.snp.left).offset(-2)
-            make.bottom.equalTo(contentsView.snp.bottom).offset(-5)
+            make.verticalEdges.equalToSuperview().inset(5)
+            make.leading.equalToSuperview().inset(12)
+            make.trailing.equalTo(arrowImageView.snp.leading).offset(-2)
         }
         
         arrowImageView.snp.makeConstraints { make in
-            make.right.equalTo(contentsView.snp.right).offset(-8)
-            make.centerY.equalTo(contentsView.snp.centerY)
-            make.width.equalTo(14)
-            make.height.equalTo(14)
+            make.right.equalToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(14)
         }
     }
 }

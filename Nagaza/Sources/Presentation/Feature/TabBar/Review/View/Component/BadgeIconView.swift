@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 final class BadgeIconView: NagazaBaseView {
-    let titleText: UILabel = {
+    private let titleText: UILabel = {
         let label = UILabel()
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 8)
         return label
@@ -54,19 +54,19 @@ final class BadgeIconView: NagazaBaseView {
     
     override func makeUI() {
         layer.cornerRadius = 8
+        
         initSubviews()
         initConstraints()
     }
+    
     private func initSubviews() {
         addSubview(titleText)
     }
     
     private func initConstraints() {
         titleText.snp.makeConstraints { make in
-            make.top.equalTo(snp.top).offset(3)
-            make.left.equalTo(snp.left).offset(6)
-            make.right.equalTo(snp.right).offset(-6)
-            make.bottom.equalTo(snp.bottom).offset(-3)
+            make.verticalEdges.equalToSuperview().inset(3)
+            make.horizontalEdges.equalToSuperview().inset(6)
         }
     }
 }

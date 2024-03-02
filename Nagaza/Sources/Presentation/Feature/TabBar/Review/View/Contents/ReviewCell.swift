@@ -36,7 +36,9 @@ final class ReviewCell: UITableViewCell {
     }()
     
     private let starImageView = RatingView()
+    
     private let lifeBadgeView = BadgeIconView(type: .life)
+    
     private let writeDateLabel: UILabel = {
         let label = UILabel()
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 14)
@@ -55,14 +57,18 @@ final class ReviewCell: UITableViewCell {
     }()
     
     private lazy var tagCollcetionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero,
-                                              collectionViewLayout: flowLayout)
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: flowLayout
+        )
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(FilterTagCollectionViewCell.self,
-                                forCellWithReuseIdentifier: "FilterTagCollectionViewCell")
+        collectionView.register(
+            FilterTagCollectionViewCell.self,
+            forCellWithReuseIdentifier: "FilterTagCollectionViewCell"
+        )
         
         return collectionView
     }()
@@ -76,7 +82,7 @@ final class ReviewCell: UITableViewCell {
         return layout
     }()
     
-    private lazy var infoStackView: UIStackView = {
+    private let infoStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
@@ -113,8 +119,6 @@ final class ReviewCell: UITableViewCell {
         label.textColor = NagazaAsset.Colors.black1.color
         return label
     }()
-    
-//    private let themeRatingView = UIView()
     
     private let themeMoreImageView: UIImageView = {
         let imageView = UIImageView()
@@ -165,7 +169,7 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var cafeTitleStackView: UIStackView = {
+    private let cafeTitleStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
@@ -173,7 +177,7 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var cafeInfoStackView: UIStackView = {
+    private let cafeInfoStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
@@ -182,7 +186,7 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var cafeStackView: UIStackView = {
+    private let cafeStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
@@ -216,6 +220,7 @@ final class ReviewCell: UITableViewCell {
             setCollectionViewHeight()
             afterViewLayout.toggle()
         }
+        setCollectionViewHeight()
     }
     
     override init(style: UITableViewCell.CellStyle,
@@ -223,7 +228,7 @@ final class ReviewCell: UITableViewCell {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         
-        initSubviews()
+        setup()
         initConstraints()
     }
     
@@ -231,7 +236,7 @@ final class ReviewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func initSubviews() {
+    private func setup() {
         tagCollcetionView.delegate = self
         tagCollcetionView.dataSource = self
         
@@ -270,87 +275,77 @@ final class ReviewCell: UITableViewCell {
     
     private func initConstraints() {
         profileImageView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top).offset(30)
-            make.left.equalTo(contentView.snp.left).offset(24)
+            make.size.equalTo(40)
+            make.top.equalToSuperview().inset(30)
+            make.leading.equalToSuperview().inset(24)
             make.bottom.equalTo(starImageView.snp.top).offset(-17)
-            make.width.equalTo(40)
-            make.height.equalTo(40)
         }
         
         nicknameLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(profileImageView.snp.centerY)
-            make.left.equalTo(profileImageView.snp.right).offset(10)
-            make.right.equalTo(ratingView.snp.left).offset(-10)
+            make.centerY.equalTo(profileImageView)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            make.trailing.equalTo(ratingView.snp.leading).offset(-10)
         }
         
         ratingView.snp.makeConstraints { make in
-            make.centerY.equalTo(profileImageView.snp.centerY)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.centerY.equalTo(profileImageView)
+            make.size.equalTo(30)
         }
         
         starImageView.snp.makeConstraints { make in
-            make.left.equalTo(contentView.snp.left).offset(24)
-            make.right.equalTo(lifeBadgeView.snp.left).offset(-10)
+            make.leading.equalToSuperview().inset(24)
+            make.trailing.equalTo(lifeBadgeView.snp.leading).offset(-10)
         }
         
         lifeBadgeView.snp.makeConstraints { make in
-            make.centerY.equalTo(starImageView.snp.centerY)
+            make.centerY.equalTo(starImageView)
         }
         
         writeDateLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(starImageView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).offset(-24)
+            make.centerY.equalTo(starImageView)
+            make.trailing.equalToSuperview().inset(24)
         }
         
         contentsLabel.snp.makeConstraints { make in
             make.top.equalTo(starImageView.snp.bottom).offset(17)
-            make.left.equalTo(contentView.snp.left).offset(24)
-            make.right.equalTo(contentView.snp.right).offset(-24)
+            make.horizontalEdges.equalToSuperview().inset(24)
             make.bottom.equalTo(tagCollcetionView.snp.top).offset(-20)
         }
         
         tagCollcetionView.snp.makeConstraints { make in
-            make.left.equalTo(contentView.snp.left).offset(20)
-            make.right.equalTo(contentView.snp.right).offset(-20)
+            make.horizontalEdges.equalToSuperview().inset(20)
             make.bottom.equalTo(infoStackView.snp.top).offset(-20)
             collectionViewHeight = make.height.equalTo(0).constraint
         }
         
         infoStackView.snp.makeConstraints { make in
-            make.left.equalTo(contentView.snp.left).offset(21)
-            make.right.equalTo(contentView.snp.right).offset(-21)
-            make.bottom.equalTo(contentView.snp.bottom).offset(-30)
+            make.horizontalEdges.equalToSuperview().inset(21)
+            make.bottom.equalToSuperview().inset(30)
         }
         
         themeImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.left.equalToSuperview().offset(10)
-            make.right.equalTo(themeTitleLabel.snp.left).offset(-10)
-            make.bottom.equalToSuperview().offset(-5)
-            make.width.equalTo(40)
-            make.height.equalTo(40)
+            make.top.leading.equalToSuperview().inset(10)
+            make.trailing.equalTo(themeTitleLabel.snp.leading).offset(-10)
+            make.bottom.equalToSuperview().inset(5)
+            make.size.equalTo(40)
         }
 
         themeTitleLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(themeImageView.snp.centerY)
-            make.right.equalTo(themeMoreImageView.snp.left).offset(-5)
+            make.centerY.equalTo(themeImageView)
+            make.trailing.equalTo(themeMoreImageView.snp.leading).offset(-5)
         }
         
         themeMoreImageView.snp.makeConstraints { make in
-            make.width.equalTo(16)
-            make.height.equalTo(16)
+            make.size.equalTo(16)
             make.centerY.equalToSuperview()
-            make.right.equalTo(-10)
+            make.trailing.equalTo(-10)
         }
         
         cafeImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(5)
-            make.left.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().offset(-10)
-            make.right.equalTo(cafeStackView.snp.left).offset(-10)
-            make.width.equalTo(40)
-            make.height.equalTo(40)
+            make.size.equalTo(40)
+            make.top.equalToSuperview().inset(5)
+            make.leading.bottom.equalToSuperview().inset(10)
+            make.trailing.equalTo(cafeStackView.snp.leading).offset(-10)
         }
         
         cafeStackView.snp.makeConstraints { make in
@@ -358,10 +353,9 @@ final class ReviewCell: UITableViewCell {
         }
         
         cafeMoreImageView.snp.makeConstraints { make in
-            make.width.equalTo(16)
-            make.height.equalTo(16)
+            make.size.equalTo(16)
             make.centerY.equalToSuperview()
-            make.right.equalTo(-10)
+            make.trailing.equalToSuperview().inset(10)
         }
         
         lineView.snp.makeConstraints { make in
@@ -371,8 +365,6 @@ final class ReviewCell: UITableViewCell {
         setCollectionViewHeight()
     }
     
-    
-    
     var dataList: [String] = ["성공", "힌트1개", "4명", "난이도 보통", "활동성 보통", "스토리 보통", "장치80%", "장치80%", "장치80%"]
     
     var collectionViewHeight: Constraint!
@@ -380,7 +372,7 @@ final class ReviewCell: UITableViewCell {
     func setCollectionViewHeight() {
         var count = 0
         
-        let screenWidth = contentView.bounds.width // Use contentView's width
+        let screenWidth = contentView.bounds.width
         let tagWidth: CGFloat = "#".widthOfFont(usingFont: NagazaFontFamily.Pretendard.regular.font(size: 12))
         var totalWidth: CGFloat = 0
         
@@ -411,7 +403,6 @@ final class ReviewCell: UITableViewCell {
         
         collectionViewHeight.update(offset: height)
     }
-
 }
 
 extension ReviewCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {

@@ -57,9 +57,8 @@ final class FilterTopView: NagazaBaseView {
         return button
     }()
     
-    private lazy var buttonStackView: UIStackView = {
+    private let buttonStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.addArrangedSubviews([resetButton, applyButton])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
@@ -74,15 +73,24 @@ final class FilterTopView: NagazaBaseView {
     }()
     
     override func makeUI() {
+        setup()
+        initConstraints()
+    }
+    
+    private func setup() {
         addSubview(stackView)
         stackView.addArrangedSubviews([filterTitleCollectionView,
                                        filterContentsView,
-                                       buttonStackView
-                                       ])
+                                       buttonStackView])
+        
+        buttonStackView.addArrangedSubviews([resetButton,
+                                             applyButton])
         
         resetButton.addSubview(resetButtonLabel)
         applyButton.addSubview(applyButtonLabel)
-        
+    }
+    
+    private func initConstraints() {
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -100,15 +108,13 @@ final class FilterTopView: NagazaBaseView {
         }
         
         resetButtonLabel.snp.makeConstraints { make in
-            make.top.equalTo(resetButton.snp.top).offset(12)
+            make.verticalEdges.equalToSuperview().inset(12)
             make.horizontalEdges.equalTo(resetButton)
-            make.bottom.equalTo(resetButton.snp.bottom).offset(-12)
         }
         
         applyButtonLabel.snp.makeConstraints { make in
-            make.top.equalTo(applyButton.snp.top).offset(12)
-            make.horizontalEdges.equalTo(applyButton)
-            make.bottom.equalTo(applyButton.snp.bottom).offset(-12)
+            make.verticalEdges.equalToSuperview().inset(12)
+            make.horizontalEdges.equalToSuperview()
         }
     }
 }

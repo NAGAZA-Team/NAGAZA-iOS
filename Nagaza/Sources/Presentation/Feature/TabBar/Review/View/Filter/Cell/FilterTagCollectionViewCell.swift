@@ -25,13 +25,13 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "FilterTagCollectionViewCell"
     
-    let contentsView: UIView = {
+    private let contentsView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         return view
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = NagazaAsset.Colors.gray3.color
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 10)
@@ -44,7 +44,8 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
         contentsView.layer.borderWidth = 1
         contentsView.layer.cornerRadius = 10
         contentsView.layer.borderColor = NagazaAsset.Colors.gray5.color.cgColor
-        initSubviews()
+        
+        setup()
         initConstraints()
     }
     
@@ -52,23 +53,19 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func initSubviews() {
-        
+    private func setup() {
         contentView.addSubview(contentsView)
         contentsView.addSubview(titleLabel)
     }
     
     private func initConstraints() {
-        
         contentsView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView)
+            make.edges.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(contentsView.snp.top).offset(5)
-            make.left.equalTo(contentsView.snp.left).offset(10)
-            make.right.equalTo(contentsView.snp.right).offset(-10)
-            make.bottom.equalTo(contentsView.snp.bottom).offset(-5)
+            make.verticalEdges.equalToSuperview().inset(5)
+            make.horizontalEdges.equalToSuperview().inset(10)
         }
     }
 }

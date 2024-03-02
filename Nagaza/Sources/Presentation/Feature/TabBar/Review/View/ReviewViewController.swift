@@ -20,6 +20,7 @@ final class ReviewViewController: NagazaBaseViewController {
     }
     
     private let tabBarView = FilterTopView()
+    
     private let reviewTableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
@@ -28,15 +29,23 @@ final class ReviewViewController: NagazaBaseViewController {
     }()
     
     override func makeUI() {
+        // TODO: 분리할 base func 필요할듯
         reviewTableView.delegate = self
         reviewTableView.dataSource = self
         
-        view.addSubviews([tabBarView, reviewTableView])
-        
+        setup()
+        initConstraints()
+    }
+    
+    private func setup() {
+        view.addSubviews([tabBarView,
+                          reviewTableView])
+    }
+    
+    private func initConstraints() {
         tabBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.left.equalTo(view.snp.left)
-            make.right.equalTo(view.snp.right) 
+            make.horizontalEdges.equalToSuperview()
         }
         
         reviewTableView.snp.makeConstraints { make in
@@ -54,13 +63,11 @@ extension ReviewViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = reviewTableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as? ReviewCell else { return UITableViewCell() }
-        print("!!?")
         cell.setCollectionViewHeight()
         return cell
     }
-    
-    
 }
+
 //
 //#if DEBUG
 //import SwiftUI

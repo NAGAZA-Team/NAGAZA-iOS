@@ -9,7 +9,7 @@ import UIKit
 
 final class FilterTitleCollectionView: UIView {
     
-    var dummy: [String] = ["난이도", "활동성", "인테리어", "장치/자물쇠", "장르 연출/스토리", "인생 테마", "조도(방해)", "볼륨(방해)", "밀어내기", "npc", "직렬식/병렬식", "노후도", "삑딱쿵/분위기", "공포도"]
+    var filterTitle: [String] = ["난이도", "활동성", "인테리어", "장치/자물쇠", "장르 연출/스토리", "인생 테마", "조도(방해)", "볼륨(방해)", "밀어내기", "npc", "직렬식/병렬식", "노후도", "삑딱쿵/분위기", "공포도"]
     
     lazy var filterTitleCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -19,7 +19,6 @@ final class FilterTitleCollectionView: UIView {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(FilterTitleCollectionViewCell.self,
                                 forCellWithReuseIdentifier: "FilterTitleCollectionViewCell")
-        
         return collectionView
     }()
     
@@ -43,9 +42,16 @@ final class FilterTitleCollectionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func initUI() {
+    private func initUI() {
+        setup()
+        initConstraints()
+    }
+    
+    private func setup() {
         addSubview(filterTitleCollectionView)
-        
+    }
+    
+    private func initConstraints() {
         filterTitleCollectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -53,18 +59,18 @@ final class FilterTitleCollectionView: UIView {
 }
 extension FilterTitleCollectionView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dummy.count
+        return filterTitle.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterTitleCollectionViewCell.identifier, for: indexPath) as? FilterTitleCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(name: dummy[indexPath.row])
+        cell.configure(name: filterTitle[indexPath.row])
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let size = FilterTitleCollectionViewCell.fittingSize(availableHeight: 40, 
-                                                             name: dummy[indexPath.item])
+                                                             name: filterTitle[indexPath.item])
         return size
     }
 }
