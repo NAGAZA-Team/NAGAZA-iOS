@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 final class FilterTitleCollectionViewCell: UICollectionViewCell {
-    static let identifier = FilterTitleCollectionView.description()
+    static let identifier = FilterTitleCollectionViewCell.description()
     
     static func fittingSize(availableHeight: CGFloat, name: String?) -> CGSize {
         let cell = FilterTitleCollectionViewCell()

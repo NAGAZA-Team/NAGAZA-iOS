@@ -24,15 +24,13 @@ final class FilterTitleCollectionView: UIView {
         collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(FilterTitleCollectionViewCell.self,
-                                forCellWithReuseIdentifier: FilterTagCollectionViewCell.identifier)
+                                forCellWithReuseIdentifier: FilterTitleCollectionViewCell.identifier)
         return collectionView
     }()
     
-    var buttonHandler: () -> () = {}
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-    
+        
         setupView()
         setupLayout()
     }

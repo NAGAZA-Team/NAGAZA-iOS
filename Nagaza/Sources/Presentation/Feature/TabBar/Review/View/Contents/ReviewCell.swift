@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 
 final class ReviewCell: UITableViewCell {
+    
     static let identifier = ReviewCell.description()
     
     private let profileImageView: UIImageView = {
@@ -82,8 +83,8 @@ final class ReviewCell: UITableViewCell {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(
-            FilterTagCollectionViewCell.self,
-            forCellWithReuseIdentifier: "FilterTagCollectionViewCell"
+            ReviewTagCollectionViewCell.self,
+            forCellWithReuseIdentifier: ReviewTagCollectionViewCell.identifier
         )
         
         collectionView.backgroundColor = .white
@@ -448,8 +449,8 @@ extension ReviewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = tagCollcetionView.dequeueReusableCell(
-            withReuseIdentifier: FilterTagCollectionViewCell.identifier,
-            for: indexPath) as? FilterTagCollectionViewCell else { return UICollectionViewCell() }
+            withReuseIdentifier: ReviewTagCollectionViewCell.identifier,
+            for: indexPath) as? ReviewTagCollectionViewCell else { return UICollectionViewCell() }
         cell.configure(name: "#\(dataList[indexPath.row])")
         return cell
     }
@@ -474,7 +475,7 @@ extension ReviewCell: UICollectionViewDelegate {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let size = FilterTagCollectionViewCell.fittingSize(availableHeight: 24,
+        let size = ReviewTagCollectionViewCell.fittingSize(availableHeight: 24,
                                                            name: "#\(dataList[indexPath.row])")
         return size
     }
