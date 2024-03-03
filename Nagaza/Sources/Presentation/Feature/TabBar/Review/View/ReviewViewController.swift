@@ -13,36 +13,38 @@ final class ReviewViewController: NagazaBaseViewController {
     
     private var viewModel: ReviewViewModel!
     
+    private lazy var tabBarView = FilterTopView()
+    
+    private lazy var reviewTableView = {
+        let tableView = UITableView()
+        
+        tableView.backgroundColor = .clear
+        tableView.register(ReviewCell.self, forCellReuseIdentifier: ReviewCell.identifier)
+        
+        return tableView
+    }()
+    
     static func create(with viewModel: ReviewViewModel) -> ReviewViewController {
         let vc = ReviewViewController()
         vc.viewModel = viewModel
         return vc
     }
     
-    private let tabBarView = FilterTopView()
-    
-    private let reviewTableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = .clear
-        tableView.register(ReviewCell.self, forCellReuseIdentifier: "ReviewCell")
-        return tableView
-    }()
-    
     override func makeUI() {
         // TODO: 분리할 base func 필요할듯
         reviewTableView.delegate = self
         reviewTableView.dataSource = self
         
-        setup()
-        initConstraints()
+        setupViews()
+        setupLayout()
     }
     
-    private func setup() {
+    private func setupViews() {
         view.addSubviews([tabBarView,
                           reviewTableView])
     }
     
-    private func initConstraints() {
+    private func setupLayout() {
         tabBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.horizontalEdges.equalToSuperview()
@@ -56,16 +58,20 @@ final class ReviewViewController: NagazaBaseViewController {
     }
 }
 
-extension ReviewViewController: UITableViewDelegate, UITableViewDataSource {
+extension ReviewViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = reviewTableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as? ReviewCell else { return UITableViewCell() }
-        cell.setCollectionViewHeight()
+
         return cell
     }
+}
+
+extension ReviewViewController: UITableViewDelegate {
+    
 }
 
 //

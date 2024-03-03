@@ -11,73 +11,86 @@ import SnapKit
 
 final class FilterTopView: NagazaBaseView {
     
-    private var filterTitleCollectionView: FilterTitleCollectionView = {
+    private lazy var filterTitleCollectionView: FilterTitleCollectionView = {
         let view = FilterTitleCollectionView()
         return view
     }()
     
     // TODO: 추후 작성 예정
-    private let filterContentsView: UIView = {
+    private lazy var filterContentsView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
         return view
     }()
     
-    private let resetButtonLabel: UILabel = {
+    private lazy var resetButtonLabel: UILabel = {
         let label = UILabel()
+        
         label.text = "초기화"
         label.textColor = NagazaAsset.Colors.gray1.color
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 15)
         label.textAlignment = .center
+        
         return label
     }()
     
-    private let applyButtonLabel: UILabel = {
+    private lazy var applyButtonLabel: UILabel = {
         let label = UILabel()
+        
         label.text = "적용"
         label.textColor = .white
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 15)
         label.textAlignment = .center
+        
         return label
     }()
     
-    private let resetButton: UIButton = {
+    private lazy var resetButton: UIButton = {
         let button = UIButton()
+        
         button.backgroundColor = NagazaAsset.Colors.gray8.color
         button.layer.borderColor = NagazaAsset.Colors.gray3.color.cgColor
         button.layer.borderWidth = 1
+        
         return button
     }()
     
-    private let applyButton: UIButton = {
+    private lazy var applyButton: UIButton = {
         let button = UIButton()
+        
         button.backgroundColor = NagazaAsset.Colors.mainOrange.color
         button.layer.borderColor = NagazaAsset.Colors.gray3.color.cgColor
         button.layer.borderWidth = 1
+        
         return button
     }()
     
-    private let buttonStackView: UIStackView = {
+    private lazy var buttonStackView: UIStackView = {
         let stackView = UIStackView()
+        
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
+        
         return stackView
     }()
     
-    private let stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
+        
         stackView.spacing = 0
         stackView.axis = .vertical
+        
         return stackView
     }()
     
     override func makeUI() {
-        setup()
-        initConstraints()
+        
+        setupView()
+        setupLayout()
     }
     
-    private func setup() {
+    private func setupView() {
         addSubview(stackView)
         stackView.addArrangedSubviews([filterTitleCollectionView,
                                        filterContentsView,
@@ -90,7 +103,7 @@ final class FilterTopView: NagazaBaseView {
         applyButton.addSubview(applyButtonLabel)
     }
     
-    private func initConstraints() {
+    private func setupLayout() {
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 
 final class FilterTagCollectionViewCell: UICollectionViewCell {
+    static let identifier = FilterTagCollectionViewCell.description()
+    
     static func fittingSize(availableHeight: CGFloat, name: String?) -> CGSize {
         let cell = FilterTagCollectionViewCell()
         cell.configure(name: name)
@@ -19,46 +21,41 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
                                                         withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
     }
     
-    func configure(name: String?) {
-        titleLabel.text = name
-    }
-    
-    static let identifier = "FilterTagCollectionViewCell"
-    
-    private let contentsView: UIView = {
+    private lazy var contentsView: UIView = {
         let view = UIView()
+        
         view.backgroundColor = .gray
+        
         return view
     }()
     
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
+        
         label.textColor = NagazaAsset.Colors.gray3.color
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 10)
+        
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentsView.backgroundColor = .white
-        contentsView.layer.borderWidth = 1
-        contentsView.layer.cornerRadius = 10
-        contentsView.layer.borderColor = NagazaAsset.Colors.gray5.color.cgColor
         
-        setup()
-        initConstraints()
+        setupView()
+        setupLayout()
+        setupAttribute()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError()
     }
     
-    private func setup() {
+    private func setupView() {
         contentView.addSubview(contentsView)
         contentsView.addSubview(titleLabel)
     }
     
-    private func initConstraints() {
+    private func setupLayout() {
         contentsView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -67,5 +64,16 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
             make.verticalEdges.equalToSuperview().inset(5)
             make.horizontalEdges.equalToSuperview().inset(10)
         }
+    }
+    
+    private func setupAttribute() {
+        contentsView.backgroundColor = .white
+        contentsView.layer.borderWidth = 1
+        contentsView.layer.cornerRadius = 10
+        contentsView.layer.borderColor = NagazaAsset.Colors.gray5.color.cgColor
+    }
+    
+    func configure(name: String?) {
+        titleLabel.text = name
     }
 }

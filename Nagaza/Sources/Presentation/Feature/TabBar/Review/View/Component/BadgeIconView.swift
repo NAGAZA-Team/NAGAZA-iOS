@@ -9,47 +9,79 @@ import UIKit
 
 import SnapKit
 
+enum BadgeIconType {
+    case mud
+    case soil
+    case grass
+    case flower
+    case flowerGarden
+    case life
+    
+    var title: String {
+        switch self {
+        case .mud:
+            "진흙길"
+        case .soil:
+            "흙길"
+        case .grass:
+            "풀밭길"
+        case .flower:
+            "꽃길"
+        case .flowerGarden:
+            "꽃밭길"
+        case .life:
+            "인생테마"
+        }
+    }
+    
+    var textColor: UIColor {
+        switch self {
+        case .mud:
+            NagazaAsset.Colors.darkbrownMudText.color
+        case .soil:
+            NagazaAsset.Colors.brownSoilText.color
+        case .grass:
+            NagazaAsset.Colors.greenGrassText.color
+        case .flower:
+            NagazaAsset.Colors.blueFlowerText.color
+        case .flowerGarden:
+            NagazaAsset.Colors.pinkFlowerText.color
+        case .life:
+            NagazaAsset.Colors.darkbrownMudText.color
+        }
+    }
+    
+    var backgrouncColor: UIColor {
+        switch self {
+        case .mud:
+            NagazaAsset.Colors.darkbrownMudBackground.color
+        case .soil:
+            NagazaAsset.Colors.brownSoilBackground.color
+        case .grass:
+            NagazaAsset.Colors.greenGrassBackground.color
+        case .flower:
+            NagazaAsset.Colors.blueFlowerBackground.color
+        case .flowerGarden:
+            NagazaAsset.Colors.pinkFlowerBackground.color
+        case .life:
+            NagazaAsset.Colors.yellowLifeBackground.color
+        }
+    }
+}
+
 final class BadgeIconView: NagazaBaseView {
-    private let titleText: UILabel = {
+    private lazy var titleText: UILabel = {
         let label = UILabel()
+        
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 8)
+        
         return label
     }()
     
     convenience init(type: BadgeIconType) {
         self.init()
-        
-        switch type {
-        case .mud:
-            titleText.text = "진흙길"
-            titleText.textColor = NagazaAsset.Colors.darkbrownMudText.color
-            backgroundColor = NagazaAsset.Colors.darkbrownMudBackground.color
-            
-        case .soil:
-            titleText.text = "흙길"
-            titleText.textColor = NagazaAsset.Colors.brownSoilText.color
-            backgroundColor = NagazaAsset.Colors.brownSoilBackground.color
-            
-        case .grass:
-            titleText.text = "풀밭길"
-            titleText.textColor = NagazaAsset.Colors.greenGrassText.color
-            backgroundColor = NagazaAsset.Colors.greenGrassBackground.color
-            
-        case .flower:
-            titleText.text = "꽃길"
-            titleText.textColor = NagazaAsset.Colors.blueFlowerText.color
-            backgroundColor = NagazaAsset.Colors.blueFlowerBackground.color
-            
-        case .flowerGarden:
-            titleText.text = "꽃밭길"
-            titleText.textColor = NagazaAsset.Colors.pinkFlowerText.color
-            backgroundColor = NagazaAsset.Colors.pinkFlowerBackground.color
-            
-        case .life:
-            titleText.text = "인생테마"
-            titleText.textColor = NagazaAsset.Colors.darkbrownMudText.color
-            backgroundColor = NagazaAsset.Colors.yellowLifeBackground.color
-        }
+    
+        setupType(with: type)
     }
     
     override func makeUI() {
@@ -69,13 +101,11 @@ final class BadgeIconView: NagazaBaseView {
             make.horizontalEdges.equalToSuperview().inset(6)
         }
     }
-}
-
-enum BadgeIconType {
-    case mud
-    case soil
-    case grass
-    case flower
-    case flowerGarden
-    case life
+    
+    private func setupType(with type: BadgeIconType) {
+        titleText.text = type.title
+        titleText.textColor = type.textColor
+        
+        self.backgroundColor = type.backgrouncColor
+    }
 }

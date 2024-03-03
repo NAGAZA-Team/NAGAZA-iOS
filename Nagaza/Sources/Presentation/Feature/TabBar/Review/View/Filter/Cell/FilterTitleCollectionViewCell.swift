@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 final class FilterTitleCollectionViewCell: UICollectionViewCell {
-    static let identifier = "FilterTitleCollectionViewCell"
+    static let identifier = FilterTitleCollectionView.description()
     
     static func fittingSize(availableHeight: CGFloat, name: String?) -> CGSize {
         let cell = FilterTitleCollectionViewCell()
@@ -21,49 +21,51 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
                                                         withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
     }
     
-    func configure(name: String?) {
-        titleLabel.text = name
-    }
-    
-    private let contentsView: UIView = {
+    private lazy var contentsView: UIView = {
         let view = UIView()
+        
         view.backgroundColor = .gray
         view.layer.cornerRadius = 10
+        
         return view
     }()
     
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
+        
         label.textColor = NagazaAsset.Colors.gray3.color
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 10)
+        
         return label
     }()
     
-    private let arrowImageView: UIImageView = {
+    private lazy var arrowImageView: UIImageView = {
         let imageView = UIImageView()
+        
         imageView.image = NagazaAsset.Images.icArrowBottomGray.image
+        
         return imageView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentsView.backgroundColor = NagazaAsset.Colors.gray8.color
         
-        setup()
-        initConstraints()
+        setupView()
+        setupLayout()
+        setupAttribute()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError()
     }
     
-    private func setup() {
+    private func setupView() {
         contentView.addSubview(contentsView)
         contentsView.addSubviews([titleLabel,
                                   arrowImageView])
     }
     
-    private func initConstraints() {
+    private func setupLayout() {
         contentsView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -79,5 +81,13 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.size.equalTo(14)
         }
+    }
+    
+    private func setupAttribute() {
+        contentsView.backgroundColor = NagazaAsset.Colors.gray8.color
+    }
+    
+    func configure(name: String?) {
+        titleLabel.text = name
     }
 }
