@@ -45,7 +45,22 @@ final class ReviewCell: UITableViewCell {
     
     private let starImageView = RatingView()
     
-    private let lifeBadgeView = BadgeIconView(type: .flowerGarden)
+    private let badgeStackView: UIStackView = {
+        let stackView = UIStackView()
+        
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.spacing = 10
+        
+        return stackView
+    }()
+    
+    // TODO: 리뷰 api 생성 시 제거
+    private let lifeBadgeView = BadgeIconView(type: .life)
+    private let levelBadgeView = BadgeIconView(type: .flowerGarden)
+    
+    private let emtpyView = UIView()
     
     private let writeDateLabel: UILabel = {
         let label = UILabel()
@@ -283,11 +298,16 @@ final class ReviewCell: UITableViewCell {
                                  nicknameLabel,
                                  ratingView,
                                  starImageView,
-                                 lifeBadgeView,
+                                 badgeStackView,
                                  writeDateLabel,
                                  contentsLabel,
                                  tagCollcetionView,
                                  infoStackView])
+        
+        // TODO: 리뷰 api 생성 시 제거 (emtpyView 제외)
+        badgeStackView.addArrangedSubviews([lifeBadgeView,
+                                            levelBadgeView,
+                                            emtpyView])
         
         infoStackView.addArrangedSubviews([themeView,
                                            lineView,
@@ -333,11 +353,12 @@ final class ReviewCell: UITableViewCell {
         
         starImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(24)
-            make.trailing.equalTo(lifeBadgeView.snp.leading).offset(-10)
+            make.trailing.equalTo(badgeStackView.snp.leading).offset(-10)
         }
         
-        lifeBadgeView.snp.makeConstraints { make in
+        badgeStackView.snp.makeConstraints { make in
             make.centerY.equalTo(starImageView)
+            make.trailing.equalTo(writeDateLabel.snp.leading).offset(-10)
         }
         
         writeDateLabel.snp.makeConstraints { make in
