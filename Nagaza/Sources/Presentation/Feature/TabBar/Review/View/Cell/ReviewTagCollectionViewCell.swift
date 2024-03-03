@@ -1,5 +1,5 @@
 //
-//  FilterTagCollectionViewCell.swift
+//  ReviewTagCollectionViewCell.swift
 //  Nagaza
 //
 //  Created by 강조은 on 2024/01/30.
@@ -9,11 +9,11 @@ import UIKit
 
 import SnapKit
 
-final class FilterTagCollectionViewCell: UICollectionViewCell {
-    static let identifier = FilterTagCollectionViewCell.description()
+final class ReviewTagCollectionViewCell: UICollectionViewCell {
+    static let identifier = ReviewTagCollectionViewCell.description()
     
     static func fittingSize(availableHeight: CGFloat, name: String?) -> CGSize {
-        let cell = FilterTagCollectionViewCell()
+        let cell = ReviewTagCollectionViewCell()
         cell.configure(name: name)
         
         let targetSize = CGSize(width: UIView.layoutFittingCompressedSize.width, height: availableHeight)
