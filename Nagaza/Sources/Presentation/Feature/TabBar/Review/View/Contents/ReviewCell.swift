@@ -14,7 +14,7 @@ import RxCocoa
 final class ReviewCell: UITableViewCell {
     static let identifier = ReviewCell.description()
     
-    private lazy var profileImageView: UIImageView = {
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.dummy.image
@@ -25,7 +25,7 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var nicknameLabel: UILabel = {
+    private let nicknameLabel: UILabel = {
         let label = UILabel()
         
         label.text = "아기고양이별이"
@@ -34,7 +34,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var ratingView: UIImageView = {
+    private let ratingView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.icLv5.image
@@ -42,11 +42,11 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var starImageView = RatingView()
+    private let starImageView = RatingView()
     
-    private lazy var lifeBadgeView = BadgeIconView(type: .flowerGarden)
+    private let lifeBadgeView = BadgeIconView(type: .flowerGarden)
     
-    private lazy var writeDateLabel: UILabel = {
+    private let writeDateLabel: UILabel = {
         let label = UILabel()
         
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 14)
@@ -56,7 +56,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var contentsLabel: UILabel = {
+    private let contentsLabel: UILabel = {
         let label = UILabel()
         
         label.text = "진짜 오랜만에 나온 감성테마 꽃길 테마입니다!!!드림 이스케이프 매장 아무도 모르게 해주시고... 돌핀 테마도 많이 많이 해주시면 좋을 것 같아요~ 예약은 네이버"
@@ -105,9 +105,9 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var themeView = UIView()
+    private let themeView = UIView()
     
-    private lazy var lineView: UIView = {
+    private let lineView: UIView = {
         let view = UIView()
         
         view.backgroundColor = NagazaAsset.Colors.gray8.color
@@ -115,9 +115,9 @@ final class ReviewCell: UITableViewCell {
         return view
     }()
     
-    private lazy var cafeView = UIView()
+    private let cafeView = UIView()
     
-    private lazy var themeImageView: UIImageView = {
+    private let themeImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.dummy.image
@@ -128,7 +128,7 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var themeTitleLabel: UILabel = {
+    private let themeTitleLabel: UILabel = {
         let label = UILabel()
         
         label.text = "리그오브디저트"
@@ -138,7 +138,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var themeMoreImageView: UIImageView = {
+    private let themeMoreImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.icArrowRightGray.image
@@ -146,7 +146,7 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var cafeTitleLabel: UILabel = {
+    private let cafeTitleLabel: UILabel = {
         let label = UILabel()
         
         label.text = "꿈소풍 2호점"
@@ -156,9 +156,9 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var cafeRatingView = RatingView()
+    private let cafeRatingView = RatingView()
     
-    private lazy var cafeReviewLabel: UILabel = {
+    private let cafeReviewLabel: UILabel = {
         let label = UILabel()
         
         label.text = "리뷰 25개"
@@ -168,7 +168,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var barLabel: UILabel = {
+    private let barLabel: UILabel = {
         let label = UILabel()
         
         label.text = "|"
@@ -178,7 +178,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var themeLabel: UILabel = {
+    private let themeLabel: UILabel = {
         let label = UILabel()
         
         label.text = "테마 4개"
@@ -188,7 +188,7 @@ final class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var cafeImageView: UIImageView = {
+    private let cafeImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.dummy.image
@@ -199,7 +199,7 @@ final class ReviewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var cafeTitleStackView: UIStackView = {
+    private let cafeTitleStackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.axis = .horizontal
@@ -209,7 +209,7 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var cafeInfoStackView: UIStackView = {
+    private let cafeInfoStackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.axis = .horizontal
@@ -220,7 +220,7 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var cafeStackView: UIStackView = {
+    private let cafeStackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.axis = .vertical
@@ -230,7 +230,7 @@ final class ReviewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var cafeMoreImageView: UIImageView = {
+    private let cafeMoreImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.icArrowRightGray.image

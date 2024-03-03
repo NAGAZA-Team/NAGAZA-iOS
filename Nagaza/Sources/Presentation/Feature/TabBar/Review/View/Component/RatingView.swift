@@ -8,17 +8,21 @@
 import UIKit
 
 final class RatingView: NagazaBaseView {
-    private lazy var starImageView: UIImageView = {
+    private let starImageView: UIImageView = {
         let imageView = UIImageView()
+        
         imageView.image = NagazaAsset.Images.icStar.image
+        
         return imageView
     }()
     
-    private lazy var ratingLabel: UILabel = {
+    private let ratingLabel: UILabel = {
         let label = UILabel()
+        
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 16)
         label.textColor = NagazaAsset.Colors.gray3.color
         label.text = "3.2"
+        
         return label
     }()
         

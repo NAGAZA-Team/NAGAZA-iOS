@@ -29,7 +29,7 @@ final class FilterTagCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         
         label.textColor = NagazaAsset.Colors.gray3.color

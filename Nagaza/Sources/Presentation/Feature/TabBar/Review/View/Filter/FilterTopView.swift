@@ -17,13 +17,13 @@ final class FilterTopView: NagazaBaseView {
     }()
     
     // TODO: 추후 작성 예정
-    private lazy var filterContentsView: UIView = {
+    private let filterContentsView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
         return view
     }()
     
-    private lazy var resetButtonLabel: UILabel = {
+    private let resetButtonLabel: UILabel = {
         let label = UILabel()
         
         label.text = "초기화"
@@ -34,7 +34,7 @@ final class FilterTopView: NagazaBaseView {
         return label
     }()
     
-    private lazy var applyButtonLabel: UILabel = {
+    private let applyButtonLabel: UILabel = {
         let label = UILabel()
         
         label.text = "적용"
@@ -45,7 +45,7 @@ final class FilterTopView: NagazaBaseView {
         return label
     }()
     
-    private lazy var resetButton: UIButton = {
+    private let resetButton: UIButton = {
         let button = UIButton()
         
         button.backgroundColor = NagazaAsset.Colors.gray8.color
@@ -55,7 +55,7 @@ final class FilterTopView: NagazaBaseView {
         return button
     }()
     
-    private lazy var applyButton: UIButton = {
+    private let applyButton: UIButton = {
         let button = UIButton()
         
         button.backgroundColor = NagazaAsset.Colors.mainOrange.color
@@ -65,7 +65,7 @@ final class FilterTopView: NagazaBaseView {
         return button
     }()
     
-    private lazy var buttonStackView: UIStackView = {
+    private let buttonStackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.axis = .horizontal
@@ -75,7 +75,7 @@ final class FilterTopView: NagazaBaseView {
         return stackView
     }()
     
-    private lazy var stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.spacing = 0

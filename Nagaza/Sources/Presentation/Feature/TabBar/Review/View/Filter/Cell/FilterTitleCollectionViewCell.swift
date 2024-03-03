@@ -30,7 +30,7 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         
         label.textColor = NagazaAsset.Colors.gray3.color
@@ -39,7 +39,7 @@ final class FilterTitleCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var arrowImageView: UIImageView = {
+    private let arrowImageView: UIImageView = {
         let imageView = UIImageView()
         
         imageView.image = NagazaAsset.Images.icArrowBottomGray.image

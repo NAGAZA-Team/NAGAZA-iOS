@@ -70,7 +70,7 @@ enum BadgeIconType {
 }
 
 final class BadgeIconView: NagazaBaseView {
-    private lazy var titleText: UILabel = {
+    private let titleText: UILabel = {
         let label = UILabel()
         
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 8)
