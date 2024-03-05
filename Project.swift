@@ -66,7 +66,8 @@ final class BaseProjectFactory: ProjectFactory {
             ]
         ],
         "App Transport Security Settings": ["Allow Arbitrary Loads": true],
-        "Privacy - Photo Library Additions Usage Description": "프로필 사진 촬영을 위해서 권한 설정",
+        "Privacy - Photo Library Additions Usage Description": "프로필 사진 촬영을 위한 권한 설정",
+        "NSLocationWhenInUseUsageDescription": "앱 사용 중 위치 정보 수집을 위한 권한 설정",
         "NSAppTransportSecurity": ["NSAllowsArbitraryLoads": true],
         "UIAppFonts": [
           "Item 0": "SpoqaHanSansNeo-Bold.ttf",
