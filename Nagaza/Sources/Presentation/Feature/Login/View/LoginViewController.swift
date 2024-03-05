@@ -12,7 +12,7 @@ import SnapKit
 final class LoginViewController: UIViewController, Alertable {
     
     private var viewModel: LoginViewModel!
-    private lazy var login = LoginUseCase()
+    
     private lazy var appLogo: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "img_launch")
@@ -50,7 +50,7 @@ final class LoginViewController: UIViewController, Alertable {
         button.tintColor = NagazaAsset.Colors.black.color
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(pressedAppleButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(moveSignUpView), for: .touchUpInside)
         return button
     }()
     
@@ -94,10 +94,6 @@ final class LoginViewController: UIViewController, Alertable {
         button.addTarget(self, action: #selector(moveSignUpView), for: .touchUpInside)
         return button
     }()
-    
-    @objc private func pressedAppleButton() {
-        login.executeAppleLogin()
-    }
     
     @objc private func moveSignUpView() {
         let vc = EscapeExperienceViewController()
@@ -161,7 +157,7 @@ final class LoginViewController: UIViewController, Alertable {
     }
 }
 
-#if DEBUG
+#if DEBUGzX
 import SwiftUI
 
 struct LoginViewControllerPreview: PreviewProvider {
