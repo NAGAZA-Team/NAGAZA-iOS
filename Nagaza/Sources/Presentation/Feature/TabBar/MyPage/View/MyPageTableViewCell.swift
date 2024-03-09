@@ -12,16 +12,20 @@ final class MyPageTableViewCell: UITableViewCell {
     static let identifier = MyPageTableViewCell.description()
     
     private let titleLabel: UILabel = {
+        
         let label = UILabel()
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 16)
         label.textColor = NagazaAsset.Colors.black1.color
+        
         return label
     }()
     
     private let countLabel: UILabel = {
         let label = UILabel()
+        
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 15)
         label.textColor = NagazaAsset.Colors.mainOrange.color
+        
         return label
     }()
     
