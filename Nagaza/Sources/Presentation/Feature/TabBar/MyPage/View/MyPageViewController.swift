@@ -60,13 +60,17 @@ final class MyPageViewController: NagazaBaseViewController {
     private let myInfoButton: UIButton = {
         let button = UIButton(type: .custom)
         
-        button.setTitle("내 정보 보기", for: .normal)
-        button.titleLabel?.font = NagazaFontFamily.Pretendard.semiBold.font(size: 12)
-        button.setTitleColor(NagazaAsset.Colors.gray5.color, for: .normal)
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 13
         button.layer.borderColor = NagazaAsset.Colors.gray5.color.cgColor
-        button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
+        
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
+        config.attributedTitle = AttributedString("내 정보 보기", attributes: AttributeContainer([NSAttributedString.Key.font: UIFont.ngaP2Sb,
+             NSAttributedString.Key.foregroundColor: NagazaAsset.Colors.gray5.color
+            ])
+        )
+        button.configuration = config
         
         return button
     }()
