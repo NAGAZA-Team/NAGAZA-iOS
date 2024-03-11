@@ -59,7 +59,7 @@ final class MyPageTableViewCell: UITableViewCell {
         }
     }
     
-    func config(item: MypageInfo) {
+    func config(item: MyPageInfo) {
         titleLabel.text = item.title
         if let count = item.count {
             countLabel.text = "\(count)"
