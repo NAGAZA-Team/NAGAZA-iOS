@@ -7,13 +7,27 @@
 
 import Foundation
 
-struct MypageInfo: Hashable {
-    public static func == (lhs: MypageInfo, rhs: MypageInfo) -> Bool {
-        lhs.identifier == rhs.identifier
+enum MyPageInfoSection: Hashable {
+    case myData([MyPageInfo])
+    case appSetting([MyPageInfo])
+    case inquiry([MyPageInfo])
+    
+    var list: [MyPageInfo] {
+        switch self {
+        case .myData(let list), .appSetting(let list), .inquiry(let list):
+            return list
+        }
     }
-    
+}
+
+struct MyPageInfo: Hashable {
     let identifier = UUID()
-    
     let title: String
     var count: Int? = nil
+}
+
+extension MyPageInfo {
+    public static func == (lhs: MyPageInfo, rhs: MyPageInfo) -> Bool {
+        lhs.identifier == rhs.identifier
+    }
 }

@@ -25,7 +25,7 @@ final class MyPageViewModel {
     }
     
     struct Output {
-        let cellDatas: Driver<[MypageInfo]>
+        let sectionItems: Driver<[MyPageInfoSection]>
     }
     
     init(
@@ -38,16 +38,26 @@ final class MyPageViewModel {
         let response = input.initialTrigger
         // TODO: 서버 데이터 가져오기
         
-        let cellDatas = Driver.just(makeCellDatas())
-        return Output(cellDatas: cellDatas)
-    }
-    
-    private func makeCellDatas() -> [MypageInfo] {
-        let myReview = MypageInfo(title: "내가 작성한 리뷰", count: 15)
-        let like = MypageInfo(title: "찜 목록", count: 23)
-        let appSetting = MypageInfo(title: "앱 설정")
-        let inquiry = MypageInfo(title: "문의/제안하기")
+        let sectionItems = input.initialTrigger
+            .flatMapLatest {
+                var sectionItems = [MyPageInfoSection]()
+                
+                let myReview = MyPageInfo(title: "내가 작성한 리뷰", count: 15)
+                let like = MyPageInfo(title: "찜 목록", count: 23)
+                let appSetting = MyPageInfo(title: "앱 설정")
+                let inquiry = MyPageInfo(title: "문의/제안하기")
+                
+                let myDataSection = MyPageInfoSection.myData([myReview, like])
+                let appSettingSection = MyPageInfoSection.appSetting([appSetting])
+                let inquirySection = MyPageInfoSection.inquiry([inquiry])
+                
+                sectionItems.append(myDataSection)
+                sectionItems.append(appSettingSection)
+                sectionItems.append(inquirySection)
+                                                                
+                return Driver.just(sectionItems)
+            }
         
-        return [myReview, like, appSetting, inquiry]
+        return Output(sectionItems: sectionItems)
     }
 }
