@@ -167,22 +167,21 @@ final class MyPageViewController: NagazaBaseViewController {
         }
         
         gradeView.snp.makeConstraints { make in
-            make.top.equalTo(contentsLabel.snp.bottom).offset(13)
+            make.top.equalTo(profileImageView.snp.bottom).offset(24)
             make.directionalHorizontalEdges.equalToSuperview().inset(25)
             make.height.equalTo(56)
         }
         
         gradeImageView.snp.makeConstraints { make in
-            make.size.equalTo(40)
+            make.width.equalTo(40)
             make.leading.equalToSuperview().inset(15)
-            make.trailing.equalTo(gradeInfoLabel.snp.leading).offset(-10)
             make.centerY.equalToSuperview()
-            make.top.equalToSuperview().inset(10)
         }
         
         gradeInfoLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
+            make.leading.equalTo(gradeImageView.snp.trailing).offset(10)
             make.trailing.equalTo(gradeInfoImageView.snp.leading).offset(-10)
+            make.centerY.equalToSuperview()
         }
         
         gradeInfoImageView.snp.makeConstraints { make in
@@ -222,7 +221,7 @@ final class MyPageViewController: NagazaBaseViewController {
                     }
                 }
                 
-                this.dataSource.apply(snapshot)
+                this.dataSource.apply(snapshot, animatingDifferences: false)
             }
             .disposed(by: disposeBag)
     }

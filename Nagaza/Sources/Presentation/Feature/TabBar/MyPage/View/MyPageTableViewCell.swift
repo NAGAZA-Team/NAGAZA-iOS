@@ -63,6 +63,6 @@ final class MyPageTableViewCell: UITableViewCell {
         titleLabel.text = item.title
         if let count = item.count {
             countLabel.text = "\(count)"
-        }
+        } else { countLabel.text = nil }
     }
 }
