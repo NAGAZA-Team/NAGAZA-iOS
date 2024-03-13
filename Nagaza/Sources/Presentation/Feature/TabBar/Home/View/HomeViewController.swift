@@ -45,7 +45,7 @@ final class HomeViewController: NagazaBaseViewController {
     
     private var viewModel: HomeViewModel!
     
-    private var dataSource: UICollectionViewDiffableDataSource<HomeSectionType, Room>? = nil
+    private var dataSource: DataSource!
     
     private lazy var recommendedThemeViewController: RecommendThemeViewController = {
         let vc = RecommendThemeViewController.create(with: viewModel)
@@ -84,7 +84,7 @@ final class HomeViewController: NagazaBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.configureDataSource()
+        self.setDataSource()
     }
     
     override func navigationSetting() {
@@ -151,7 +151,7 @@ final class HomeViewController: NagazaBaseViewController {
         
         output.roomsList
             .drive(with: self, onNext: { this, roomslist in
-                var snapshot = NSDiffableDataSourceSnapshot<HomeSectionType, Room>()
+                var snapshot = Snapshot()
                 snapshot.appendSections([.horror, .fantasy, .suspense, .comic, .drama, .sf, .rRtated])
                 for (index, list) in roomslist.enumerated() {
                     let homeSectionType = HomeSectionType(rawValue: index) ?? .comic
@@ -171,8 +171,8 @@ final class HomeViewController: NagazaBaseViewController {
                     case .rRtated:
                         snapshot.appendItems(list, toSection: .rRtated)
                     }
-                    this.dataSource?.apply(snapshot)
                 }
+                this.dataSource.apply(snapshot)
             })
             .disposed(by: disposeBag)
         
@@ -222,8 +222,14 @@ extension Reactive where Base: HomeViewController {
 }
 
 extension HomeViewController {
-    private func configureDataSource() {
-        let roomCellRegistraition = UICollectionView.CellRegistration<ThemeCell, Room> { [weak self] cell, indexPath, item in
+    typealias CellType = ThemeCell
+    typealias ModelType = Room
+    typealias SectionType = HomeSectionType
+    typealias DataSource = UICollectionViewDiffableDataSource<SectionType, ModelType>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, ModelType>
+    
+    private func setDataSource() {
+        let roomCellRegistraition = UICollectionView.CellRegistration<CellType, ModelType> { [weak self] cell, indexPath, item in
             
             cell.bind(with: item)
 //            cell.delegate = self
@@ -234,11 +240,11 @@ extension HomeViewController {
             supplementaryView.themeLabel.text = sectionType.title
         }
         
-        dataSource = UICollectionViewDiffableDataSource<HomeSectionType, Room>(collectionView: themesViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = DataSource(collectionView: themesViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             return collectionView.dequeueConfiguredReusableCell(using: roomCellRegistraition, for: indexPath, item: itemIdentifier)
         })
         
-        dataSource?.supplementaryViewProvider = { (view, kind, index) in
+        dataSource.supplementaryViewProvider = { (view, kind, index) in
             return self.themesViewController.collectionView.dequeueConfiguredReusableSupplementary(
                 using: headerRegistration,
                 for: index
