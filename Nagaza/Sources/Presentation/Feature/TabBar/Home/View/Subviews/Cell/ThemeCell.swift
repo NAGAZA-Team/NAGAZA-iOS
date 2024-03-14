@@ -190,7 +190,7 @@ final class ThemeCell: UICollectionViewCell {
         self.titleLabel.text = model.name
         self.branchLabel.text = model.area
         self.ratedLabel.text = String(model.total)
-        self.posterImageView.loadImage(from: model.imageUrlString)
+//        self.posterImageView.loadImage(from: model.imageUrlString)
     }
     
     private func updatePosterImage() {
