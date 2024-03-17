@@ -68,8 +68,11 @@ final class SubRegionTableViewCell: UITableViewCell {
         }
     }
     
-    func bind(region: String, count: String) {
-        regionLabel.text = region
-        countLabel.text = count + " >"
+    func bind(region: SubRegion) {
+        regionLabel.text = region.region
+        
+        if let themeCount = region.themeCount {
+            countLabel.text = "\(themeCount)" + " >"
+        }
     }
 }

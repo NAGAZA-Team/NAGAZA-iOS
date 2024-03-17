@@ -9,7 +9,7 @@ import Foundation
 
 /// DTO에서 활용할 때 Int형으로 Code형식 또는 단순 String으로 할지 의논 필요
 /// 노션 안건 7번 건의
-enum Region: Int {
+enum Region: Int, CaseIterable {
     case nationwide
     case seoul
     case gyeonggi

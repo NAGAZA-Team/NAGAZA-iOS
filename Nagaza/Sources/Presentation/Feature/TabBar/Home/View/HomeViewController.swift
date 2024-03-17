@@ -109,10 +109,11 @@ final class HomeViewController: NagazaBaseViewController {
         navigationItem.rightBarButtonItem = searchButtonItem
     }
     
+    // TODO: DIContainer / FlowCoordinator 연결 예정
     @objc private func test(_ sender: UIButton) {
-        print("Test")
         let action = RegionFilterViewModelActions()
-        let viewModel = RegionFilterViewModel(actions: action)
+        let useCase = RegionSettingUseCase()
+        let viewModel = RegionFilterViewModel(regionSettingUseCase: useCase, actions: action)
         
         let VC = RegionFilterViewController.create(with: viewModel)
         
