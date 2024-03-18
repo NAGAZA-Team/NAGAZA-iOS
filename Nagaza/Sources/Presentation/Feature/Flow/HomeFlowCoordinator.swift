@@ -7,8 +7,10 @@
 
 import UIKit
 
+/// Flow Coordinator는 DICiontainer의 Presentation만 알아야 하기 때문에 해당 부분만 delegate 패턴으로 채택해줍니다.
 protocol HomeFlowCoordinaterDependencies {
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
+    func makeRegionSettingViewController(with subRegion: String) -> RegionSettingViewController
 }
 
 final class HomeFlowCoordinator: Coordinator {
@@ -34,13 +36,23 @@ final class HomeFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = HomeViewModelActions(logoutTest: logoutTest)
+        let actions = HomeViewModelActions(
+            showRegionSetting: showRegionSetting(with:),
+            logoutTest: logoutTest
+        )
+        
         let vc = dependencies.makeHomeViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
         homeVC = vc
+    }
+    
+    private func showRegionSetting(with subRegion: String) {
+        let vc = dependencies.makeRegionSettingViewController(with: subRegion)
+        
+        navigationController.pushViewController(vc, animated: false)
     }
     
     private func logoutTest() {

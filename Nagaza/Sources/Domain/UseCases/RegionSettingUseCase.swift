@@ -1,5 +1,5 @@
 //
-//  RegionSettingUseCase.swift
+//  DefaultRegionSettingUseCase.swift
 //  Nagaza
 //
 //  Created by 전성훈 on 2024/03/18.
@@ -7,14 +7,19 @@
 
 import Foundation
 
-final class RegionSettingUseCase {
+protocol RegionSettingUseCase {
+    func loadMainRegions(with subRegion: String) -> [MainRegion]
+    func loadSubRegions(with mainRegion: Region) -> [SubRegion]
+}
+
+final class DefaultRegionSettingUseCase: RegionSettingUseCase {
     
     init() {
         
     }
     
-    func loadMainRegions(with isSelectedIndex: Int = 0) -> [MainRegion] {
-        return Region.allCases.map { MainRegion(region: $0, isSelected: $0.rawValue == isSelectedIndex)}
+    func loadMainRegions(with subRegion: String = "전국 전체") -> [MainRegion] {
+        return Region.allCases.map { MainRegion(region: $0, isSelected: $0.rawValue == 1)}
     }
     
     func loadSubRegions(with mainRegion: Region) -> [SubRegion] {

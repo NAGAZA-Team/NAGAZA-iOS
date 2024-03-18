@@ -10,14 +10,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-struct RegionSettingViewModelActions {
-    
-}
-
 final class RegionSettingViewModel: ViewModelType {
     private let regionSettingUseCase: RegionSettingUseCase!
-    
-    private let actions: RegionSettingViewModelActions!
+        
+    private var firstSubRegion = ""
     
     struct Input {
         let viewWillAppearTrigger: Driver<Void>
@@ -35,10 +31,10 @@ final class RegionSettingViewModel: ViewModelType {
     
     init(
         regionSettingUseCase: RegionSettingUseCase,
-        actions: RegionSettingViewModelActions
+        firstSubRegion: String = ""
     ) {
         self.regionSettingUseCase = regionSettingUseCase
-        self.actions = actions
+        self.firstSubRegion = firstSubRegion
     }
     
     func transform(input: Input) -> Output {
@@ -48,7 +44,7 @@ final class RegionSettingViewModel: ViewModelType {
         let viewWillAppearTrigger = input.viewWillAppearTrigger
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                let regions = self.regionSettingUseCase.loadMainRegions()
+                let regions = self.regionSettingUseCase.loadMainRegions(with: firstSubRegion)
                 mainRegions.accept(regions)
             })
             .asDriver()

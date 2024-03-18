@@ -47,6 +47,8 @@ final class HomeViewController: NagazaBaseViewController {
     
     private var dataSource: DataSource!
     
+    private let mapButtonTapped = PublishSubject<String>()
+    
     private lazy var recommendedThemeViewController: RecommendThemeViewController = {
         let vc = RecommendThemeViewController.create(with: viewModel)
         return vc
@@ -90,12 +92,7 @@ final class HomeViewController: NagazaBaseViewController {
     override func navigationSetting() {
         super.navigationSetting()
         
-        let mapButtonItem = UIBarButtonItem(
-            image: NagazaAsset.Images.icMapGray.image,
-            style: .plain,
-            target: self,
-            action: #selector(test(_:))
-        )
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image)
         
         let searchButtonItem = UIBarButtonItem(
             image: NagazaAsset.Images.icSearchGray.image,
@@ -104,21 +101,28 @@ final class HomeViewController: NagazaBaseViewController {
             action: nil
         )
         
-        navigationItem.title = "홈"
+        navigationItem.title = "전국 전체"
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
+        
+        mapButtonItem.rx.tap
+               .map { [weak self] in
+                   self?.navigationItem.title ?? ""
+               }
+               .bind(to: mapButtonTapped)
+               .disposed(by: disposeBag)
     }
     
-    // TODO: DIContainer / FlowCoordinator 연결 예정
-    @objc private func test(_ sender: UIButton) {
-        let action = RegionFilterViewModelActions()
-        let useCase = RegionSettingUseCase()
-        let viewModel = RegionFilterViewModel(regionSettingUseCase: useCase, actions: action)
-        
-        let VC = RegionFilterViewController.create(with: viewModel)
-        
-        self.present(VC, animated: true)
-    }
+//    // TODO: DIContainer / FlowCoordinator 연결 예정
+//    @objc private func test(_ sender: UIButton) {
+//        let action = RegionSettingViewModelActions()
+//        let useCase = RegionSettingUseCase()
+//        let viewModel = RegionSettingViewModel(regionSettingUseCase: useCase, actions: action)
+//        
+//        let VC = RegionSettingViewController.create(with: viewModel)
+//        
+//        self.present(VC, animated: true)
+//    }
     
     override func makeUI() {
         view.addSubview(scrollView)
@@ -142,11 +146,16 @@ final class HomeViewController: NagazaBaseViewController {
     // MARK: Binding
     override func bindViewModel() {
         let initialTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
+        
         let contentOffset = scrollView.rx.contentOffset.asDriver()
+        
+        let mapButtonTapped = mapButtonTapped.asDriverOnErrorJustEmpty()
         
         let input = HomeViewModel.Input(
             initialTrigger: initialTrigger,
-            contentOffset: contentOffset)
+            contentOffset: contentOffset,
+            mapButtonTapped: mapButtonTapped
+        )
         
         let output = viewModel.transform(input: input)
         
@@ -179,6 +188,10 @@ final class HomeViewController: NagazaBaseViewController {
         
         output.scrollOffsetState
             .drive(self.rx.scrollOffsetState)
+            .disposed(by: disposeBag)
+        
+        output.mapButtonTapped
+            .drive()
             .disposed(by: disposeBag)
     }
     

@@ -12,6 +12,7 @@ import RxCocoa
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
 struct HomeViewModelActions {
+    let showRegionSetting: (String) -> Void
     let logoutTest: () -> Void
 }
 
@@ -48,11 +49,13 @@ final class HomeViewModel: ViewModelType {
     struct Input {
         let initialTrigger: Driver<Void>
         let contentOffset: Driver<CGPoint>
+        let mapButtonTapped: Driver<String>
     }
     
     struct Output {
         let roomsList: Driver<[[Room]]>
         let scrollOffsetState: Driver<ScrollOffsetState>
+        let mapButtonTapped: Driver<Void>
     }
     
     init(
@@ -68,7 +71,7 @@ final class HomeViewModel: ViewModelType {
             .flatMapLatest { [unowned self] _ in
                 return homeUseCase.fetchCafesList().asDriver(onErrorJustReturn: .init(cafes: [], page: 0, totalPages: 0))
             }
-
+        
         let roomsList = cafesResponse
             .flatMapLatest { cafesPage in
                 if cafesPage.cafes.isEmpty { return Driver<[[Room]]>.just([]) }
@@ -82,10 +85,23 @@ final class HomeViewModel: ViewModelType {
         let scrollOffsetState = input.contentOffset
             .map { ScrollOffsetState(rawValue: $0.y) }
         
+        let mapButtonTapped = input.mapButtonTapped
+            .map { [weak self] subRegion in
+                self?.showRegionSetting(with: subRegion)
+                
+                return
+            }
+            .asDriver()
+        
         return Output(
             roomsList: roomsList,
-            scrollOffsetState: scrollOffsetState
+            scrollOffsetState: scrollOffsetState,
+            mapButtonTapped: mapButtonTapped
         )
+    }
+    
+    private func showRegionSetting(with subRegion: String) {
+        actions.showRegionSetting(subRegion)
     }
 }
 
