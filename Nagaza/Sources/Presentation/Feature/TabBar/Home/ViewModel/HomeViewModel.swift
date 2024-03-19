@@ -12,7 +12,7 @@ import RxCocoa
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
 struct HomeViewModelActions {
-    let showRegionSetting: (String) -> Void
+    let showRegionSetting: (String, @escaping (String) -> Void) -> Void
     let logoutTest: () -> Void
 }
 
@@ -46,6 +46,8 @@ final class HomeViewModel: ViewModelType {
     
     private var disposeBag = DisposeBag()
     
+    private let selectedRegion = PublishSubject<String>()
+    
     struct Input {
         let initialTrigger: Driver<Void>
         let contentOffset: Driver<CGPoint>
@@ -56,6 +58,7 @@ final class HomeViewModel: ViewModelType {
         let roomsList: Driver<[[Room]]>
         let scrollOffsetState: Driver<ScrollOffsetState>
         let mapButtonTapped: Driver<Void>
+        let selectedRegion: Driver<String>
     }
     
     init(
@@ -93,15 +96,22 @@ final class HomeViewModel: ViewModelType {
             }
             .asDriver()
         
+        let selectedRegionDriver = selectedRegion.asDriver(onErrorJustReturn: "전국 전체")
+        
         return Output(
             roomsList: roomsList,
             scrollOffsetState: scrollOffsetState,
-            mapButtonTapped: mapButtonTapped
+            mapButtonTapped: mapButtonTapped,
+            selectedRegion: selectedRegionDriver
         )
     }
     
     private func showRegionSetting(with subRegion: String) {
-        actions.showRegionSetting(subRegion)
+        actions.showRegionSetting(subRegion, updateRegion(with:))
+    }
+    
+    private func updateRegion(with subRegion: String) {
+        selectedRegion.onNext(subRegion)
     }
 }
 

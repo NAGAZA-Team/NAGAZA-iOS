@@ -8,6 +8,7 @@
 import Foundation
 
 protocol RegionSettingUseCase {
+    func loadMainRegions() -> [MainRegion]
     func loadMainRegions(with subRegion: String) -> [MainRegion]
     func loadSubRegions(with mainRegion: Region) -> [SubRegion]
 }
@@ -18,8 +19,16 @@ final class DefaultRegionSettingUseCase: RegionSettingUseCase {
         
     }
     
-    func loadMainRegions(with subRegion: String = "전국 전체") -> [MainRegion] {
-        return Region.allCases.map { MainRegion(region: $0, isSelected: $0.rawValue == 1)}
+    func loadMainRegions() -> [MainRegion] {
+        return Region.allCases.map { MainRegion(region: $0, isSelected: $0.rawValue == 0)}
+    }
+    
+    func loadMainRegions(with subRegion: String) -> [MainRegion] {
+        return Region.allCases.map { region in
+            let isSelected = region.cities.contains(subRegion)
+            
+            return MainRegion(region: region, isSelected: isSelected)
+        }
     }
     
     func loadSubRegions(with mainRegion: Region) -> [SubRegion] {

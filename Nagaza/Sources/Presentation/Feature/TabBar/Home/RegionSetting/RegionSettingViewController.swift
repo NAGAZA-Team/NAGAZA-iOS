@@ -92,9 +92,9 @@ final class RegionSettingViewController: NagazaBaseViewController {
              }
              .asDriver(onErrorJustReturn: 0)
         
-        let subRegionSelectied = subReginTableView.rx.modelSelected(String.self)
+        let subRegionSelectied = subReginTableView.rx.modelSelected(SubRegion.self)
             .asDriver()
-        
+                
         let input = RegionSettingViewModel.Input(
             viewWillAppearTrigger: viewWillAppearTrigger,
             mainRegionSelected: mainRegionSelected,
@@ -134,11 +134,23 @@ final class RegionSettingViewController: NagazaBaseViewController {
         output.subRegionsUpdated
             .drive()
             .disposed(by: disposeBag)
+        
+        output.subRegionSelected
+            .drive(self.rx.closeViewController)
+            .disposed(by: disposeBag)
+    }
+    
+    internal func closeViewController() {
+        self.navigationController?.popViewController(animated: false)
     }
 }
 
 extension Reactive where Base: RegionSettingViewController {
-    
+    var closeViewController: Binder<Void> {
+        return Binder(self.base) { base, state in
+            base.closeViewController()
+        }
+    }
 }
 
 //

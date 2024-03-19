@@ -68,19 +68,25 @@ extension HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
     
     // MARK: Make Region Setting ViewModel - ViewController
     private func makeRegionSettingViewModel(
-        with subRegion: String
+        with subRegion: String,
+        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) -> RegionSettingViewModel {
         return RegionSettingViewModel(
             regionSettingUseCase: makeRegionSettingUseCase(),
-            firstSubRegion: subRegion
+            subRegionFromHomeVC: subRegion,
+            didSelect: didSelect
         )
     }
     
     func makeRegionSettingViewController(
-        with subRegion: String
+        with subRegion: String,
+        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) -> RegionSettingViewController {
         return RegionSettingViewController.create(
-            with: makeRegionSettingViewModel(with: subRegion)
+            with: makeRegionSettingViewModel(
+                with: subRegion,
+                didSelect: didSelect
+            )
         )
     }
 }

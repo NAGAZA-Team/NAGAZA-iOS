@@ -193,9 +193,13 @@ final class HomeViewController: NagazaBaseViewController {
         output.mapButtonTapped
             .drive()
             .disposed(by: disposeBag)
+        
+        output.selectedRegion
+            .drive(self.rx.navigationTitleSetValue)
+            .disposed(by: disposeBag)
     }
     
-    func updateNavigationBarAppearance(with state: ScrollOffsetState) {
+    internal func updateNavigationBarAppearance(with state: ScrollOffsetState) {
         let navBarAppearance = UINavigationBarAppearance()
         
         navBarAppearance.configureWithOpaqueBackground()
@@ -225,12 +229,22 @@ final class HomeViewController: NagazaBaseViewController {
         
         scrollView.backgroundColor = isDarkMode ? .black : .white
     }
+    
+    internal func updateNavigationTitle(with region: String) {
+        navigationItem.title = region
+    }
 }
 
 extension Reactive where Base: HomeViewController {
     var scrollOffsetState: Binder<ScrollOffsetState> {
         return Binder(self.base) { base, state in
             base.updateNavigationBarAppearance(with: state)
+        }
+    }
+    
+    var navigationTitleSetValue: Binder<String> {
+        return Binder(self.base) { base, region in
+            base.updateNavigationTitle(with: region)
         }
     }
 }

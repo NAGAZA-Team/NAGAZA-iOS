@@ -10,15 +10,18 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+typealias RegionSettingViewModelDidSelectAction = (String) -> Void
+
 final class RegionSettingViewModel: ViewModelType {
     private let regionSettingUseCase: RegionSettingUseCase!
         
-    private var firstSubRegion = ""
+    private var subRegionFromHomeVC = ""
+    private let didSelect: RegionSettingViewModelDidSelectAction
     
     struct Input {
         let viewWillAppearTrigger: Driver<Void>
         let mainRegionSelected: Driver<Int>
-        let subRegionSelected: Driver<String>
+        let subRegionSelected: Driver<SubRegion>
     }
     
     struct Output {
@@ -27,14 +30,17 @@ final class RegionSettingViewModel: ViewModelType {
         let subRegions: Driver<[SubRegion]>
         let mainRegionSelected: Driver<Void>
         let subRegionsUpdated: Driver<Void>
+        let subRegionSelected: Driver<Void>
     }
     
     init(
         regionSettingUseCase: RegionSettingUseCase,
-        firstSubRegion: String = ""
+        subRegionFromHomeVC: String = "",
+        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
         self.regionSettingUseCase = regionSettingUseCase
-        self.firstSubRegion = firstSubRegion
+        self.subRegionFromHomeVC = subRegionFromHomeVC
+        self.didSelect = didSelect
     }
     
     func transform(input: Input) -> Output {
@@ -44,7 +50,7 @@ final class RegionSettingViewModel: ViewModelType {
         let viewWillAppearTrigger = input.viewWillAppearTrigger
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                let regions = self.regionSettingUseCase.loadMainRegions(with: firstSubRegion)
+                let regions = self.regionSettingUseCase.loadMainRegions(with: subRegionFromHomeVC)
                 mainRegions.accept(regions)
             })
             .asDriver()
@@ -78,6 +84,15 @@ final class RegionSettingViewModel: ViewModelType {
             }
             .asDriver()
         
+        let subRegionSelected = input.subRegionSelected
+            .map { [weak self] subRegion in
+                
+                self?.didSelect(subRegion.region)
+                
+                return
+            }
+            .asDriver()
+        
         let mainRegionsDriver = mainRegions.asDriver()
         let subRegionsDriver = subRegions.asDriver()
         
@@ -86,7 +101,8 @@ final class RegionSettingViewModel: ViewModelType {
             mainRegins: mainRegionsDriver,
             subRegions: subRegionsDriver,
             mainRegionSelected: mainRegionSelected,
-            subRegionsUpdated: subRegionsUpdated
+            subRegionsUpdated: subRegionsUpdated,
+            subRegionSelected: subRegionSelected
         )
     }
     
