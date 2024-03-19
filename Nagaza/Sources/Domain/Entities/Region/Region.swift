@@ -45,15 +45,15 @@ enum Region: Int, CaseIterable {
         case .nationwide:
             return ["전국 전체"]
         case .seoul:
-            return ["서울 전체", "강남", "건대", "홍대", "신촌", "대학로", "강북", "신림", "기타"]
+            return ["서울 전체", "강남", "건대", "홍대", "신촌", "대학로", "강북", "신림", "서울 기타"]
         case .gyeonggi:
-            return ["경기도 전체", "인천", "부천", "일산", "수원", "안양", "기타"]
+            return ["경기도 전체", "인천", "부천", "일산", "수원", "안양", "경기도 기타"]
         case .chungcheong:
-            return ["충남 전체", "대전", "천안", "청주", "기타"]
+            return ["충남 전체", "대전", "천안", "청주", "충남 기타"]
         case .gyeongsang:
-            return ["경상도 전체", "대구", "부산", "기타"]
+            return ["경상도 전체", "대구", "부산", "경상도 기타"]
         case .jeolla:
-            return ["전라도 전체", "광주", "전주", "기타"]
+            return ["전라도 전체", "광주", "전주", "전라도 기타"]
         case .gangwon:
             return ["강원 전체"]
         case .jeju:
