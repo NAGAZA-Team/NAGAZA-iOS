@@ -20,51 +20,51 @@ enum BadgeIconType {
     var title: String {
         switch self {
         case .mud:
-            "진흙길"
+            return "진흙길"
         case .soil:
-            "흙길"
+            return "흙길"
         case .grass:
-            "풀밭길"
+            return "풀밭길"
         case .flower:
-            "꽃길"
+            return "꽃길"
         case .flowerGarden:
-            "꽃밭길"
+            return "꽃밭길"
         case .life:
-            "인생테마"
+            return "인생테마"
         }
     }
     
     var textColor: UIColor {
         switch self {
         case .mud:
-            NagazaAsset.Colors.darkbrownMudText.color
+            return NagazaAsset.Colors.darkbrownMudText.color
         case .soil:
-            NagazaAsset.Colors.brownSoilText.color
+            return NagazaAsset.Colors.brownSoilText.color
         case .grass:
-            NagazaAsset.Colors.greenGrassText.color
+            return NagazaAsset.Colors.greenGrassText.color
         case .flower:
-            NagazaAsset.Colors.blueFlowerText.color
+            return NagazaAsset.Colors.blueFlowerText.color
         case .flowerGarden:
-            NagazaAsset.Colors.pinkFlowerText.color
+            return NagazaAsset.Colors.pinkFlowerText.color
         case .life:
-            NagazaAsset.Colors.darkbrownMudText.color
+            return NagazaAsset.Colors.darkbrownMudText.color
         }
     }
     
     var backgrouncColor: UIColor {
         switch self {
         case .mud:
-            NagazaAsset.Colors.darkbrownMudBackground.color
+            return NagazaAsset.Colors.darkbrownMudBackground.color
         case .soil:
-            NagazaAsset.Colors.brownSoilBackground.color
+            return NagazaAsset.Colors.brownSoilBackground.color
         case .grass:
-            NagazaAsset.Colors.greenGrassBackground.color
+            return NagazaAsset.Colors.greenGrassBackground.color
         case .flower:
-            NagazaAsset.Colors.blueFlowerBackground.color
+            return NagazaAsset.Colors.blueFlowerBackground.color
         case .flowerGarden:
-            NagazaAsset.Colors.pinkFlowerBackground.color
+            return NagazaAsset.Colors.pinkFlowerBackground.color
         case .life:
-            NagazaAsset.Colors.yellowLifeBackground.color
+            return NagazaAsset.Colors.yellowLifeBackground.color
         }
     }
 }
@@ -80,7 +80,7 @@ final class BadgeIconView: NagazaBaseView {
     
     convenience init(type: BadgeIconType) {
         self.init()
-        
+    
         setupType(with: type)
     }
     

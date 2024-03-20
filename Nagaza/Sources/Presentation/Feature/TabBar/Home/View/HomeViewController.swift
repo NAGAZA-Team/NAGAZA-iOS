@@ -54,8 +54,7 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var recommendedThemeView = RecommendThemeView()
     
-    private lazy var scrollView = UIScrollView()
-    
+ 
     private lazy var recommendedContainer: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
