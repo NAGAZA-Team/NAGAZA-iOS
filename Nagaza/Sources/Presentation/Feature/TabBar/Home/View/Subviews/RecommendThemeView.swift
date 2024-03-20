@@ -11,19 +11,19 @@ import RxSwift
 import SnapKit
 
 // TODO: Haert Components 제거
-final class RecommendThemeViewController: NagazaBaseViewController {
-    private var viewModel: HomeViewModel!
+final class RecommendThemeView: NagazaBaseView {
+    //    private var viewModel: HomeViewModel!
     
-    lazy var recommandThemeBackgroundTopGradientView = UIView()
-    lazy var recommandThemeBackgroundBottomGradientView = UIView()
+    private lazy var recommandThemeBackgroundTopGradientView = UIView()
+    private lazy var recommandThemeBackgroundBottomGradientView = UIView()
     
     private lazy var heartIcon: UIButton = {
         let btn = UIButton()
         
-        btn.addTarget(self,
-                      action: #selector(heartTapped(_:)),
-                      for: .touchUpInside
-        )
+        //        btn.addTarget(self,
+        //                      action: #selector(heartTapped(_:)),
+        //                      for: .touchUpInside
+        //        )
         btn.setImage(UIImage(systemName: "heart"),
                      for: .normal
         )
@@ -87,24 +87,17 @@ final class RecommendThemeViewController: NagazaBaseViewController {
         return btn
     }()
     
-    static func create(with viewModel: HomeViewModel) -> RecommendThemeViewController {
-        let vc = RecommendThemeViewController()
-        vc.viewModel = viewModel
-        
-        return vc
-    }
-    
     override func makeUI() {
         // TODO: 이미지에 따른 추천 색상으로 변경
         let middleColor = UIColor.systemPink
-        view.backgroundColor = middleColor
+        self.backgroundColor = middleColor
         
         labelStackView.addArrangedSubviews([
             userNameLabel,
             recommendLabel
         ])
         
-        view.addSubviews([
+        self.addSubviews([
             recommandThemeBackgroundTopGradientView,
             recommandThemeBackgroundBottomGradientView,
             posterImageView,
@@ -136,12 +129,12 @@ final class RecommendThemeViewController: NagazaBaseViewController {
     }
     
     override func adjustLayoutAfterRendering() {
-        let gradientHeight = view.bounds.height / 2
+        let gradientHeight = self.bounds.height / 2
         
         let topGradientFrame = CGRect(
             x: 0,
             y: 0,
-            width: view.bounds.width,
+            width: self.bounds.width,
             height: gradientHeight
         )
         recommandThemeBackgroundTopGradientView.frame = topGradientFrame
@@ -152,8 +145,8 @@ final class RecommendThemeViewController: NagazaBaseViewController {
         
         let bottomGradientFrame = CGRect(
             x: 0,
-            y: view.bounds.height - gradientHeight,
-            width: view.bounds.width,
+            y: self.bounds.height - gradientHeight,
+            width: self.bounds.width,
             height: gradientHeight
         )
         recommandThemeBackgroundBottomGradientView.frame = bottomGradientFrame
@@ -162,10 +155,6 @@ final class RecommendThemeViewController: NagazaBaseViewController {
             UIColor(white: 1, alpha: 0),
             .white
         ])
-    }
-    
-    override func bindViewModel() {
-        
     }
     
     @objc private func heartTapped(_ sender: UIButton) {

@@ -47,15 +47,12 @@ final class HomeViewController: NagazaBaseViewController {
     
     private var dataSource: DataSource!
     
-    private lazy var recommendedThemeViewController: RecommendThemeViewController = {
-        let vc = RecommendThemeViewController.create(with: viewModel)
-        return vc
+    private lazy var mapButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image)
+        return barButtonItem
     }()
     
-    private lazy var themesViewController: HomeThemesCollectionViewController = {
-        let vc = HomeThemesCollectionViewController.create(with: viewModel)
-        return vc
-    }()
+    private lazy var recommendedThemeView = RecommendThemeView()
     
     private lazy var scrollView = UIScrollView()
     
@@ -64,16 +61,10 @@ final class HomeViewController: NagazaBaseViewController {
         view.backgroundColor = .clear
         add(child: recommendedThemeViewController, container: view)
         
-        return view
+        return collectionView
     }()
     
-    private lazy var themesContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        add(child: themesViewController, container: view)
-        
-        return view
-    }()
+    private lazy var scrollView = UIScrollView()
     
     static func create(with viewModel: HomeViewModel) -> HomeViewController {
         let vc = HomeViewController()
@@ -90,12 +81,6 @@ final class HomeViewController: NagazaBaseViewController {
     override func navigationSetting() {
         super.navigationSetting()
         
-        let mapButtonItem = UIBarButtonItem(
-            image: NagazaAsset.Images.icMapGray.image,
-            style: .plain,
-            target: nil,
-            action: nil
-        )
         let searchButtonItem = UIBarButtonItem(
             image: NagazaAsset.Images.icSearchGray.image,
             style: .plain,
@@ -103,10 +88,21 @@ final class HomeViewController: NagazaBaseViewController {
             action: nil
         )
         
-        navigationItem.title = "홈"
+        navigationItem.title = "전국 전체"
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
     }
+    
+//    // TODO: DIContainer / FlowCoordinator 연결 예정
+//    @objc private func test(_ sender: UIButton) {
+//        let action = RegionSettingViewModelActions()
+//        let useCase = RegionSettingUseCase()
+//        let viewModel = RegionSettingViewModel(regionSettingUseCase: useCase, actions: action)
+//        
+//        let VC = RegionSettingViewController.create(with: viewModel)
+//        
+//        self.present(VC, animated: true)
+//    }
     
     override func makeUI() {
         view.addSubview(scrollView)
@@ -114,14 +110,14 @@ final class HomeViewController: NagazaBaseViewController {
             $0.edges.equalToSuperview()
         }
         
-        scrollView.addSubviews([recommendedContainer, themesContainer])
-        recommendedContainer.snp.makeConstraints {
+        scrollView.addSubviews([recommendedThemeView, themesCollectionView])
+        recommendedThemeView.snp.makeConstraints {
             $0.top.leading.trailing.width.equalTo(scrollView)
             $0.height.equalTo(CGFloat.windowFrameheight / 2)
         }
         
-        themesContainer.snp.makeConstraints {
-            $0.top.equalTo(recommendedContainer.snp.bottom)
+        themesCollectionView.snp.makeConstraints {
+            $0.top.equalTo(recommendedThemeView.snp.bottom)
             $0.leading.trailing.width.bottom.equalTo(scrollView)
             $0.height.equalTo(themesViewEstimatedHeight * CGFloat(themesViewGroupCount))
         }
@@ -130,11 +126,25 @@ final class HomeViewController: NagazaBaseViewController {
     // MARK: Binding
     override func bindViewModel() {
         let initialTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
+        
         let contentOffset = scrollView.rx.contentOffset.asDriver()
+        
+        let mapButtonTapSubject = PublishSubject<String>()
+        
+        let mapButtonTapTrigger = mapButtonTapSubject.asDriverOnErrorJustEmpty()
+        
+        mapButtonItem.rx.tap
+            .map { [weak self] in
+                self?.navigationItem.title ?? ""
+            }
+            .bind(to: mapButtonTapSubject)
+            .disposed(by: disposeBag)
         
         let input = HomeViewModel.Input(
             initialTrigger: initialTrigger,
-            contentOffset: contentOffset)
+            contentOffset: contentOffset,
+            mapButtonTapped: mapButtonTapTrigger
+        )
         
         let output = viewModel.transform(input: input)
         
@@ -168,9 +178,17 @@ final class HomeViewController: NagazaBaseViewController {
         output.scrollOffsetState
             .drive(self.rx.scrollOffsetState)
             .disposed(by: disposeBag)
+        
+        output.mapButtonTapped
+            .drive()
+            .disposed(by: disposeBag)
+        
+        output.selectedRegion
+            .drive(self.rx.navigationTitleSetValue)
+            .disposed(by: disposeBag)
     }
     
-    func updateNavigationBarAppearance(with state: ScrollOffsetState) {
+    internal func updateNavigationBarAppearance(with state: ScrollOffsetState) {
         let navBarAppearance = UINavigationBarAppearance()
         
         navBarAppearance.configureWithOpaqueBackground()
@@ -200,12 +218,22 @@ final class HomeViewController: NagazaBaseViewController {
         
         scrollView.backgroundColor = isDarkMode ? .black : .white
     }
+    
+    internal func updateNavigationTitle(with region: String) {
+        navigationItem.title = region
+    }
 }
 
 extension Reactive where Base: HomeViewController {
     var scrollOffsetState: Binder<ScrollOffsetState> {
         return Binder(self.base) { base, state in
             base.updateNavigationBarAppearance(with: state)
+        }
+    }
+    
+    var navigationTitleSetValue: Binder<String> {
+        return Binder(self.base) { base, region in
+            base.updateNavigationTitle(with: region)
         }
     }
 }
@@ -229,12 +257,12 @@ extension HomeViewController {
             supplementaryView.themeLabel.text = sectionType.title
         }
         
-        dataSource = DataSource(collectionView: themesViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = DataSource(collectionView: themesCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             return collectionView.dequeueConfiguredReusableCell(using: roomCellRegistraition, for: indexPath, item: itemIdentifier)
         })
         
         dataSource.supplementaryViewProvider = { (view, kind, index) in
-            return self.themesViewController.collectionView.dequeueConfiguredReusableSupplementary(
+            return self.themesCollectionView.dequeueConfiguredReusableSupplementary(
                 using: headerRegistration,
                 for: index
             )
