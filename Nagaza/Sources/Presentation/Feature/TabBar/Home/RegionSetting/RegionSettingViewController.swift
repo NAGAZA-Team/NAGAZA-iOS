@@ -33,6 +33,7 @@ final class RegionSettingViewController: NagazaBaseViewController {
         let tableView = UITableView()
         tableView.bounces = false
         tableView.backgroundColor = NagazaAsset.Colors.white.color
+        tableView.separatorInset = .zero
         
         tableView.register(
             SubRegionTableViewCell.self,
@@ -67,10 +68,8 @@ final class RegionSettingViewController: NagazaBaseViewController {
         subReginTableView.rowHeight = 50
         
         mainRegionTableView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalToSuperview()
+            $0.top.leading.bottom.equalTo(view.safeAreaLayoutGuide)
             $0.width.equalTo(130)
-            $0.bottom.equalToSuperview()
         }
         
         subReginTableView.snp.makeConstraints {
