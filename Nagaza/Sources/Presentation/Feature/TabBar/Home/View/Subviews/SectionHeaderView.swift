@@ -8,8 +8,6 @@
 import UIKit
 
 final class SectionHeaderView: UICollectionReusableView {
-    static let identifier = String(describing: SectionHeaderView.self)
-
     lazy var themeLabel: UILabel = {
         let label = UILabel()
 
