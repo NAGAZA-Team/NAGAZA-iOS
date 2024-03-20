@@ -5,24 +5,23 @@
 //  Created by 전성훈 on 2023/10/20.
 //
 
-import MapKit
-
 import RxSwift
 import RxCocoa
 
 struct MapViewModelActions {
-    
+    var toMapSearch: () -> Void
 }
 
 final class MapViewModel: ViewModelType {
+//    private let mapUseCase: MapRepositoryInterface
     private let actions: MapViewModelActions!
     
     struct Input {
-        let searchButtonTapTrigger: Driver<String>
+        let searchViewTapTrigger: Driver<Void>
     }
     
     struct Output {
-        let coordinates: Driver<CLLocationCoordinate2D?>
+        let mapSearch: Driver<Void>
     }
     
     init(actions: MapViewModelActions) {
@@ -30,42 +29,19 @@ final class MapViewModel: ViewModelType {
     }
     
     func transform(input: Input) -> Output {
-        let coordinatesRelay = PublishRelay<CLLocationCoordinate2D?>()
-        
-        let searchRequestSequence = input.searchButtonTapTrigger
-            .do(onNext: { searchText in
-                guard !searchText.isEmpty else { return }
-                
-                let searchRequest = MKLocalSearch.Request()
-                searchRequest.naturalLanguageQuery = searchText
-                
-                let localSearch = MKLocalSearch(request: searchRequest)
-                localSearch.start { (response, error) in
-                    guard let response = response else {
-                        if let error = error {
-                            print("검색 중 에러 발생: \(error.localizedDescription)")
-                            coordinatesRelay.accept(nil)
-                        }
-                        return
-                    }
-                    
-                    guard let first = response.mapItems.first else { return }
-                    
-                    coordinatesRelay.accept(
-                        CLLocationCoordinate2D(
-                            latitude: first.placemark.coordinate.latitude,
-                            longitude: first.placemark.coordinate.longitude
-                        )
-                    )
-                }
-            })
-        
-        let coordinates = coordinatesRelay.asDriver(onErrorJustReturn: nil)
-            .withLatestFrom(searchRequestSequence) { coordinates, _ in
-                print("찾을 좌표 - \(coordinates)")
-                return coordinates
+        let mapSearch = input.searchViewTapTrigger
+            .do { [weak self] _ in
+                guard let self = self else { return }
+                self.toMapSearch()
             }
+            .asDriver()
         
-        return Output(coordinates: coordinates)
+        return Output(mapSearch: mapSearch)
+    }
+}
+
+extension MapViewModel {
+    func toMapSearch() {
+        actions.toMapSearch()
     }
 }

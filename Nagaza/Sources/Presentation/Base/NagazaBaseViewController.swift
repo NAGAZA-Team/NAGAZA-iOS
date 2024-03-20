@@ -33,9 +33,13 @@ class NagazaBaseViewController: UIViewController {
     
     /// Set up Navigation Bar
     func navigationSetting() {
-        navigationController?.navigationBar.backIndicatorImage = NagazaAsset.Images.icArrowRightGray.image
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = NagazaAsset.Images.icArrowRightGray.image
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = NagazaAsset.Colors.gray3.color
+        navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: nil,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
