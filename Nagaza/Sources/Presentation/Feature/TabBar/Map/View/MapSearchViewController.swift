@@ -13,7 +13,7 @@ final class MapSearchViewController: NagazaBaseViewController {
     private var viewModel: MapSearchViewModel!
     private var dataSource: DataSource!
     
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout.searchLayout(withEstimatedHeight: 45)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)

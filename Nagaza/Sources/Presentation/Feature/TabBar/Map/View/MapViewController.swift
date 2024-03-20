@@ -15,13 +15,13 @@ import RxGesture
 final class MapViewController: NagazaBaseViewController {
     private var viewModel: MapViewModel!
     
-    lazy var mapView: MKMapView = {
+    private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.showsUserLocation = true
         return mapView
     }()
     
-    lazy var mapSearchView = MapSearchView()
+    private lazy var mapSearchView = MapSearchView()
     
     static func create(with viewModel: MapViewModel) -> MapViewController {
         let vc = MapViewController()
