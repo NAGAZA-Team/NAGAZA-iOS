@@ -8,7 +8,7 @@
 import UIKit
 
 final class SearchHeaderView: UICollectionReusableView {
-    private lazy var recentTextLabel: UILabel = {
+    lazy var recentTextLabel: UILabel = {
         let label = UILabel()
         label.text = "최근 검색"
         label.font = UIFont.ngaSubTitle2B
@@ -17,7 +17,7 @@ final class SearchHeaderView: UICollectionReusableView {
         return label
     }()
     
-    private lazy var removaAllButton: UIButton = {
+    lazy var removaAllButton: UIButton = {
         let button = UIButton()
         button.setAttributedTitle(NSAttributedString(string: "모두 지우기", attributes: [
             NSAttributedString.Key.font: UIFont.ngaSubTitle2B
