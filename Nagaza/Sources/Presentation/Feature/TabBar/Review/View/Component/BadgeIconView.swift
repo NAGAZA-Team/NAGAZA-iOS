@@ -20,34 +20,34 @@ enum BadgeIconType {
     var title: String {
         switch self {
         case .mud:
-            return "진흙길"
+            "진흙길"
         case .soil:
-            return "흙길"
+            "흙길"
         case .grass:
-            return "풀밭길"
+            "풀밭길"
         case .flower:
-            return "꽃길"
+            "꽃길"
         case .flowerGarden:
-            return "꽃밭길"
+            "꽃밭길"
         case .life:
-            return "인생테마"
+            "인생테마"
         }
     }
     
     var textColor: UIColor {
         switch self {
         case .mud:
-            return NagazaAsset.Colors.darkbrownMudText.color
+            NagazaAsset.Colors.darkbrownMudText.color
         case .soil:
-            return NagazaAsset.Colors.brownSoilText.color
+            NagazaAsset.Colors.brownSoilText.color
         case .grass:
-            return NagazaAsset.Colors.greenGrassText.color
+            NagazaAsset.Colors.greenGrassText.color
         case .flower:
-            return NagazaAsset.Colors.blueFlowerText.color
+            NagazaAsset.Colors.blueFlowerText.color
         case .flowerGarden:
-            return NagazaAsset.Colors.pinkFlowerText.color
+            NagazaAsset.Colors.pinkFlowerText.color
         case .life:
-            return NagazaAsset.Colors.darkbrownMudText.color
+            NagazaAsset.Colors.darkbrownMudText.color
         }
     }
     
