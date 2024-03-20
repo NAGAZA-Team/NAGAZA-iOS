@@ -15,31 +15,13 @@ import RxGesture
 final class MapViewController: NagazaBaseViewController {
     private var viewModel: MapViewModel!
     
-    lazy var mapView: MKMapView = {
+    private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.showsUserLocation = true
         return mapView
     }()
     
-    lazy var searchTextField: UISearchTextField = {
-        let searchTextField = UISearchTextField()
-        
-        let customView = UIView(frame: CGRect(x: -16, y: 0, width: 24, height: 24))
-        let searchImageView = UIImageView()
-        searchImageView.image = NagazaAsset.Images.imgSearch.image
-        customView.addSubview(searchImageView)
-        searchImageView.frame = customView.frame
-        
-        searchTextField.leftView = nil
-        searchTextField.rightView = customView
-        searchTextField.rightViewMode = .always
-        searchTextField.clearButtonMode = .never
-        searchTextField.placeholder = "검색어를 입력하세요"
-        searchTextField.backgroundColor = .white
-        searchTextField.isOpaque = true
-        searchTextField.alpha = 1
-        return searchTextField
-    }()
+    private lazy var mapSearchView = MapSearchView()
     
     static func create(with viewModel: MapViewModel) -> MapViewController {
         let vc = MapViewController()
@@ -48,15 +30,19 @@ final class MapViewController: NagazaBaseViewController {
         return vc
     }
     
-    override func loadView() {
-        super.loadView()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
-        view = mapView
     }
     
     override func makeUI() {
-        view.addSubview(searchTextField)
-        searchTextField.snp.makeConstraints {
+        view.addSubview(mapView)
+        mapView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        view.addSubview(mapSearchView)
+        mapSearchView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(25)
             $0.leading.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(60)
@@ -70,37 +56,16 @@ final class MapViewController: NagazaBaseViewController {
     }
     
     override func bindViewModel() {
-        guard let searchImageView = self.searchTextField.rightView else { return }
+        let searchViewTapTrigger = mapSearchView.rx.tapGesture()
+            .when(.recognized)
+            .map { _ in }.asDriverOnErrorJustEmpty()
         
-        let searchButtonTapTrigger = searchImageView.rx.tapGesture()
-            .withLatestFrom(searchTextField.rx.text.map({ $0 ?? "" })) .asDriver(onErrorJustReturn: "")
-        
-        let input = MapViewModel.Input(searchButtonTapTrigger: searchButtonTapTrigger)
+        let input = MapViewModel.Input(searchViewTapTrigger: searchViewTapTrigger)
         
         let output = viewModel.transform(input: input)
         
-        output.coordinates
-            .do(onNext: { coordinates in
-                guard let value = coordinates else {
-                    // TODO: 입력한 값이 없을 때 처리
-                    print("검색한 값이 없음!!")
-                    return
-                }
-            })
-            .map { [weak self] value in
-                guard let self = self else { return MKCoordinateRegion() }
-                guard let coordinates = value else { return self.mapView.region }
-                return MKCoordinateRegion(
-                    center:
-                        CLLocationCoordinate2D(
-                            latitude: coordinates.latitude,
-                            longitude: coordinates.longitude
-                        ),
-                    latitudinalMeters: 500,
-                    longitudinalMeters: 500
-                )
-            }
-            .drive(mapView.rx.region)
+        output.mapSearch
+            .drive()
             .disposed(by: disposeBag)
     }
 }
@@ -147,15 +112,15 @@ extension MapViewController: MKMapViewDelegate {
     }
 }
 
-#if DEBUG
-import SwiftUI
-
-struct MapViewControllerPreview: PreviewProvider {
-    static var previews: some View {
-        let actions = MapViewModelActions()
-        let viewModel = MapViewModel(actions: actions)
-        let viewController = MapViewController.create(with: viewModel)
-        return viewController.toPreView()
-    }
-}
-#endif
+//#if DEBUG
+//import SwiftUI
+//
+//struct MapViewControllerPreview: PreviewProvider {
+//    static var previews: some View {
+//        let actions = MapViewModelActions()
+//        let viewModel = MapViewModel(actions: actions)
+//        let viewController = MapViewController.create(with: viewModel)
+//        return viewController.toPreView()
+//    }
+//}
+//#endif

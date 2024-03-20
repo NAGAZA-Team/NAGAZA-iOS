@@ -9,6 +9,7 @@ import UIKit
 
 protocol MapFlowCoordinaterDependencies {
     func makeMapViewController(actions: MapViewModelActions) -> MapViewController
+    func makeMapSearchViewController(actions: MapSearchViewModelActions) -> MapSearchViewController
 }
 
 final class MapFlowCoordinator: Coordinator {
@@ -37,13 +38,19 @@ final class MapFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = MapViewModelActions()
+        let actions = MapViewModelActions(toMapSearch: toMapSearch)
         let vc = dependencies.makeMapViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(false, animated: false)
-        navigationController.pushViewController(vc, animated: false)
+        navigationController = UINavigationController(rootViewController: vc)
         
         mapVC = vc
     }
     
+    func toMapSearch() {
+        let actions = MapSearchViewModelActions()
+        let vc = dependencies.makeMapSearchViewController(actions: actions)
+        
+        navigationController.pushViewController(vc, animated: true)
+    }
 }

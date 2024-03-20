@@ -54,11 +54,12 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var recommendedThemeView = RecommendThemeView()
     
-    private lazy var themesCollectionView: UICollectionView = {
-        let layout =  UICollectionViewCompositionalLayout.listLayout(withEstimatedHeight: 215)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.isScrollEnabled = false
+    private lazy var scrollView = UIScrollView()
+    
+    private lazy var recommendedContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        add(child: recommendedThemeViewController, container: view)
         
         return collectionView
     }()
@@ -248,10 +249,10 @@ extension HomeViewController {
         let roomCellRegistraition = UICollectionView.CellRegistration<CellType, ModelType> { [weak self] cell, indexPath, item in
             
             cell.bind(with: item)
-//            cell.delegate = self
+            // cell.delegate = self
         }
         
-        let headerRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>(elementKind: ElementKind.sectionHeader) { supplementaryView, elementKind, indexPath in
+        let headerRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
             let sectionType = HomeSectionType(rawValue: indexPath.section) ?? .comic
             supplementaryView.themeLabel.text = sectionType.title
         }
