@@ -47,18 +47,16 @@ final class HomeViewController: NagazaBaseViewController {
     
     private var dataSource: DataSource!
     
-    private lazy var mapButtonItem: UIBarButtonItem = {
-        let barButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image)
-        return barButtonItem
-    }()
+    private let mapButtonTapped = PublishSubject<String>()
     
     private lazy var recommendedThemeView = RecommendThemeView()
     
-    private lazy var themesCollectionView: UICollectionView = {
-        let layout =  UICollectionViewCompositionalLayout.listLayout(withEstimatedHeight: 215)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.isScrollEnabled = false
+    private lazy var scrollView = UIScrollView()
+    
+    private lazy var recommendedContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        add(child: recommendedThemeViewController, container: view)
         
         return collectionView
     }()
@@ -80,6 +78,8 @@ final class HomeViewController: NagazaBaseViewController {
     override func navigationSetting() {
         super.navigationSetting()
         
+        let mapButtonItem = UIBarButtonItem(image: NagazaAsset.Images.icMapGray.image)
+        
         let searchButtonItem = UIBarButtonItem(
             image: NagazaAsset.Images.icSearchGray.image,
             style: .plain,
@@ -90,6 +90,13 @@ final class HomeViewController: NagazaBaseViewController {
         navigationItem.title = "전국 전체"
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
+        
+        mapButtonItem.rx.tap
+               .map { [weak self] in
+                   self?.navigationItem.title ?? ""
+               }
+               .bind(to: mapButtonTapped)
+               .disposed(by: disposeBag)
     }
     
 //    // TODO: DIContainer / FlowCoordinator 연결 예정
@@ -128,21 +135,12 @@ final class HomeViewController: NagazaBaseViewController {
         
         let contentOffset = scrollView.rx.contentOffset.asDriver()
         
-        let mapButtonTapSubject = PublishSubject<String>()
-        
-        let mapButtonTapTrigger = mapButtonTapSubject.asDriverOnErrorJustEmpty()
-        
-        mapButtonItem.rx.tap
-            .map { [weak self] in
-                self?.navigationItem.title ?? ""
-            }
-            .bind(to: mapButtonTapSubject)
-            .disposed(by: disposeBag)
+        let mapButtonTapped = mapButtonTapped.asDriverOnErrorJustEmpty()
         
         let input = HomeViewModel.Input(
             initialTrigger: initialTrigger,
             contentOffset: contentOffset,
-            mapButtonTapped: mapButtonTapTrigger
+            mapButtonTapped: mapButtonTapped
         )
         
         let output = viewModel.transform(input: input)
