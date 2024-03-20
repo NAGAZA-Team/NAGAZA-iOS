@@ -54,17 +54,17 @@ enum BadgeIconType {
     var backgrouncColor: UIColor {
         switch self {
         case .mud:
-            return NagazaAsset.Colors.darkbrownMudBackground.color
+            NagazaAsset.Colors.darkbrownMudBackground.color
         case .soil:
-            return NagazaAsset.Colors.brownSoilBackground.color
+            NagazaAsset.Colors.brownSoilBackground.color
         case .grass:
-            return NagazaAsset.Colors.greenGrassBackground.color
+            NagazaAsset.Colors.greenGrassBackground.color
         case .flower:
-            return NagazaAsset.Colors.blueFlowerBackground.color
+            NagazaAsset.Colors.blueFlowerBackground.color
         case .flowerGarden:
-            return NagazaAsset.Colors.pinkFlowerBackground.color
+            NagazaAsset.Colors.pinkFlowerBackground.color
         case .life:
-            return NagazaAsset.Colors.yellowLifeBackground.color
+            NagazaAsset.Colors.yellowLifeBackground.color
         }
     }
 }
@@ -80,7 +80,7 @@ final class BadgeIconView: NagazaBaseView {
     
     convenience init(type: BadgeIconType) {
         self.init()
-    
+        
         setupType(with: type)
     }
     
