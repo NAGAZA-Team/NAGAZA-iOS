@@ -8,7 +8,7 @@
 import UIKit
 
 final class HomeSceneDIContainer {
-
+    
     // AppDicontainer에서 Infra Service를 주입 받습니다.
     struct Dependencies {
         
@@ -21,19 +21,20 @@ final class HomeSceneDIContainer {
     }
     
     // MARK: - Domain
-
-    private func makeHomeUseCase() -> HomeRepositoryInterface {
-        return HomeRepository(
-            isStub: true,
-            sampleStatusCode: 200,
-            customEndpointClosure: nil
+    
+    private func makeHomeUseCaseInterface() -> HomeUseCaseInterface {
+        return DefaultHomeUseCase(
+            roomsRepository: HomeRepository(
+                isStub: true,
+                sampleStatusCode: 200,
+                customEndpointClosure: nil
+            )
         )
     }
-        
+    
     func makeRegionSettingUseCase() -> RegionSettingUseCase {
         DefaultRegionSettingUseCase()
     }
-
 }
 
 // MARK: - Data
@@ -57,7 +58,7 @@ extension HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
     private func makeHomeViewModel(
         actions: HomeViewModelActions
     ) -> HomeViewModel {
-        return HomeViewModel(homeUseCase: makeHomeUseCase(), actions: actions)
+        return HomeViewModel(homeUseCaseInterface: makeHomeUseCaseInterface(), actions: actions)
     }
     
     func makeHomeViewController(

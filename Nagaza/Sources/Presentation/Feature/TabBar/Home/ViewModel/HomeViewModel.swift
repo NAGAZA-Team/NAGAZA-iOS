@@ -41,7 +41,7 @@ enum ScrollOffsetState {
 
 // MARK: - HomeViewModel
 final class HomeViewModel: ViewModelType {
-    private let homeUseCase: HomeRepositoryInterface
+    private let homeUseCaseInterface: HomeUseCaseInterface
     private let actions: HomeViewModelActions!
     
     private var disposeBag = DisposeBag()
@@ -62,17 +62,17 @@ final class HomeViewModel: ViewModelType {
     }
     
     init(
-        homeUseCase: HomeRepositoryInterface,
+        homeUseCaseInterface: HomeUseCaseInterface,
         actions: HomeViewModelActions
     ) {
-        self.homeUseCase = homeUseCase
+        self.homeUseCaseInterface = homeUseCaseInterface
         self.actions = actions
     }
     
     func transform(input: Input) -> Output {
         let cafesResponse = input.initialTrigger
             .flatMapLatest { [unowned self] _ in
-                return homeUseCase.fetchCafesList().asDriver(onErrorJustReturn: .init(cafes: [], page: 0, totalPages: 0))
+                return homeUseCaseInterface.fetchCafesList().asDriver(onErrorJustReturn: .init(cafes: [], page: 0, totalPages: 0))
             }
         
         let roomsList = cafesResponse
@@ -80,7 +80,7 @@ final class HomeViewModel: ViewModelType {
                 if cafesPage.cafes.isEmpty { return Driver<[[Room]]>.just([]) }
                 else {
                     let firstId = cafesPage.cafes[0].id
-                    return self.homeUseCase.fetchRoomsList(cafeId: firstId)
+                    return self.homeUseCaseInterface.fetchRoomsList(cafeId: firstId)
                         .map { $0.roomsList }.asDriver(onErrorJustReturn: [])
                 }
             }
