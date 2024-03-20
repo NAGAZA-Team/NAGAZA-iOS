@@ -15,7 +15,9 @@ final class AppDIContainer {
     }
     
     func makeHomeSceneDIContainer() -> HomeSceneDIContainer {
-        return HomeSceneDIContainer()
+        let dependencise = HomeSceneDIContainer.Dependencies()
+        
+        return HomeSceneDIContainer(dependencies: dependencise)
     }
     
     func makeMapSceneDIContainer() -> MapSceneDIContainer {

@@ -8,6 +8,8 @@
 import UIKit
 
 class NagazaBaseView: UIView {
+    private var afterViewDidLoad = true
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         makeUI()
@@ -17,7 +19,19 @@ class NagazaBaseView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if afterViewDidLoad {
+            afterViewDidLoad.toggle()
+            adjustLayoutAfterRendering()
+        }
+    }
+    
     /// Set up constraints of view and add subviews
     func makeUI() { }
+    
+    /// Adjust layout after rendering
+    func adjustLayoutAfterRendering() { }
 }
 
