@@ -49,33 +49,18 @@ final class HomeViewController: NagazaBaseViewController {
     
     private let mapButtonTapped = PublishSubject<String>()
     
-    private lazy var recommendedThemeViewController: RecommendThemeViewController = {
-        let vc = RecommendThemeViewController.create(with: viewModel)
-        return vc
-    }()
+    private lazy var recommendedThemeView = RecommendThemeView()
     
-    private lazy var themesViewController: HomeThemesCollectionViewController = {
-        let vc = HomeThemesCollectionViewController.create(with: viewModel)
-        return vc
+    private lazy var themesCollectionView: UICollectionView = {
+        let layout =  UICollectionViewCompositionalLayout.listLayout(withEstimatedHeight: 215)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = false
+        
+        return collectionView
     }()
     
     private lazy var scrollView = UIScrollView()
-        
-    private lazy var recommendedContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        add(child: recommendedThemeViewController, container: view)
-        
-        return view
-    }()
-    
-    private lazy var themesContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        add(child: themesViewController, container: view)
-        
-        return view
-    }()
     
     static func create(with viewModel: HomeViewModel) -> HomeViewController {
         let vc = HomeViewController()
@@ -130,14 +115,14 @@ final class HomeViewController: NagazaBaseViewController {
             $0.edges.equalToSuperview()
         }
         
-        scrollView.addSubviews([recommendedContainer, themesContainer])
-        recommendedContainer.snp.makeConstraints {
+        scrollView.addSubviews([recommendedThemeView, themesCollectionView])
+        recommendedThemeView.snp.makeConstraints {
             $0.top.leading.trailing.width.equalTo(scrollView)
             $0.height.equalTo(CGFloat.windowFrameheight / 2)
         }
         
-        themesContainer.snp.makeConstraints {
-            $0.top.equalTo(recommendedContainer.snp.bottom)
+        themesCollectionView.snp.makeConstraints {
+            $0.top.equalTo(recommendedThemeView.snp.bottom)
             $0.leading.trailing.width.bottom.equalTo(scrollView)
             $0.height.equalTo(themesViewEstimatedHeight * CGFloat(themesViewGroupCount))
         }
@@ -268,12 +253,12 @@ extension HomeViewController {
             supplementaryView.themeLabel.text = sectionType.title
         }
         
-        dataSource = DataSource(collectionView: themesViewController.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = DataSource(collectionView: themesCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             return collectionView.dequeueConfiguredReusableCell(using: roomCellRegistraition, for: indexPath, item: itemIdentifier)
         })
         
         dataSource.supplementaryViewProvider = { (view, kind, index) in
-            return self.themesViewController.collectionView.dequeueConfiguredReusableSupplementary(
+            return self.themesCollectionView.dequeueConfiguredReusableSupplementary(
                 using: headerRegistration,
                 for: index
             )
