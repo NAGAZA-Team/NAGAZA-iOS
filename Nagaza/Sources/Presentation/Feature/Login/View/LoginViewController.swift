@@ -12,6 +12,7 @@ import SnapKit
 final class LoginViewController: UIViewController, Alertable {
     
     private var viewModel: LoginViewModel!
+    private lazy var login = LoginUseCase()
     
     private lazy var appLogo: UIImageView = {
         let imageView = UIImageView()
@@ -37,6 +38,28 @@ final class LoginViewController: UIViewController, Alertable {
         return stackView
     }()
     
+    // TODO: - will be deleted, after implement sns login sdk
+    private lazy var temporaryMoveHomeBtn: UIButton = {
+        var config = UIButton.Configuration.filled()
+        
+        var titleContainer = AttributeContainer()
+        titleContainer.font = UIFont.ngaSubTitle1M
+        
+        config.attributedTitle = AttributedString("홈뷰로 이동", attributes: titleContainer)
+        
+        config.imagePadding = 12
+        config.image = UIImage(systemName: "house.circle.fill")
+        config.titleAlignment = .center
+        config.baseForegroundColor = .black
+        let button = UIButton(configuration: config)
+        button.tintColor = NagazaAsset.Colors.blueFlowerBackground.color
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
     private lazy var appleLoginBtn: UIButton = {
         var config = UIButton.Configuration.filled()
         
@@ -50,7 +73,7 @@ final class LoginViewController: UIViewController, Alertable {
         button.tintColor = NagazaAsset.Colors.black.color
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(moveSignUpView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(pressedAppleButton), for: .touchUpInside)
         return button
     }()
     
@@ -95,6 +118,10 @@ final class LoginViewController: UIViewController, Alertable {
         return button
     }()
     
+    @objc private func pressedAppleButton() {
+        login.executeAppleLogin()
+    }
+    
     @objc private func moveSignUpView() {
         let vc = EscapeExperienceViewController()
         _ = UINavigationController(rootViewController: vc)
@@ -119,8 +146,14 @@ final class LoginViewController: UIViewController, Alertable {
     
     private func setupView() {
         view.backgroundColor = .white
+        view.addSubview(temporaryMoveHomeBtn)
         view.addSubview(appLogo)
         view.addSubview(snsLoginStackView)
+        
+        temporaryMoveHomeBtn.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(48)
+            $0.trailing.equalToSuperview().inset(24)
+        }
         
         appLogo.snp.makeConstraints {
             $0.top.equalTo(view.snp.top).inset(162)
@@ -157,7 +190,7 @@ final class LoginViewController: UIViewController, Alertable {
     }
 }
 
-#if DEBUGzX
+#if DEBUG
 import SwiftUI
 
 struct LoginViewControllerPreview: PreviewProvider {
