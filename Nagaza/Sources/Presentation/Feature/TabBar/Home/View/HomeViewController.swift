@@ -51,12 +51,11 @@ final class HomeViewController: NagazaBaseViewController {
     
     private lazy var recommendedThemeView = RecommendThemeView()
     
-    private lazy var scrollView = UIScrollView()
-    
-    private lazy var recommendedContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        add(child: recommendedThemeViewController, container: view)
+    private lazy var themesCollectionView: UICollectionView = {
+        let layout =  UICollectionViewCompositionalLayout.listLayout(withEstimatedHeight: 215)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = false
         
         return collectionView
     }()
