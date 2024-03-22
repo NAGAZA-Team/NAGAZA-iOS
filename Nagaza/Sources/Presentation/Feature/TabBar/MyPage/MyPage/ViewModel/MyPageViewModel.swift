@@ -26,7 +26,7 @@ final class MyPageViewModel {
     }
     
     struct Output {
-        let sectionItems: Driver<[MySection]>
+        let sectionItems: Driver<[MyPageSection]>
     }
     
     init(
@@ -67,17 +67,17 @@ final class MyPageViewModel {
         return Output(sectionItems: sectionItems)
     }
     
-    private func createSectionData() -> [MySection] {
+    private func createSectionData() -> [MyPageSection] {
         let myReview = MyPageInfo(type: .myReview, count: 15)
         let like = MyPageInfo(type: .like, count: 23)
         let appSetting = MyPageInfo(type: .appSetting)
         let inquiry = MyPageInfo(type: .inquiry)
         
-        var sectionItems: [MySection] = []
+        var sectionItems: [MyPageSection] = []
         
-        let myDataSection = MySection(model: .myData, items: [myReview, like])
-        let appSettingSection = MySection(model: .appSetting, items: [appSetting])
-        let inquirySection = MySection(model: .inquiry, items: [inquiry])
+        let myDataSection = MyPageSection(model: .myData, items: [myReview, like])
+        let appSettingSection = MyPageSection(model: .appSetting, items: [appSetting])
+        let inquirySection = MyPageSection(model: .inquiry, items: [inquiry])
         
         sectionItems.append(myDataSection)
         sectionItems.append(appSettingSection)

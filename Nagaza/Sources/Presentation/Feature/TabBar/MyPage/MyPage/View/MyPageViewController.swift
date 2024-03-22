@@ -229,5 +229,5 @@ extension MyPageViewController: UITableViewDelegate {
 
 extension MyPageViewController {
     typealias CellType = MyPageTableViewCell
-    typealias DataSource = RxTableViewSectionedReloadDataSource<MySection>
+    typealias DataSource = RxTableViewSectionedReloadDataSource<MyPageSection>
 }

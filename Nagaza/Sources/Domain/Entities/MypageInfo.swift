@@ -8,9 +8,9 @@
 import Foundation
 import RxDataSources
 
-typealias MySection = SectionModel<MyPageSectionType, MyPageInfo>
+typealias MyPageSection = SectionModel<MyPageSectionType, MyPageInfo>
 
-struct MyPageInfo: Hashable {
+struct MyPageInfo {
     let type: MyPageRowType
     var count: Int? = nil
 }
