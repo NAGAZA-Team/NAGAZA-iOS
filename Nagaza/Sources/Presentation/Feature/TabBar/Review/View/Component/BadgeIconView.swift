@@ -80,7 +80,7 @@ final class BadgeIconView: NagazaBaseView {
     
     convenience init(type: BadgeIconType) {
         self.init()
-    
+        
         setupType(with: type)
     }
     

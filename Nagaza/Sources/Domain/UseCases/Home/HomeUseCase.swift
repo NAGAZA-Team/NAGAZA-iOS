@@ -4,10 +4,15 @@
 //
 //  Created by SeungMin on 1/6/24.
 //
-
+//
 import RxSwift
 
-final class HomeUseCase {
+protocol HomeUseCaseInterface {
+    func fetchCafesList() -> Single<CafesPage>
+    func fetchRoomsList(cafeId: Int) -> Single<RoomsPage>
+}
+
+final class DefaultHomeUseCase: HomeUseCaseInterface {
     private let repository: HomeRepositoryInterface
     
     init(roomsRepository: HomeRepositoryInterface) {
