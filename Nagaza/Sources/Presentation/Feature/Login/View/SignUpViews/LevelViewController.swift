@@ -45,7 +45,7 @@ class LevelViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(moveToThemeView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(moveToSettingAOIView), for: .touchUpInside)
         return button
     }()
     
@@ -60,7 +60,7 @@ class LevelViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(moveToThemeView), for: .touchUpInside)
+        //button.addTarget(self, action: #selector(moveToSettingAOIView), for: .touchUpInside)
         return button
     }()
     
@@ -75,13 +75,35 @@ class LevelViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(moveToThemeView), for: .touchUpInside)
+        //button.addTarget(self, action: #selector(moveToSettingAOIView), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var nextButton: UIButton = {
+        let button = UIButton()
+        
+        button.setTitle("다음", for: .normal)
+        button.setTitleColor(NagazaAsset.Colors.white.color, for: .normal)
+        button.titleLabel?.font = UIFont.ngaH5M
+        button.backgroundColor = NagazaAsset.Colors.mainOrange.color
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 16
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc private func nextButtonTapped() {
+        let vc = ChoiceRegionOfInterestViewController()
+        _ = UINavigationController(rootViewController: vc)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     
     private func setupUI() {
         view.addSubview(questionLabel)
         view.addSubview(choiceButtonStack)
+        view.addSubview(nextButton)
         
         NSLayoutConstraint.activate([
             questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 343),
@@ -97,14 +119,24 @@ class LevelViewController: UIViewController {
             lvIntermediateButton.heightAnchor.constraint(equalToConstant: 44),
             lvHighButton.trailingAnchor.constraint(equalTo: choiceButtonStack.trailingAnchor),
             lvHighButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nextButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
+            nextButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            nextButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            nextButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
-    
+    @objc private func moveToSettingAOIView() {
+        
+    }
+    /*
     @objc private func moveToThemeView() {
         let vc = ThemeSelectionViewController()
         _ = UINavigationController(rootViewController: vc)
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    */
 }
 
 #if DEBUG
@@ -117,4 +149,5 @@ struct LevelViewControllerPreview: PreviewProvider {
     }
 }
 #endif
+
 

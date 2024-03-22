@@ -37,15 +37,18 @@ class EscapeExperienceViewController: UIViewController {
     private lazy var yesButton: UIButton = {
         let button = UIButton()
         button.setTitle("있어요", for: .normal)
+        
         button.frame = CGRect(x: 0, y: 0, width: 130, height: 72)
         button.setTitleColor(NagazaAsset.Colors.mainOrange.color, for: .normal)
+        button.setTitleColor(NagazaAsset.Colors.white.color, for: .selected)
+        
         button.tintColor = .clear
         button.layer.borderColor = NagazaAsset.Colors.mainOrange.color.cgColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(moveToLevelView), for: .touchUpInside)
+        //button.addTarget(self, action: #selector(moveToLevelView), for: .touchUpInside)
         return button
     }()
     
@@ -63,11 +66,21 @@ class EscapeExperienceViewController: UIViewController {
         return button
     }()
     
-    @objc private func nextButtonTapped() {
-//        delegate?.didTapNextButton()
-    }
+    private lazy var nextButton: UIButton = {
+        let button = UIButton()
+        
+        button.setTitle("다음", for: .normal)
+        button.setTitleColor(NagazaAsset.Colors.white.color, for: .normal)
+        button.titleLabel?.font = UIFont.ngaH5M
+        button.backgroundColor = NagazaAsset.Colors.mainOrange.color
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 16
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        return button
+    }()
     
-    @objc private func moveToLevelView() {
+    @objc private func nextButtonTapped() {
         let vc = LevelViewController()
         _ = UINavigationController(rootViewController: vc)
         self.navigationController?.pushViewController(vc, animated: true)
@@ -80,7 +93,7 @@ class EscapeExperienceViewController: UIViewController {
         setupUI()
         setupNavigationBar()
     }
-
+    // TODO: - will be deleted, after implement sns sdk
     private func setupNavigationBar() {
         // 내비게이션 바 타이틀 설정
         title = "SignUp"
@@ -106,6 +119,7 @@ class EscapeExperienceViewController: UIViewController {
     private func setupUI() {
         view.addSubview(questionLabel)
         view.addSubview(choiceButtonStack)
+        view.addSubview(nextButton)
         
         NSLayoutConstraint.activate([
             questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 343),
@@ -120,6 +134,12 @@ class EscapeExperienceViewController: UIViewController {
             yesButton.heightAnchor.constraint(equalToConstant: 72),
             noButton.trailingAnchor.constraint(equalTo: choiceButtonStack.trailingAnchor),
             noButton.heightAnchor.constraint(equalToConstant: 72),
+            
+            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nextButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
+            nextButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            nextButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            nextButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
@@ -135,3 +155,4 @@ struct EscapeExperienceViewControllerPreview: PreviewProvider {
     }
 }
 #endif
+
