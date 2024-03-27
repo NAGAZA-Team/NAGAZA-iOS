@@ -6,69 +6,59 @@
 //
 
 import UIKit
-
-enum MyPageSectionType: Int {
-    case myData
-    case appSetting
-    case inquiry
-}
+import RxSwift
+import RxCocoa
+import RxDataSources
 
 final class MyPageViewController: NagazaBaseViewController {
     
     private var viewModel: MyPageViewModel!
     
-    private var dataSource: DataSource!
-    
     static func create(with viewModel: MyPageViewModel) -> MyPageViewController {
         let vc = MyPageViewController()
         vc.viewModel = viewModel
-        
         return vc
     }
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        
         imageView.image = NagazaAsset.Images.dummy.image
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 33
-        
         return imageView
     }()
     
     private let nicknameLabel: UILabel = {
         let label = UILabel()
-        
         label.text = "아기고양이별이님"
         label.font = NagazaFontFamily.Pretendard.semiBold.font(size: 20)
         label.textColor = NagazaAsset.Colors.mainOrange.color
-        
         return label
     }()
     
     private let contentsLabel: UILabel = {
         let label = UILabel()
-        
         label.text = "오늘 방탈출 하셨나요 하셨나요?"
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 17)
         label.textColor = NagazaAsset.Colors.black1.color
-        
         return label
     }()
     
     private let myInfoButton: UIButton = {
         let button = UIButton(type: .custom)
-        
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 13
         button.layer.borderColor = NagazaAsset.Colors.gray5.color.cgColor
         
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 6,
+                                                       leading: 12,
+                                                       bottom: 6,
+                                                       trailing: 12)
         config.attributedTitle = AttributedString("내 정보 보기", attributes: AttributeContainer([NSAttributedString.Key.font: UIFont.ngaP2Sb,
-             NSAttributedString.Key.foregroundColor: NagazaAsset.Colors.gray5.color
-            ])
+                                                                                             NSAttributedString.Key.foregroundColor: NagazaAsset.Colors.gray5.color
+                                                                                            ])
         )
         button.configuration = config
         
@@ -86,46 +76,43 @@ final class MyPageViewController: NagazaBaseViewController {
     
     private let gradeImageView: UIImageView = {
         let imageView = UIImageView()
-        
         imageView.image = NagazaAsset.Images.icLv5.image
-        
         return imageView
     }()
     
     private let gradeInfoLabel: UILabel = {
         let label = UILabel()
-        
         label.text = "3번만 더 탈출하면 다음 등급으로 승급할 수 있어요!"
         label.font = NagazaFontFamily.Pretendard.medium.font(size: 12)
         label.textColor = NagazaAsset.Colors.gray5.color
-        
         return label
     }()
     
     private let gradeInfoImageView: UIImageView = {
         let imageView = UIImageView()
-        
         imageView.image = NagazaAsset.Images.icInfo.image
-        
         return imageView
     }()
     
     private let settingTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.backgroundColor = NagazaAsset.Colors.white.color
-        tableView.register(MyPageTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MyPageTableViewHeader.identifier)
+        let tableView = UITableView()
+        tableView.register(MyPageTableViewHeader.self,
+                           forHeaderFooterViewReuseIdentifier: MyPageTableViewHeader.identifier)
         tableView.register(MyPageTableViewCell.self,
                            forCellReuseIdentifier: MyPageTableViewCell.identifier)
+        tableView.backgroundColor = NagazaAsset.Colors.white.color
         tableView.separatorInset = .zero
         tableView.sectionHeaderTopPadding = 0
         tableView.sectionFooterHeight = 0
+        tableView.isScrollEnabled = false
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        settingTableView.delegate = self
+        settingTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     override func makeUI() {
@@ -174,7 +161,7 @@ final class MyPageViewController: NagazaBaseViewController {
         
         gradeImageView.snp.makeConstraints { make in
             make.width.equalTo(40)
-            make.leading.equalToSuperview().inset(15)
+            make.leading.equalToSuperview().inset(10)
             make.centerY.equalToSuperview()
         }
         
@@ -197,58 +184,37 @@ final class MyPageViewController: NagazaBaseViewController {
     }
     
     override func bindViewModel() {
-        setDataSource()
-        
         let initialTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
+      
+        let appSettingTap = settingTableView.rx.modelSelected(MyPageInfo.self).asDriver()
         
-        let input = MyPageViewModel.Input(initialTrigger: initialTrigger)
+        let input = MyPageViewModel.Input(
+            initialTrigger: initialTrigger,
+            appSettingTap: appSettingTap
+        )
         
         let output = viewModel.transform(input: input)
         
-        output.sectionItems
-            .drive(with: self) { this, list in
-                var snapshot = Snapshot()
-                snapshot.appendSections([.myData, .appSetting, .inquiry])
-                
-                list.forEach { item in
-                    switch item {
-                    case .myData:
-                        snapshot.appendItems(item.list, toSection: .myData)
-                    case .appSetting:
-                        snapshot.appendItems(item.list, toSection: .appSetting)
-                    case .inquiry:
-                        snapshot.appendItems(item.list, toSection: .inquiry)
-                    }
-                }
-                
-                this.dataSource.apply(snapshot, animatingDifferences: false)
-            }
+        output.sectionItems.asObservable()
+            .bind(to: settingTableView.rx.items(dataSource: createDataSource()))
             .disposed(by: disposeBag)
     }
     
-    private func setDataSource() {
-        dataSource = DataSource(tableView: settingTableView, cellProvider: { tableView, indexPath, item in
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier:  MyPageTableViewCell.identifier,
-                for: indexPath) as? MyPageTableViewCell
-            else { return UITableViewCell() }
-            cell.selectionStyle = .none
-            cell.config(item: item)
-            return cell
-        })
+    private func createDataSource() -> DataSource {
+        return DataSource(
+            configureCell: { (_, tableView, indexPath, item) in
+                guard let cell = tableView.dequeueReusableCell(
+                    withIdentifier:  CellType.identifier,
+                    for: indexPath) as? CellType
+                else { return UITableViewCell() }
+                cell.config(item: item)
+                return cell
+            }
+        )
     }
 }
 
-extension MyPageViewController {
-    typealias CellType = MyPageTableViewCell
-    typealias ModelType = MyPageInfo
-    typealias SectionType = MyPageSectionType
-    typealias DataSource = UITableViewDiffableDataSource<SectionType, ModelType>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, ModelType>
-}
-
 extension MyPageViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
@@ -264,14 +230,7 @@ extension MyPageViewController: UITableViewDelegate {
     }
 }
 
-//
-//#if DEBUG
-//import SwiftUI
-//
-//struct MyPageViewControllerPreview: PreviewProvider {
-//    static var previews: some View {
-//        let viewController = MyPageViewController()
-//        return viewController.toPreView()
-//    }
-//}
-//#endif
+extension MyPageViewController {
+    typealias CellType = MyPageTableViewCell
+    typealias DataSource = RxTableViewSectionedReloadDataSource<MyPageSection>
+}

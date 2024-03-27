@@ -1,33 +1,16 @@
 //
-//  MypageInfo.swift
+//  MyPageInfo.swift
 //  Nagaza
 //
 //  Created by 강조은 on 3/10/24.
 //
 
 import Foundation
+import RxDataSources
 
-enum MyPageInfoSection: Hashable {
-    case myData([MyPageInfo])
-    case appSetting([MyPageInfo])
-    case inquiry([MyPageInfo])
-    
-    var list: [MyPageInfo] {
-        switch self {
-        case .myData(let list), .appSetting(let list), .inquiry(let list):
-            return list
-        }
-    }
-}
+typealias MyPageSection = SectionModel<MyPageSectionType, MyPageInfo>
 
-struct MyPageInfo: Hashable {
-    let identifier = UUID()
-    let title: String
+struct MyPageInfo {
+    let type: MyPageRowType
     var count: Int? = nil
-}
-
-extension MyPageInfo {
-    public static func == (lhs: MyPageInfo, rhs: MyPageInfo) -> Bool {
-        lhs.identifier == rhs.identifier
-    }
 }

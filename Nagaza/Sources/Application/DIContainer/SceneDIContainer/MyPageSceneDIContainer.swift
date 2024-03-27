@@ -8,6 +8,16 @@
 import UIKit
 
 final class MyPageSceneDIContainer: MyPageFlowCoordinatorDependencies {
+    func makeMyPageFlowCoordinator(navigationController: UINavigationController) -> MyPageFlowCoordinator {
+        MyPageFlowCoordinator(
+            navigationController: navigationController,
+            dependencies: self
+        )
+    }
+}
+
+// MARK: - 마이페이지 메인
+extension MyPageSceneDIContainer {
     func makeMyPageViewController(actions: MyPageViewModelActions) -> MyPageViewController {
         MyPageViewController.create(with: makeMyPageViewModel(actions: actions))
     }
@@ -15,11 +25,15 @@ final class MyPageSceneDIContainer: MyPageFlowCoordinatorDependencies {
     private func makeMyPageViewModel(actions: MyPageViewModelActions) -> MyPageViewModel {
         MyPageViewModel(actions: actions)
     }
+}
+
+// MARK: - 마이페이지 - 앱 설정
+extension MyPageSceneDIContainer {
+    func makeMyPageAppSettingViewController(actions: MyPageAppSettingViewModelActions) -> MyPageAppSettingViewController {
+        MyPageAppSettingViewController.create(with: makeMyPageAppSettingViewModel(actions: actions))
+    }
     
-    func makeMyPageFlowCoordinator(navigationController: UINavigationController) -> MyPageFlowCoordinator {
-        MyPageFlowCoordinator(
-            navigationController: navigationController,
-            dependencies: self
-        )
+    private func makeMyPageAppSettingViewModel(actions: MyPageAppSettingViewModelActions) -> MyPageAppSettingViewModel {
+        MyPageAppSettingViewModel(actions: actions)
     }
 }

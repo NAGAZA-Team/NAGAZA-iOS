@@ -7,25 +7,21 @@
 
 import UIKit
 
-final class MyPageTableViewCell: UITableViewCell {
+final class MyPageTableViewCell: NagazaBaseTableViewCell {
     
     static let identifier = MyPageTableViewCell.description()
     
     private let titleLabel: UILabel = {
-        
         let label = UILabel()
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 16)
         label.textColor = NagazaAsset.Colors.black1.color
-        
         return label
     }()
     
     private let countLabel: UILabel = {
         let label = UILabel()
-        
         label.font = NagazaFontFamily.Pretendard.regular.font(size: 15)
         label.textColor = NagazaAsset.Colors.mainOrange.color
-        
         return label
     }()
     
@@ -33,20 +29,18 @@ final class MyPageTableViewCell: UITableViewCell {
                   reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
-        
-        setup()
-        initConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setup() {
-        contentView.addSubviews([titleLabel, countLabel])
+    override func makeUI() {
+        contentView.addSubviews([titleLabel,
+                                 countLabel])
     }
     
-    private func initConstraints() {
+    override func setConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(20)
             make.leading.equalToSuperview().inset(24)
@@ -60,9 +54,12 @@ final class MyPageTableViewCell: UITableViewCell {
     }
     
     func config(item: MyPageInfo) {
-        titleLabel.text = item.title
+        titleLabel.text = item.type.title
+        
         if let count = item.count {
             countLabel.text = "\(count)"
-        } else { countLabel.text = nil }
+        } else {
+            countLabel.text = nil
+        }
     }
 }

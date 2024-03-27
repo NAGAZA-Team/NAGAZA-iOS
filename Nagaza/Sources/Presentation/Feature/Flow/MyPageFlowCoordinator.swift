@@ -15,7 +15,6 @@ final class MyPageFlowCoordinator: Coordinator {
     var type: CoordinatorType { .myPage }
     
     var childCoordinators: [Coordinator] = []
-    
     var navigationController: UINavigationController
     
     weak var finishDelegate: CoordinatorFinishDelegate?
@@ -34,12 +33,23 @@ final class MyPageFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = MyPageViewModelActions()
+        let actions = MyPageViewModelActions(moveAppSetting: moveAppSetting)
         let vc = dependencies.makeMyPageViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
         
         myPageVC = vc
+    }
+}
+
+extension MyPageFlowCoordinator {
+    func moveAppSetting() {
+        let coordinator = MyPageAppSettingCoordinator(navigationController: navigationController,
+                                                      dependencies: dependencies)
+        coordinator.start()
+        navigationController.pushViewController(coordinator.viewController,
+                                                animated: true)
+        childCoordinators.append(coordinator)
     }
 }
