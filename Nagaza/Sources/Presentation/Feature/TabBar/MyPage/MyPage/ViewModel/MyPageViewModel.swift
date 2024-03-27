@@ -22,7 +22,7 @@ final class MyPageViewModel {
     
     struct Input {
         let initialTrigger: Driver<Void>
-        let appSettingTap: ControlEvent<MyPageInfo>
+        let appSettingTap: Driver<MyPageInfo>
     }
     
     struct Output {
@@ -45,8 +45,7 @@ final class MyPageViewModel {
             }
         
         input.appSettingTap
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self, onNext: { owner, event in
+            .drive(with: self, onNext: { owner, event in
                 print(event)
                 switch event.type {
                 case .myReview:

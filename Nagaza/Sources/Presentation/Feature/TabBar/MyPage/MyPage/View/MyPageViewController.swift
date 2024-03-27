@@ -185,10 +185,13 @@ final class MyPageViewController: NagazaBaseViewController {
     
     override func bindViewModel() {
         let initialTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
-        let appSettingTap = settingTableView.rx.modelSelected(MyPageInfo.self)
+      
+        let appSettingTap = settingTableView.rx.modelSelected(MyPageInfo.self).asDriver()
         
-        let input = MyPageViewModel.Input(initialTrigger: initialTrigger,
-                                          appSettingTap: appSettingTap)
+        let input = MyPageViewModel.Input(
+            initialTrigger: initialTrigger,
+            appSettingTap: appSettingTap
+        )
         
         let output = viewModel.transform(input: input)
         
