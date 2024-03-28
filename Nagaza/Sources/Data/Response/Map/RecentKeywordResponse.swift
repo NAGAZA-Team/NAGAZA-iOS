@@ -1,5 +1,5 @@
 //
-//  KeywordResponseDTO.swift
+//  RecentKeywordResponse.swift
 //  Nagaza
 //
 //  Created by SeungMin on 3/14/24.
