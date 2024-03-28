@@ -5,7 +5,6 @@
 //  Created by SeungMin on 2023/11/01.
 //
 
-import Security
 import Foundation
 
 final class Keychain {
@@ -15,9 +14,12 @@ final class Keychain {
     private let lock: NSLock = NSLock() // 멀티 스레드 환경에서 객체의 멤버에 동시 접근 방지
     private var lastResultCode: OSStatus = noErr
     
-    private init() { }
+    private init() {
+        setApiKey()
+    }
     
     enum TokenType: String {
+        case apiKey
         case accessToken
         case refreshToken
     }
@@ -112,6 +114,13 @@ final class Keychain {
         
         lastResultCode = SecItemDelete(keyChainQuery)
         return lastResultCode == noErr
+    }
+    
+    private func setApiKey() {
+        set(
+            "eb31c26138364bf0d6d5fa78138e693d",
+            forKey: .apiKey
+        )
     }
 }
 
