@@ -9,12 +9,13 @@ import RxSwift
 import RxCocoa
 
 struct MapViewModelActions {
-    var toMapSearch: () -> Void
+    var toMapSearchVC: () -> Void
 }
 
 final class MapViewModel: ViewModelType {
-//    private let mapUseCase: MapRepositoryInterface
+//    private let mapUseCase: MapUseCaseInterface
     private let actions: MapViewModelActions!
+    let searchItem = PublishRelay<Place?>()
     
     struct Input {
         let searchViewTapTrigger: Driver<Void>
@@ -22,6 +23,7 @@ final class MapViewModel: ViewModelType {
     
     struct Output {
         let mapSearch: Driver<Void>
+        let searchItem: Driver<Place?>
     }
     
     init(actions: MapViewModelActions) {
@@ -32,16 +34,19 @@ final class MapViewModel: ViewModelType {
         let mapSearch = input.searchViewTapTrigger
             .do { [weak self] _ in
                 guard let self = self else { return }
-                self.toMapSearch()
+                self.toMapSearchVC()
             }
             .asDriver()
         
-        return Output(mapSearch: mapSearch)
+        return Output(
+            mapSearch: mapSearch,
+            searchItem: searchItem.asDriverOnErrorJustEmpty()
+        )
     }
 }
 
 extension MapViewModel {
-    func toMapSearch() {
-        actions.toMapSearch()
+    func toMapSearchVC() {
+        actions.toMapSearchVC()
     }
 }

@@ -13,7 +13,7 @@ import RxCocoa
 import RxGesture
 
 final class MapViewController: NagazaBaseViewController {
-    private var viewModel: MapViewModel!
+    var viewModel: MapViewModel!
     
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
@@ -67,6 +67,30 @@ final class MapViewController: NagazaBaseViewController {
         output.mapSearch
             .drive()
             .disposed(by: disposeBag)
+        
+        output.searchItem
+            .drive(with: self) { owner, item in
+                guard let item = item,
+                      let latitude = Double(item.y),
+                      let longitude = Double(item.x) else { return }
+                owner.updateLocation(
+                    with: CLLocationCoordinate2D(
+                        latitude: latitude,
+                        longitude: longitude
+                    )
+                )
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func updateLocation(with coordinates: CLLocationCoordinate2D?) {
+        guard let coordinates = coordinates else { return }
+        let region = MKCoordinateRegion(
+            center: coordinates,
+            latitudinalMeters: 500,
+            longitudinalMeters: 500
+        )
+        mapView.region = region
     }
 }
 
@@ -103,12 +127,7 @@ extension MapViewController {
 
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        let region = MKCoordinateRegion(
-            center: userLocation.coordinate,
-            latitudinalMeters: 500,
-            longitudinalMeters: 500
-        )
-        mapView.region = region
+        updateLocation(with: userLocation.coordinate)
     }
 }
 
