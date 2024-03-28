@@ -8,16 +8,36 @@
 import UIKit
 
 import RxSwift
+import RxCocoa
 
 final class MapSearchViewController: NagazaBaseViewController {
     private var viewModel: MapSearchViewModel!
     private var dataSource: DataSource!
     
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewCompositionalLayout.searchLayout(withEstimatedHeight: 45)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        return collectionView
+    private lazy var tableView: NagazaBaseTableView = {
+        let tableView = NagazaBaseTableView(
+            frame: .zero,
+            style: .plain
+        )
+        tableView.register(
+            SearchTableViewCell.self,
+            forCellReuseIdentifier: SearchTableViewCell.identifier
+        )
+        tableView.rowHeight = 75
+        return tableView
+    }()
+    
+    private lazy var searchTextField: UISearchTextField = {
+        let searchTextField = UISearchTextField()
+        searchTextField.leftView = nil
+        searchTextField.placeholder = "검색어를 입력하세요"
+        searchTextField.backgroundColor = .white
+        return searchTextField
+    }()
+    
+    private lazy var searchButtonImageView: UIImageView = {
+        let imageView = UIImageView(image:  NagazaAsset.Images.imgSearch.image)
+        return imageView
     }()
     
     static func create(with viewModel: MapSearchViewModel) -> MapSearchViewController {
@@ -29,7 +49,7 @@ final class MapSearchViewController: NagazaBaseViewController {
     
     override func loadView() {
         super.loadView()
-        view = collectionView
+        view = tableView
     }
     
     override func viewDidLoad() {
@@ -40,20 +60,7 @@ final class MapSearchViewController: NagazaBaseViewController {
     override func navigationSetting() {
         navigationController?.navigationBar.isHidden = false
         
-        let searchTextField: UISearchTextField = {
-            let searchTextField = UISearchTextField()
-            searchTextField.leftView = nil
-            searchTextField.placeholder = "검색어를 입력하세요"
-            searchTextField.backgroundColor = .white
-            return searchTextField
-        }()
-        
-        let searchButtonItem = UIBarButtonItem(
-            image: NagazaAsset.Images.imgSearch.image, 
-            style: .plain,
-            target: nil,
-            action: nil
-        )
+        let searchButtonItem = UIBarButtonItem(customView: searchButtonImageView)
         
         navigationItem.titleView = searchTextField
         navigationItem.rightBarButtonItem = searchButtonItem
@@ -62,87 +69,69 @@ final class MapSearchViewController: NagazaBaseViewController {
     override func bindViewModel() {
         let initialTrigger = self.rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
         
-        let input = MapSearchViewModel.Input(initialTrigger: initialTrigger)
+        let searchText = searchTextField.rx.text
         
-        let ouput = viewModel.transform(input: input)
+        let searchButtonTapTrigger = self.searchButtonImageView.rx.tapGesture()
+            .when(.recognized)
+            .withLatestFrom(searchText) { return $1 ?? "" }
+            .asDriverOnErrorJustEmpty()
+                
+        let itemSelectedTrigger = tableView.rx.itemSelected
+            .asDriver()
+            .debug()
         
-        ouput.recentKeywordList
-            .drive(with: self) { owner, recentKeywordlist in
+        let input = MapSearchViewModel.Input(
+            initialTrigger: initialTrigger,
+            searchButtonTapTrigger: searchButtonTapTrigger, 
+            itemSelectedTrigger: itemSelectedTrigger
+        )
+        
+        let output = viewModel.transform(input: input)
+        
+//        ouput.recentKeywordList
+//            .drive(with: self) { owner, recentKeywordlist in
+//                var snapshot = Snapshot()
+//                snapshot.appendSections([.home])
+//                snapshot.appendItems(recentKeywordlist, toSection: .home)
+//                owner.dataSource.apply(snapshot)
+//            }
+//            .disposed(by: disposeBag)
+        
+        output.keywordList
+            .drive(with: self) { owner, keywordList in
                 var snapshot = Snapshot()
                 snapshot.appendSections([.home])
-                snapshot.appendItems(recentKeywordlist, toSection: .home)
+                snapshot.appendItems(keywordList, toSection: .home)
                 owner.dataSource.apply(snapshot)
             }
+            .disposed(by: disposeBag)
+        
+        output.itemSelectedActionTrigger
+            .drive()
             .disposed(by: disposeBag)
     }
 }
 
 extension MapSearchViewController {
-    typealias CellType = SearchCollectionViewCell
-    typealias ModelType = RecentKeyword
+    typealias CellType = SearchTableViewCell
+    typealias ModelType = Place
     typealias SectionType = SearchSection
-    typealias DataSource = UICollectionViewDiffableDataSource<SectionType, ModelType>
+    typealias DataSource = UITableViewDiffableDataSource<SectionType, ModelType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionType, ModelType>
     
     private func setDataSource() {
-        let headerRegistration = UICollectionView.SupplementaryRegistration
-        <SearchHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) { _,_,_ in }
-        
-        let searchCellRegistration = UICollectionView.CellRegistration<CellType, ModelType> { cell, indexPath, item in
-            cell.bind(item: item)
-        }
-        
-        dataSource = DataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-          return collectionView.dequeueConfiguredReusableCell(using: searchCellRegistration, for: indexPath, item: itemIdentifier)
+        dataSource = DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, item in
+            guard let self = self else { return UITableViewCell() }
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier) as? SearchTableViewCell
+            else { return UITableViewCell() }
+            
+            cell.bind(
+                item: item,
+                keyword: self.searchTextField.text
+            )
+            
+            return cell
         })
-        
-        dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
-            guard let self = self else { return .none }
-            return self.collectionView.dequeueConfiguredReusableSupplementary(
-            using: headerRegistration,
-            for: index
-          )
-        }
-    }
-}
-
-extension UICollectionViewCompositionalLayout {
-    static func searchLayout(withEstimatedHeight estimatedHeight: CGFloat = 45) -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout(section: .searchSection(withEstimatedHeight: estimatedHeight))
-    }
-}
-
-extension NSCollectionLayoutSection {
-    static func searchSection(withEstimatedHeight estimatedHeight: CGFloat = 45) -> NSCollectionLayoutSection {
-        
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(estimatedHeight)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(estimatedHeight)
-        )
-        
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [item])
-        
-        let sectionHeaderSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(54))
-        
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: sectionHeaderSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [sectionHeader]
-        
-        return section
     }
 }
