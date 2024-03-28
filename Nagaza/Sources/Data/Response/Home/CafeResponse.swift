@@ -1,5 +1,5 @@
 //
-//  CafeResponseDTO.swift
+//  CafeResponse.swift
 //  Nagaza
 //
 //  Created by SeungMin on 1/7/24.

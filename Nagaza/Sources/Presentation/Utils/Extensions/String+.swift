@@ -20,4 +20,23 @@ extension String {
         let size = self.size(withAttributes: fontAttributes)
         return size.height
     }
+    
+    func toAttributedString(
+        with keyword: String?,
+        font: UIFont,
+        color: UIColor
+    ) -> NSAttributedString? {
+        guard let keyword = keyword else { return NSAttributedString(string: self) }
+        
+        let attributeString = NSMutableAttributedString(string: self)
+        attributeString.addAttributes(
+            [
+                .foregroundColor: color,
+                .font: font
+            ],
+            range: (self as NSString).range(of:  keyword)
+        )
+        
+        return attributeString
+    }
 }

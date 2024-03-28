@@ -38,7 +38,7 @@ final class MapFlowCoordinator: Coordinator {
     }
     
     func start() {
-        let actions = MapViewModelActions(toMapSearch: toMapSearch)
+        let actions = MapViewModelActions(toMapSearchVC: toMapSearchVC)
         let vc = dependencies.makeMapViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(false, animated: false)
@@ -47,10 +47,17 @@ final class MapFlowCoordinator: Coordinator {
         mapVC = vc
     }
     
-    func toMapSearch() {
-        let actions = MapSearchViewModelActions()
+    func toMapSearchVC() {
+        let actions = MapSearchViewModelActions(toMapVC: toMapVC)
         let vc = dependencies.makeMapSearchViewController(actions: actions)
         
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func toMapVC(item: Place) {
+        navigationController.popViewController(animated: true)
+        
+        guard let mapVC = navigationController.topViewController as? MapViewController else { return }
+        mapVC.viewModel.searchItem.accept(item)
     }
 }
