@@ -20,16 +20,18 @@ final class MapSceneDIContainer: MapFlowCoordinaterDependencies {
         MapSearchViewController.create(with: makeMapSearchViewModel(actions: actions))
     }
     
-    private func makeMapUseCase() -> MapRepositoryInterface {
-        return MapRepository(
-            isStub: true,
-            sampleStatusCode: 200,
-            customEndpointClosure: nil
+    private func makeMapSearchUseCase() -> MapSearchUseCaseInterface {
+        return DefaultMapSearchUseCase(
+            roomsRepository: MapSearchRepository(
+                isStub: false,
+                sampleStatusCode: 200,
+                customEndpointClosure: nil
+            )
         )
     }
     
     private func makeMapSearchViewModel(actions: MapSearchViewModelActions) -> MapSearchViewModel {
-        MapSearchViewModel(mapUseCase: makeMapUseCase(), actions: actions)
+        MapSearchViewModel(mapUseCase: makeMapSearchUseCase(), actions: actions)
     }
     
     func makeMapFlowCoordinator(navigationController: UINavigationController) -> MapFlowCoordinator {
