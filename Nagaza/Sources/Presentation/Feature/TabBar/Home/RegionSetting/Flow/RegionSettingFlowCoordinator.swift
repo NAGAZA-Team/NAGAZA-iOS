@@ -1,23 +1,21 @@
 //
-//  HomeFlowCoordinaterDependencies.swift
+//  RegionSettingFlowCoordinator.swift
 //  Nagaza
 //
-//  Created by 전성훈 on 2023/10/20.
+//  Created by 전성훈 on 4/7/24.
 //
 
 import UIKit
 
-/// Flow Coordinator는 DICiontainer의 Presentation만 알아야 하기 때문에 해당 부분만 delegate 패턴으로 채택해줍니다.
-protocol HomeFlowCoordinaterDependencies {
-    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
+protocol RegionSettingFlowCoordinatorDependencies {
     func makeRegionSettingViewController(
         with subRegion: String,
         didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) -> RegionSettingViewController
 }
 
-final class HomeFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .home }
+final class RegionSettingFlowCoordinator: Coordinator {
+    var type: CoordinatorType { .regionSetting }
     
     var childCoordinators: [Coordinator] = []
     
@@ -26,33 +24,30 @@ final class HomeFlowCoordinator: Coordinator {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var tabBarDelegate: TabBarDelegate?
     
-    private let dependencies: HomeFlowCoordinaterDependencies!
-    
-    private weak var homeVC: HomeViewController?
+    private let dependencies: RegionSettingFlowCoordinatorDependencies!
+    private weak var regionSettingVC: RegionSettingViewController?
     
     init(
         navigationController: UINavigationController,
-        dependencies: HomeFlowCoordinaterDependencies
+        dependencies: RegionSettingFlowCoordinatorDependencies
     ) {
         self.navigationController = navigationController
         self.dependencies = dependencies
     }
     
     func start() {
-        let actions = HomeViewModelActions(
-            showRegionSetting: showRegionSetting(with: didSelect:),
-            logoutTest: logoutTest
-        )
+        let didSelectAction: RegionSettingViewModelDidSelectAction = { [weak self] region in
+             // 사용자가 지역을 선택했을 때 수행할 작업
+             print("선택된 지역: \(region)")
+             // 예를 들어, 다른 코디네이터를 시작하거나, 상태를 업데이트할 수 있습니다.
+         }
         
-        let vc = dependencies.makeHomeViewController(actions: actions)
+        let vc = dependencies.makeRegionSettingViewController(with: "전국", didSelect: didSelectAction)
         
-        navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
-        
-        homeVC = vc
     }
     
-    private func showRegionSetting(
+    func start(
         with subRegion: String,
         didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
@@ -61,7 +56,7 @@ final class HomeFlowCoordinator: Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
     
-    private func logoutTest() {
+    private func dismiss() {
         self.finish()
     }
 }

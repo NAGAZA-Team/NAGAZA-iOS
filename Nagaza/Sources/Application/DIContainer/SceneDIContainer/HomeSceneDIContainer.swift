@@ -42,9 +42,9 @@ extension HomeSceneDIContainer {
     
 }
 
-// MARK: - Presentation
+// MARK: - Home Presentation
 extension HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
-    // Home Flow Coordinator
+    // Flow Coordinator
     func makeHomeFlowCoordinator(
         navigationController: UINavigationController
     ) -> HomeFlowCoordinator {
@@ -54,20 +54,37 @@ extension HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
         )
     }
     
-    // MARK: Make Home ViewModel - ViewController
+    // View Model
     private func makeHomeViewModel(
         actions: HomeViewModelActions
     ) -> HomeViewModel {
-        return HomeViewModel(homeUseCaseInterface: makeHomeUseCaseInterface(), actions: actions)
+        return HomeViewModel(
+            homeUseCaseInterface: makeHomeUseCaseInterface(),
+            actions: actions
+        )
     }
     
+    // ViewController
     func makeHomeViewController(
         actions: HomeViewModelActions
     ) -> HomeViewController {
         return HomeViewController.create(with: makeHomeViewModel(actions: actions))
     }
+}
+
+// MARK: - RegionSetting Presentation
+extension HomeSceneDIContainer: RegionSettingFlowCoordinatorDependencies {
+    // Flow Coordinator
+    func makeRegionSettingFlowCoordinator(
+        navigationController: UINavigationController
+    ) -> RegionSettingFlowCoordinator {
+        RegionSettingFlowCoordinator(
+            navigationController: navigationController,
+            dependencies: self
+        )
+    }
     
-    // MARK: Make Region Setting ViewModel - ViewController
+    // View Model
     private func makeRegionSettingViewModel(
         with subRegion: String,
         didSelect: @escaping RegionSettingViewModelDidSelectAction
@@ -79,6 +96,7 @@ extension HomeSceneDIContainer: HomeFlowCoordinaterDependencies {
         )
     }
     
+    // ViewController
     func makeRegionSettingViewController(
         with subRegion: String,
         didSelect: @escaping RegionSettingViewModelDidSelectAction
