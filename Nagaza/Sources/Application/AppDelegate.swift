@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         NMFAuthManager.shared().clientId = Keychain.shared.get(.naverClientID)
 
+        DIRegister.shared.registerDIContainer()
+        
         return true
     }
     
