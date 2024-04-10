@@ -15,6 +15,7 @@ final class DIRegister {
     func registerDIContainer() {
         let container = DIContainer.shared
         
-        
+        container.register(<#T##type: T.Type##T.Type#>, dependency: <#T##T#>)
+        container.resolve(<#T##type: T.Type##T.Type#>)
     }
 }
