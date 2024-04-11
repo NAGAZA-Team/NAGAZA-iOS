@@ -11,43 +11,29 @@ protocol LoginFlowCoordinatorDependencies {
     func makeLoginViewController(actions: LoginViewModelActions) -> LoginViewController
 }
 
-final class LoginFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .login }
-    
-    var childCoordinators: [Coordinator] = []
-    
-    var navigationController: UINavigationController
-
-    weak var finishDelegate: CoordinatorFinishDelegate?
-    weak var tabBarDelegate: TabBarDelegate? = nil
+final class LoginFlowCoordinator: BaseCoordinator {
     
     private let dependencies: LoginFlowCoordinatorDependencies!
-    
-    private weak var loginVC: LoginViewController?
     
     init(
         navigationController: UINavigationController,
         dependencies: LoginFlowCoordinatorDependencies
     ) {
-        self.navigationController = navigationController
         self.dependencies = dependencies
+        super.init(navigationController: navigationController)
     }
     
-    deinit {
-        print("Login Flow Deinit")
-    }
-    
-    func start() {
+    override func start() {
         let actions = LoginViewModelActions(showTabBar: showTabBar)
         let vc = dependencies.makeLoginViewController(actions: actions)
         
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
-
-        loginVC = vc
+        
+        viewController = vc
     }
     
     private func showTabBar() {
-        self.finish()
+        // TODO: TabBarFlowCoordinator 띄우기
     }
 }

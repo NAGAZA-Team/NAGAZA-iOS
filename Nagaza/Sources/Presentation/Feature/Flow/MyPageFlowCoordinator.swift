@@ -9,47 +9,44 @@ import UIKit
 
 protocol MyPageFlowCoordinatorDependencies {
     func makeMyPageViewController(actions: MyPageViewModelActions) -> MyPageViewController
+    func makeMyPageAppSettingViewController(actions: MyPageAppSettingViewModelActions) -> MyPageAppSettingViewController
 }
 
-final class MyPageFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .myPage }
-    
-    var childCoordinators: [Coordinator] = []
-    var navigationController: UINavigationController
-    
-    weak var finishDelegate: CoordinatorFinishDelegate?
-    weak var tabBarDelegate: TabBarDelegate?
-    
+final class MyPageFlowCoordinator: BaseCoordinator {
     private let dependencies: MyPageFlowCoordinatorDependencies!
-    
-    private weak var myPageVC: MyPageViewController?
     
     init(
         navigationController: UINavigationController,
         dependencies: MyPageFlowCoordinatorDependencies
     ) {
-        self.navigationController = navigationController
         self.dependencies = dependencies
+        super.init(navigationController: navigationController)
     }
     
-    func start() {
+    override func start() {
         let actions = MyPageViewModelActions(moveAppSetting: moveAppSetting)
         let vc = dependencies.makeMyPageViewController(actions: actions)
+        viewController = vc
         
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
-        
-        myPageVC = vc
     }
 }
 
 extension MyPageFlowCoordinator {
     func moveAppSetting() {
-        let coordinator = MyPageAppSettingCoordinator(navigationController: navigationController,
-                                                      dependencies: dependencies)
+        let coordinator = MyPageAppSettingCoordinator(
+            navigationController: navigationController,
+            dependencies: dependencies
+        )
         coordinator.start()
-        navigationController.pushViewController(coordinator.viewController,
-                                                animated: true)
+        coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
+    }
+}
+
+extension MyPageFlowCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        removeChildCoordinator(childCoordinator)
     }
 }

@@ -7,15 +7,7 @@
 
 import UIKit
 
-final class AppFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .app }
-    
-    var childCoordinators: [Coordinator] = []
-    
-    weak var finishDelegate: CoordinatorFinishDelegate? = nil
-    weak var tabBarDelegate: TabBarDelegate? = nil
-    
-    var navigationController: UINavigationController
+final class AppFlowCoordinator: BaseCoordinator {
     
     private let appDIContainer: AppDIContainer
     
@@ -23,13 +15,13 @@ final class AppFlowCoordinator: Coordinator {
         navigationController: UINavigationController,
         appDIContainer: AppDIContainer
     ) {
-        self.navigationController = navigationController
         self.appDIContainer = appDIContainer
+        super.init(navigationController: navigationController)
     }
     
-    func start() {
+    override func start() {
         let splashViewController = SplashViewController()
-        self.navigationController.pushViewController(splashViewController, animated: false)
+        navigationController.pushViewController(splashViewController, animated: false)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             if let _ = Keychain.shared.get(.accessToken) {
@@ -43,10 +35,8 @@ final class AppFlowCoordinator: Coordinator {
 
 extension AppFlowCoordinator {
     func showTabBar() {
-        let tabBarController = NagazaTabBarController()
         let tabBarFlowCoordinator = TabBarFlowCoordinator(
-            navigationController: navigationController,
-            tabBarController: tabBarController
+            navigationController: navigationController
         )
         
         let HomeSceneDIContaier = appDIContainer.makeHomeSceneDIContainer()
@@ -68,27 +58,23 @@ extension AppFlowCoordinator {
         let myPageFlow = myPageSceneDIContaier.makeMyPageFlowCoordinator(
             navigationController: UINavigationController()
         )
-      
-        tabBarFlowCoordinator.setupTabs(with: [
+        
+        tabBarFlowCoordinator.start(with: [
             HomeFlow,
             mapFlow,
             reviewFlow,
             myPageFlow
         ])
         
-        tabBarFlowCoordinator.finishDelegate = self
-        tabBarFlowCoordinator.start()
-        
         childCoordinators.append(tabBarFlowCoordinator)
     }
     
-    func showLogin() {
+    private func showLogin() {
         let loginSceneDIContainer = appDIContainer.makeLoginSceneDIContainer()
         let loginFlow = loginSceneDIContainer.makeLoginFlowCoordinator(
             navigationController: navigationController
         )
         
-        loginFlow.finishDelegate = self
         loginFlow.start()
         
         childCoordinators.append(loginFlow)
@@ -97,25 +83,20 @@ extension AppFlowCoordinator {
 
 extension AppFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        childCoordinators = childCoordinators.filter({ $0.type != childCoordinator.type })
-        
-        switch childCoordinator.type {
-        case .tab:
+        if childCoordinator is TabBarFlowCoordinator {
             navigationController.viewControllers.removeAll()
-
+            
             // TODO: 토큰 삭제
             Keychain.shared.delete(.accessToken)
-
+            
             showLogin()
-        case .login:
+        } else {
             navigationController.viewControllers.removeAll()
-
+            
             // TODO: 토큰 임시 설정
             Keychain.shared.set("test", forKey: .accessToken)
-
+            
             showTabBar()
-        default:
-            break
         }
     }
 }

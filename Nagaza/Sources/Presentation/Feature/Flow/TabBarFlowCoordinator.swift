@@ -7,73 +7,46 @@
 
 import UIKit
 
-final class TabBarFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .tab }
+final class TabBarFlowCoordinator: BaseCoordinator {
     
-    var childCoordinators: [Coordinator] = []
-    
-    var navigationController: UINavigationController
-    
-    weak var finishDelegate: CoordinatorFinishDelegate?
-    weak var tabBarDelegate: TabBarDelegate? = nil
-    
-    private var tabBarVC: NagazaTabBarController!
-    
-    init(
-        navigationController: UINavigationController,
-        tabBarController: NagazaTabBarController
+    override init(
+        navigationController: UINavigationController
     ) {
-        print("TabBar Flow Init")
-        self.navigationController = navigationController
-        self.tabBarVC = tabBarController
+        super.init(navigationController: navigationController)
     }
     
-    deinit {
-        print("TabBar FlowDeinit")
-    }
-    
-    func start() {
-        tabBarVC.selectedIndex = 0
+    func start(with coordinators: [Coordinator]) {
         
-        navigationController.pushViewController(tabBarVC, animated: false)
+        let tabBarVC = NagazaTabBarController()
+        viewController = tabBarVC
+        
+        setupTabs(with: coordinators)
+        
         navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.pushViewController(tabBarVC, animated: false)
     }
     
     func setupTabs(with coordinators: [Coordinator]) {
-        
-        var tabs: [TabBarType] = []
+        let tabs: [TabBarType] = TabBarType.allCases
         
         for coordinator in coordinators {
-            switch coordinator.type {
-            case .home:
-                tabs.append(.home)
-            case .map:
-                tabs.append(.map)
-            case .review:
-                tabs.append(.review)
-            case .myPage:
-                tabs.append(.myPage)
-            default:
-                continue
-            }
-            
-            coordinator.finishDelegate = self
-            coordinator.tabBarDelegate = tabBarVC
-            
             coordinator.start()
-
             childCoordinators.append(coordinator)
         }
         
         let viewControllers = coordinators.map { $0.navigationController }
-
-        tabBarVC.setViewControllers(viewControllers, with: tabs)
+        
+        if let tabBarVC = viewController as? NagazaTabBarController {
+            tabBarVC.setViewControllers(viewControllers, with: tabs)
+            tabBarVC.selectedIndex = 0
+        }
     }
 }
 
 // MARK: Logout 버튼 클릭 시 tabBar Flow Coordinator도 같이 삭제
 extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        self.finish()
+        navigationController.popViewController(animated: true)
+        removeChildCoordinator(childCoordinator)
     }
 }

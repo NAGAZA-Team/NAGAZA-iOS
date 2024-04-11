@@ -11,35 +11,23 @@ protocol ReviewFlowCoordinatorDependencies {
     func makeReviewViewController(actions: ReviewViewModelActions) -> ReviewViewController
 }
 
-final class ReviewFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .review }
-    
-    var childCoordinators: [Coordinator] = []
-    
-    var navigationController: UINavigationController
-    
-    weak var finishDelegate: CoordinatorFinishDelegate?
-    weak var tabBarDelegate: TabBarDelegate?
-    
+final class ReviewFlowCoordinator: BaseCoordinator {
     private let dependencies: ReviewFlowCoordinatorDependencies!
-    
-    private weak var reviewVC: ReviewViewController?
     
     init(
         navigationController: UINavigationController,
         dependencies: ReviewFlowCoordinatorDependencies
     ) {
-        self.navigationController = navigationController
         self.dependencies = dependencies
+        super.init(navigationController: navigationController)
     }
     
-    func start() {
+    override func start() {
         let actions = ReviewViewModelActions()
         let vc = dependencies.makeReviewViewController(actions: actions)
+        viewController = vc
         
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
-        
-        reviewVC = vc
     }
 }

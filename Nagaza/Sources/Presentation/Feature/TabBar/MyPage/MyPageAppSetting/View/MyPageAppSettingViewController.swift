@@ -18,8 +18,28 @@ final class MyPageAppSettingViewController: NagazaBaseViewController {
         return vc
     }
     
+    private let backButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle("뒤로가기", for: .normal)
+        button.backgroundColor = .black
+        return button
+    }()
+    
     override func makeUI() {
         super.makeUI()
         view.backgroundColor = .yellow
+        
+        view.addSubview(backButton)
+        
+        backButton.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    override func bindViewModel() {
+        let backButtonEvent = backButton.rx.tap.asDriver()
+        
+        let input = MyPageAppSettingViewModel.Input(tapBackButton: backButtonEvent)
+        let output = viewModel.transform(input: input)
     }
 }
