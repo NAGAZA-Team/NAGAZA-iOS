@@ -18,21 +18,7 @@ class BaseCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func addChildCooridnator(_ coordinator: Coordinator) {
-        for element in childCoordinators {
-            if element === coordinator { return }
-        }
-        childCoordinators.append(coordinator)
+    func start() {
+        print("----- start coordinator: \(self) -----")
     }
-    
-    func removeChildCoordinator(_ coordinator: Coordinator) {
-        for (index, element) in childCoordinators.enumerated() {
-            if element === coordinator {
-                childCoordinators.remove(at: index)
-                break
-            }
-        }
-    }
-    
-    func start() {}
 }

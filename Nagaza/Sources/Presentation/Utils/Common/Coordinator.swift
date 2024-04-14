@@ -12,6 +12,28 @@ protocol Coordinator: AnyObject {
     var navigationController: UINavigationController { get set }
     
     func start()
+    func addChildCoordinator(_ coordinator: Coordinator)
+    func removeChildCoordinator(_ coordinator: Coordinator)
+    func removeChildCoordinators()
+}
+
+extension Coordinator {
+    func addChildCoordinator(_ coordinator: Coordinator) {
+        if !childCoordinators.contains(where: { $0 === coordinator }) {
+            childCoordinators.append(coordinator)
+        }
+    }
+    
+    func removeChildCoordinator(_ coordinator: Coordinator) {
+        if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
+            childCoordinators.remove(at: index)
+        }
+    }
+    
+    func removeChildCoordinators() {
+        childCoordinators.forEach { $0.removeChildCoordinators()}
+        childCoordinators.removeAll()
+    }
 }
 
 protocol CoordinatorFinishDelegate: AnyObject {

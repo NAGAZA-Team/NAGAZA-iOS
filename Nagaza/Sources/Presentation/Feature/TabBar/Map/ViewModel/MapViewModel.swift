@@ -13,7 +13,6 @@ struct MapViewModelActions {
 }
 
 final class MapViewModel: ViewModelType {
-//    private let mapUseCase: MapUseCaseInterface
     private let actions: MapViewModelActions!
     let searchItem = PublishRelay<Place?>()
     
