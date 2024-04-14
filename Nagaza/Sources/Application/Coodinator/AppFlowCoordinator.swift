@@ -8,27 +8,18 @@
 import UIKit
 
 final class AppFlowCoordinator: BaseCoordinator {
+        
+    private var window: UIWindow?
     
-    private let appDIContainer: AppDIContainer
-    
-    init(
-        navigationController: UINavigationController,
-        appDIContainer: AppDIContainer
-    ) {
-        self.appDIContainer = appDIContainer
-        super.init(navigationController: navigationController)
+    init(window: UIWindow) {
+        self.window = window
     }
     
     override func start() {
-        let splashViewController = SplashViewController()
-        navigationController.pushViewController(splashViewController, animated: false)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            if let _ = Keychain.shared.get(.accessToken) {
-                self?.showTabBar()
-            } else {
-                self?.showLogin()
-            }
+        if let _ = Keychain.shared.get(.accessToken) {
+            showTabBar()
+        } else {
+            showLogin()
         }
     }
 }
@@ -67,6 +58,7 @@ extension AppFlowCoordinator {
         ])
         
         childCoordinators.append(tabBarFlowCoordinator)
+        rootViewController =
     }
     
     private func showLogin() {

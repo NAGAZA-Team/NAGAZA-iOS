@@ -11,7 +11,6 @@ class BaseCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
-    var viewController: UIViewController = UIViewController()
     weak var finishDelegate: CoordinatorFinishDelegate?
     
     init(navigationController: UINavigationController) {

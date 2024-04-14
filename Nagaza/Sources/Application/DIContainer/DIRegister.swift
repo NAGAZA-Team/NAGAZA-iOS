@@ -15,5 +15,6 @@ final class DIRegister {
     func registerDIContainer() {
         let container = DIContainer.shared
         
+        container.register(SplashViewController.self, dependency: SplashViewController())
     }
 }
