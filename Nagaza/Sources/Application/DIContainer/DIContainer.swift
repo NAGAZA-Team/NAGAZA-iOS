@@ -19,9 +19,12 @@ final class DIContainer {
         dependencies[key] = Weak(value: dependency)
     }
     
-    func resolve<T: AnyObject>(_ type: T.Type) -> T? {
+    func resolve<T: AnyObject>(_ type: T.Type) -> T {
         let key = String(describing: type)
         
-        return dependencies[key]?.value as? T
+        guard let value = dependencies[key]?.value as? T else {
+            fatalError("---- 의존성 Key 값을 찾지 못했습니다!!: \(key) ----")
+        }
+        return value
     }
 }

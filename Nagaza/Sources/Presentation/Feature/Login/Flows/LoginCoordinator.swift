@@ -20,11 +20,14 @@ final class LoginCoordinator: BaseCoordinator {
         }
     }
         
-    func start(with window: UIWindow) {
+    func start(with window: UIWindow, navigationController: UINavigationController) {
         self.window = window
-        let loginViewController = dependencies.makeLoginViewController()
-        let navigationController = UINavigationController(rootViewController: loginViewController)
-        UIWindow.keyWindow?.rootViewController = navigationController
-        UIWindow.keyWindow?.makeKeyAndVisible()
+
+        if let loginVC = DIContainer.shared.resolve(LoginViewController.self)
+        self.navigationController = navigationController
+        self.navigationController?.pushViewController(loginVC, animated: true)
+        
+        rootViewController = loginVC
+        
     }
 }

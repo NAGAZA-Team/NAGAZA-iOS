@@ -55,7 +55,7 @@ final class AppFlowCoordinator: BaseCoordinator {
         if let loginFlowCoordinator = container.resolve(LoginCoordinator.self) {
             
             addChildCoordinator(loginFlowCoordinator)
-            loginFlowCoordinator.start(with: window)
+            loginFlowCoordinator.start(with: window, navigationController: UINavigationController())
         }
     }
 }

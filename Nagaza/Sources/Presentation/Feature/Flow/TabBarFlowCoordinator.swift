@@ -21,7 +21,8 @@ final class TabBarFlowCoordinator: BaseCoordinator {
     ) {
         self.window = window
         
-        let tabBarVC = NagazaTabBarController()
+        let tabBarVC = DIContainer.shared.resolve(NagazaTabBarController.self)
+        
         rootViewController = tabBarVC
         
         setupTabs(withViewControllers: coordinators)
@@ -35,7 +36,7 @@ final class TabBarFlowCoordinator: BaseCoordinator {
             coordinator.start(navigationController: UINavigationController())
         }
         
-        let viewControllers = coordinators.map { $0.navigationController }
+        let viewControllers = coordinators.compactMap { $0.navigationController }
         
         if let tabBarVC = rootViewController as? NagazaTabBarController {
             tabBarVC.setViewControllers(viewControllers, with: tabs)
