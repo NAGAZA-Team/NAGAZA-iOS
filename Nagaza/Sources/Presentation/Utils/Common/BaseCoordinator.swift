@@ -9,7 +9,8 @@ import UIKit
 
 class BaseCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
-    var navigationController: UINavigationController
+    
+    weak var navigationController: UINavigationController?
     weak var finishDelegate: CoordinatorFinishDelegate?
     
     init() { }

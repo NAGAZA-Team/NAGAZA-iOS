@@ -20,7 +20,6 @@ final class TabBarFlowCoordinator: BaseCoordinator {
                with window: UIWindow
     ) {
         self.window = window
-        window.backgroundColor = .white
         
         let tabBarVC = NagazaTabBarController()
         rootViewController = tabBarVC

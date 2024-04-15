@@ -8,7 +8,18 @@
 import UIKit
 
 final class AppFlowCoordinator: BaseCoordinator {
-    func startRoot(with window: UIWindow) {
+    let container = DIContainer.shared
+
+    func start(with window: UIWindow) {
+        window.rootViewController = container.resolve(SplashViewController.self)
+        window.makeKeyAndVisible()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.checkAccessToken(with: window)
+        }
+    }
+    
+    private func checkAccessToken(with window: UIWindow) {
         if let _ = Keychain.shared.get(.accessToken) {
             showTabBar(with: window)
         } else {
@@ -17,8 +28,6 @@ final class AppFlowCoordinator: BaseCoordinator {
     }
     
     private func showTabBar(with window: UIWindow) {
-        let container = DIContainer.shared
-        
         if let tabBarCoordinator = container.resolve(TabBarFlowCoordinator.self),
            let homeFlowCoordinator = container.resolve(HomeFlowCoordinator.self),
            let mapFlowCoordinator = container.resolve(MapFlowCoordinator.self),
@@ -42,36 +51,35 @@ final class AppFlowCoordinator: BaseCoordinator {
     }
     
     private func showLogin(with window: UIWindow) {
-        let loginSceneDIContainer = appDIContainer.makeLoginSceneDIContainer()
-        let loginFlow = loginSceneDIContainer.makeLoginFlowCoordinator(
-            navigationController: navigationController
-        )
         
-        loginFlow.start()
-        
-        childCoordinators.append(loginFlow)
+        if let loginFlowCoordinator = container.resolve(LoginCoordinator.self) {
+            
+            addChildCoordinator(loginFlowCoordinator)
+            loginFlowCoordinator.start(with: window)
+        }
     }
-}
-
-extension AppFlowCoordinator {
 }
 
 extension AppFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
+        removeChildCoordinator(childCoordinator)
+
         if childCoordinator is TabBarFlowCoordinator {
-            navigationController.viewControllers.removeAll()
-            
             // TODO: 토큰 삭제
             Keychain.shared.delete(.accessToken)
             
-            showLogin()
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                showLogin(with: window)
+            }
         } else {
-            navigationController.viewControllers.removeAll()
-            
             // TODO: 토큰 임시 설정
             Keychain.shared.set("test", forKey: .accessToken)
             
-            showTabBar()
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                showTabBar(with: window)
+            }
         }
     }
 }

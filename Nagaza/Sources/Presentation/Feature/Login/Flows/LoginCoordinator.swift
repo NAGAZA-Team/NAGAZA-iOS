@@ -12,17 +12,16 @@ protocol LoginCoordinatorDependencies {
 }
 
 final class LoginCoordinator: BaseCoordinator {
-    private let dependencies: LoginCoordinatorDependencies
-    
-    init(
-        navigationController: UINavigationController,
-        dependencies: LoginCoordinatorDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
+    private var window: UIWindow?
+    private var rootViewController: UIViewController? {
+        didSet {
+            window?.rootViewController = rootViewController
+            window?.makeKeyAndVisible()
+        }
     }
-    
-    override func start() {
+        
+    func start(with window: UIWindow) {
+        self.window = window
         let loginViewController = dependencies.makeLoginViewController()
         let navigationController = UINavigationController(rootViewController: loginViewController)
         UIWindow.keyWindow?.rootViewController = navigationController

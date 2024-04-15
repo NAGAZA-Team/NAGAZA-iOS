@@ -8,7 +8,7 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    let container = DIContainer.shared
     var window: UIWindow?
     var appCoordinator: AppFlowCoordinator?
 
@@ -17,20 +17,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        guard let windowScene = (scene as? UIWindowScene),
-              let splashViewController = DIContainer.shared.resolve(SplashViewController.self)
-        else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+            
+        self.window = setupWindow(for: windowScene)
         
+        setupCoordinator()
+    }
+    
+    private func setupWindow(for windowScene: UIWindowScene) -> UIWindow {
         let window = UIWindow(windowScene: windowScene)
+        window.backgroundColor = .white
         
-        self.window = window
-
-        self.window?.rootViewController = splashViewController
-        self.window?.makeKeyAndVisible()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.appCoordinator = AppFlowCoordinator(window: window)
-            self?.appCoordinator?.start()
+        return window
+    }
+    
+    private func setupCoordinator() {
+        if let window = self.window {
+            appCoordinator = container.resolve(AppFlowCoordinator.self)
+            appCoordinator?.start(with: window)
         }
     }
 }

@@ -28,6 +28,13 @@ final class DIRegister {
             TabBarFlowCoordinator.self,
             dependency: TabBarFlowCoordinator()
         )
+        
+        container.register(LoginCoordinator.self, dependency: LoginCoordinator())
+        container.register(HomeFlowCoordinator.self, dependency: HomeFlowCoordinator())
+        container.register(MapFlowCoordinator.self, dependency: MapFlowCoordinator())
+        container.register(ReviewFlowCoordinator.self, dependency: ReviewFlowCoordinator())
+        container.register(MyPageFlowCoordinator.self, dependency: MyPageFlowCoordinator())
+        
         container.register(
             NagazaTabBarController.self,
             dependency: NagazaTabBarController()
