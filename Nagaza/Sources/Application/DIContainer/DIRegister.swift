@@ -15,6 +15,22 @@ final class DIRegister {
     func registerDIContainer() {
         let container = DIContainer.shared
         
-        container.register(SplashViewController.self, dependency: SplashViewController())
+        container.register(
+            SplashViewController.self,
+            dependency: SplashViewController()
+        )
+        container.register(
+            AppFlowCoordinator.self,
+            dependency: AppFlowCoordinator()
+        )
+        
+        container.register(
+            TabBarFlowCoordinator.self,
+            dependency: TabBarFlowCoordinator()
+        )
+        container.register(
+            NagazaTabBarController.self,
+            dependency: NagazaTabBarController()
+        )
     }
 }

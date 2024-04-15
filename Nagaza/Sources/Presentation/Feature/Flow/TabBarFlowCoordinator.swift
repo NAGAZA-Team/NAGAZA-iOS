@@ -8,35 +8,37 @@
 import UIKit
 
 final class TabBarFlowCoordinator: BaseCoordinator {
-    
-    override init(
-        navigationController: UINavigationController
-    ) {
-        super.init(navigationController: navigationController)
+    private var window: UIWindow?
+    private var rootViewController: UIViewController? {
+        didSet {
+            window?.rootViewController = rootViewController
+            window?.makeKeyAndVisible()
+        }
     }
     
-    func start(with coordinators: [Coordinator]) {
+    func start(withViewControllers coordinators: [Coordinator], 
+               with window: UIWindow
+    ) {
+        self.window = window
+        window.backgroundColor = .white
         
         let tabBarVC = NagazaTabBarController()
-        viewController = tabBarVC
+        rootViewController = tabBarVC
         
-        setupTabs(with: coordinators)
-        
-        navigationController.setNavigationBarHidden(true, animated: false)
-        navigationController.pushViewController(tabBarVC, animated: false)
+        setupTabs(withViewControllers: coordinators)
     }
     
-    func setupTabs(with coordinators: [Coordinator]) {
+    private func setupTabs(withViewControllers coordinators: [Coordinator]) {
         let tabs: [TabBarType] = TabBarType.allCases
         
         for coordinator in coordinators {
-            coordinator.start()
-            childCoordinators.append(coordinator)
+            addChildCoordinator(coordinator)
+            coordinator.start(navigationController: UINavigationController())
         }
         
         let viewControllers = coordinators.map { $0.navigationController }
         
-        if let tabBarVC = viewController as? NagazaTabBarController {
+        if let tabBarVC = rootViewController as? NagazaTabBarController {
             tabBarVC.setViewControllers(viewControllers, with: tabs)
             tabBarVC.selectedIndex = 0
         }
@@ -46,7 +48,6 @@ final class TabBarFlowCoordinator: BaseCoordinator {
 // MARK: Logout 버튼 클릭 시 tabBar Flow Coordinator도 같이 삭제
 extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        navigationController.popViewController(animated: true)
         removeChildCoordinator(childCoordinator)
     }
 }

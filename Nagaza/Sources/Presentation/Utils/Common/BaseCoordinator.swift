@@ -8,16 +8,14 @@
 import UIKit
 
 class BaseCoordinator: Coordinator {
-    
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     weak var finishDelegate: CoordinatorFinishDelegate?
     
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
+    init() { }
     
-    func start() {
+    func start(navigationController: UINavigationController) {
+        self.navigationController = navigationController
         print("----- start coordinator: \(self) -----")
     }
 }

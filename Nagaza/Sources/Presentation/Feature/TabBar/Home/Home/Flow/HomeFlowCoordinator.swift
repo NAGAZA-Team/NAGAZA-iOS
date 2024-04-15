@@ -36,7 +36,6 @@ final class HomeFlowCoordinator: BaseCoordinator {
         )
         
         let vc = dependencies.makeHomeViewController(actions: actions)
-        viewController = vc
         
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
