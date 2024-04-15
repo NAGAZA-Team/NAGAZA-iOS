@@ -7,21 +7,12 @@
 
 import UIKit
 
-protocol MyPageFlowCoordinatorDependencies {
-    func makeMyPageViewController(actions: MyPageViewModelActions) -> MyPageViewController
-    func makeMyPageAppSettingViewController(actions: MyPageAppSettingViewModelActions) -> MyPageAppSettingViewController
-}
+//protocol MyPageFlowCoordinatorDependencies {
+//    func makeMyPageViewController(actions: MyPageViewModelActions) -> MyPageViewController
+//    func makeMyPageAppSettingViewController(actions: MyPageAppSettingViewModelActions) -> MyPageAppSettingViewController
+//}
 
 final class MyPageFlowCoordinator: BaseCoordinator {
-    private let dependencies: MyPageFlowCoordinatorDependencies!
-    
-    init(
-        navigationController: UINavigationController,
-        dependencies: MyPageFlowCoordinatorDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
-    }
     
     override func start() {
         let actions = MyPageViewModelActions(moveAppSetting: moveAppSetting)

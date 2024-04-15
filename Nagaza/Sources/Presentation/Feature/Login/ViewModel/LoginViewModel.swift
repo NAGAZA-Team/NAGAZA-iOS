@@ -8,8 +8,8 @@
 import Foundation
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
-struct LoginViewModelActions {
-    let showTabBar: () -> Void
+protocol LoginCoordinatorActions {
+    func navigateToMainTabBar()
 }
 
 protocol LoginViewModelInput {
@@ -23,7 +23,6 @@ protocol LoginViewModelOutput {
 typealias LoginViewModelProtocol = LoginViewModelInput & LoginViewModelOutput
 
 final class LoginViewModel: LoginViewModelProtocol {
-    private let actions: LoginViewModelActions!
     
     // MARK: Output
     

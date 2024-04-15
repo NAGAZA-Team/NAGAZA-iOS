@@ -28,35 +28,37 @@ final class AppFlowCoordinator: BaseCoordinator {
     }
     
     private func showTabBar(with window: UIWindow) {
-        if let tabBarCoordinator = container.resolve(TabBarFlowCoordinator.self),
-           let homeFlowCoordinator = container.resolve(HomeFlowCoordinator.self),
-           let mapFlowCoordinator = container.resolve(MapFlowCoordinator.self),
-           let reviewFlowCoordinator = container.resolve(ReviewFlowCoordinator.self),
-           let myPageFlowCoordinator = container.resolve(MyPageFlowCoordinator.self) {
-            
-            addChildCoordinator(tabBarCoordinator)
-            
-            let coordinators = [
-                homeFlowCoordinator,
-                mapFlowCoordinator,
-                reviewFlowCoordinator,
-                myPageFlowCoordinator
-            ]
-            
-            tabBarCoordinator.start(
-                withViewControllers: coordinators,
-                with: window
-            )
-        }
+        let tabBarCoordinator = container.resolve(TabBarFlowCoordinator.self)
+        let homeFlowCoordinator = container.resolve(HomeFlowCoordinator.self)
+        let mapFlowCoordinator = container.resolve(MapFlowCoordinator.self)
+        let reviewFlowCoordinator = container.resolve(ReviewFlowCoordinator.self)
+        let myPageFlowCoordinator = container.resolve(MyPageFlowCoordinator.self)
+        
+        addChildCoordinator(tabBarCoordinator)
+        
+        let coordinators = [
+            homeFlowCoordinator,
+            mapFlowCoordinator,
+            reviewFlowCoordinator,
+            myPageFlowCoordinator
+        ]
+        
+        tabBarCoordinator.finishDelegate = self
+        tabBarCoordinator.start(
+            withViewControllers: coordinators,
+            with: window
+        )
+        
     }
     
     private func showLogin(with window: UIWindow) {
         
-        if let loginFlowCoordinator = container.resolve(LoginCoordinator.self) {
-            
-            addChildCoordinator(loginFlowCoordinator)
-            loginFlowCoordinator.start(with: window, navigationController: UINavigationController())
-        }
+        let loginFlowCoordinator = container.resolve(LoginFlowCoordinator.self)
+
+        addChildCoordinator(loginFlowCoordinator)
+
+        loginFlowCoordinator.finishDelegate = self
+        loginFlowCoordinator.start(with: window, navigationController: UINavigationController())
     }
 }
 

@@ -16,7 +16,7 @@ final class TabBarFlowCoordinator: BaseCoordinator {
         }
     }
     
-    func start(withViewControllers coordinators: [Coordinator], 
+    override func start(withViewControllers coordinators: [Coordinator], 
                with window: UIWindow
     ) {
         self.window = window
@@ -48,6 +48,7 @@ final class TabBarFlowCoordinator: BaseCoordinator {
 // MARK: Logout 버튼 클릭 시 tabBar Flow Coordinator도 같이 삭제
 extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
-        removeChildCoordinator(childCoordinator)
+        removeChildCoordinators()
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

@@ -8,16 +8,18 @@
 import RxSwift
 import Moya
 
-final class HomeRepository: ProviderProtocol {
+final class HomeRepository: ProviderProtocol, HomeRepositoryInterface{
     typealias Target = HomeTarget
     var provider: MoyaProvider<Target>
     
     init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Moya.Endpoint)?) {
         self.provider = Self.consProvider(isStub, sampleStatusCode, customEndpointClosure)
     }
-}
-
-extension HomeRepository: HomeRepositoryInterface {
+    
+    convenience init() {
+        
+    }
+    
     func fetchCafesList() -> Single<CafesPage> {
         request(
             type: CafeResponse.self,
@@ -33,4 +35,23 @@ extension HomeRepository: HomeRepositoryInterface {
         )
         .map { $0.toDomain() }
     }
+
 }
+
+//extension HomeRepository: HomeRepositoryInterface {
+////    func fetchCafesList() -> Single<CafesPage> {
+////        request(
+////            type: CafeResponse.self,
+////            target: .fetchCafesList
+////        )
+////        .map { $0.toDomain() }
+////    }
+////    
+////    func fetchRoomsList(cafeId: Int) -> Single<RoomsPage> {
+////        request(
+////            type: RoomsResponse.self,
+////            target: .fetchRoomsList(cafeId: cafeId)
+////        )
+////        .map { $0.toDomain() }
+////    }
+//}

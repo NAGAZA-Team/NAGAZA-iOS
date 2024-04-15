@@ -7,33 +7,29 @@
 
 import UIKit
 
-protocol LoginFlowCoordinatorDependencies {
-    func makeLoginViewController(actions: LoginViewModelActions) -> LoginViewController
+final class LoginFlowCoordinator: BaseCoordinator {
+    private var window: UIWindow?
+    private var rootViewController: UIViewController? {
+        didSet {
+            window?.rootViewController = rootViewController
+            window?.makeKeyAndVisible()
+        }
+    }
+        
+    override func start(with window: UIWindow, navigationController: UINavigationController) {
+        self.window = window
+
+        let loginVC = DIContainer.shared.resolve(LoginViewController.self)
+        self.navigationController = navigationController
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.pushViewController(loginVC, animated: false)
+        
+        rootViewController = navigationController
+    }
 }
 
-final class LoginFlowCoordinator: BaseCoordinator {
-    
-    private let dependencies: LoginFlowCoordinatorDependencies!
-    
-    init(
-        navigationController: UINavigationController,
-        dependencies: LoginFlowCoordinatorDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
-    }
-    
-    override func start() {
-        let actions = LoginViewModelActions(showTabBar: showTabBar)
-        let vc = dependencies.makeLoginViewController(actions: actions)
-        
-        navigationController.setNavigationBarHidden(true, animated: false)
-        navigationController.pushViewController(vc, animated: false)
-        
-        viewController = vc
-    }
-    
-    private func showTabBar() {
-        // TODO: TabBarFlowCoordinator 띄우기
+extension LoginFlowCoordinator: LoginCoordinatorActions {
+    func navigateToMainTabBar() {
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

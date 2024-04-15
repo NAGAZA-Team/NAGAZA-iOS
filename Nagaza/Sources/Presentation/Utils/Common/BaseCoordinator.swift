@@ -15,8 +15,25 @@ class BaseCoordinator: Coordinator {
     
     init() { }
     
+    /// Basic Start type
     func start(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        print("----- start coordinator: \(self) -----")
+    }
+    
+    /// Login start type
+    func start(
+        with window: UIWindow,
+        navigationController: UINavigationController
+    ) {
+        print("----- start coordinator: \(self) -----")
+    }
+    
+    /// TabBarVC start type
+    func start(
+        withViewControllers coordinators: [Coordinator],
+        with window: UIWindow
+    ) {
         print("----- start coordinator: \(self) -----")
     }
 }

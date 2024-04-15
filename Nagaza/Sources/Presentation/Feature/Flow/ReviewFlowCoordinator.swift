@@ -12,15 +12,15 @@ protocol ReviewFlowCoordinatorDependencies {
 }
 
 final class ReviewFlowCoordinator: BaseCoordinator {
-    private let dependencies: ReviewFlowCoordinatorDependencies!
+//    private let dependencies: ReviewFlowCoordinatorDependencies!
     
-    init(
-        navigationController: UINavigationController,
-        dependencies: ReviewFlowCoordinatorDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
-    }
+//    init(
+//        navigationController: UINavigationController,
+//        dependencies: ReviewFlowCoordinatorDependencies
+//    ) {
+//        self.dependencies = dependencies
+//        super.init(navigationController: navigationController)
+//    }
     
     override func start() {
         let actions = ReviewViewModelActions()

@@ -13,15 +13,15 @@ protocol MapFlowCoordinaterDependencies {
 }
 
 final class MapFlowCoordinator: BaseCoordinator {
-    private let dependencies: MapFlowCoordinaterDependencies!
+//    private let dependencies: MapFlowCoordinaterDependencies!
     
-    init(
-        navigationController: UINavigationController,
-        dependencies: MapFlowCoordinaterDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
-    }
+//    init(
+//        navigationController: UINavigationController,
+//        dependencies: MapFlowCoordinaterDependencies
+//    ) {
+//        self.dependencies = dependencies
+//        super.init(navigationController: navigationController)
+//    }
     
     override func start() {
         let actions = MapViewModelActions(toMapSearchVC: toMapSearchVC)

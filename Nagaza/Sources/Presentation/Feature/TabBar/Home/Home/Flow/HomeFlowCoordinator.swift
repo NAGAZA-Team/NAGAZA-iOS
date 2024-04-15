@@ -19,15 +19,15 @@ protocol HomeFlowCoordinaterDependencies {
 
 final class HomeFlowCoordinator: BaseCoordinator {
     
-    private let dependencies: HomeFlowCoordinaterDependencies!
+//    private let dependencies: HomeFlowCoordinaterDependencies!
     
-    init(
-        navigationController: UINavigationController,
-        dependencies: HomeFlowCoordinaterDependencies
-    ) {
-        self.dependencies = dependencies
-        super.init(navigationController: navigationController)
-    }
+//    init(
+//        navigationController: UINavigationController,
+//        dependencies: HomeFlowCoordinaterDependencies
+//    ) {
+//        self.dependencies = dependencies
+//        super.init(navigationController: navigationController)
+//    }
     
     override func start() {
         let actions = HomeViewModelActions(

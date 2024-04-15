@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RegionSettingUseCase {
+protocol RegionSettingUseCase: AnyObject {
     func loadMainRegions() -> [MainRegion]
     func loadMainRegions(with subRegion: String) -> [MainRegion]
     func loadSubRegions(with mainRegion: Region) -> [SubRegion]
