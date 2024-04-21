@@ -21,51 +21,38 @@ final class DIContainerTests: XCTestCase {
         
         register.registerDIContainer()
     }
-
+    
     override func tearDownWithError() throws {
         container.reset()
         
         try super.tearDownWithError()
     }
     
-    // MARK: Repository Tests
-    /// Home Repository
-    func test_HomeRepositoryIsRegistered() {
-        guard let homeRepository = container.resolve(HomeRepository.self) else {
-            XCTFail("Home Repository 주입 실패")
-            
-            return
+    func test_AllComponentsAreRegistered() {
+        // 테스트 코드에선 굳이 [weak self] 안 해도 괜찮음
+        // 그렇지만 일관된 코드 작성을 위해 추가해봄
+        let components: [() -> Void] = [
+            { [weak self] in self?.assertComponentIsRegistered(type: HomeRepository.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: DefaultHomeUseCase.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: DefaultRegionSettingUseCase.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: SplashViewController.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: AppFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: LoginFlowCoordinator.self)},
+        ]
+        
+        components.forEach { test in
+            test()
         }
     }
     
-    // MARK: UseCase Tests
-    /// Home Use Case
-    func test_HomeUseCaseIsRegistered() {
-        guard let homeUseCase = container.resolve(DefaultHomeUseCase.self) else {
-            XCTFail("Home UseCase 주입 실패")
-            
+    private func assertComponentIsRegistered<T: AnyObject>(
+        type: T.Type,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        guard let _ = container.resolve(type) else {
+            XCTFail("\(type) 주입 실패", file: file, line: line)
             return
         }
     }
-    
-    /// Region Setting Use Case
-    func test_RegionSettingUseCaseIsRegistered() {
-        guard let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self) else {
-            XCTFail("Region Setting UseCase 주입 실패")
-            
-            return
-        }
-    }
-    
-    // MARK: Presentation Tests
-    /// Splash View Controller
-    func test_SplashViewControllerIsRegistered() {
-        guard let splashViewController = container.resolve(SplashViewController.self) else {
-            XCTFail("SplashViewController 주입 실패")
-            
-            return
-        }
-    }
-    
-    
 }
