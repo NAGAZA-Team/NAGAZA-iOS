@@ -14,12 +14,6 @@ final class MyPageViewController: NagazaBaseViewController {
     
     private var viewModel: MyPageViewModel!
     
-    static func create(with viewModel: MyPageViewModel) -> MyPageViewController {
-        let vc = MyPageViewController()
-        vc.viewModel = viewModel
-        return vc
-    }
-    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = NagazaAsset.Images.dummy.image
@@ -109,6 +103,20 @@ final class MyPageViewController: NagazaBaseViewController {
         tableView.isScrollEnabled = false
         return tableView
     }()
+    
+    init(viewModel: MyPageViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+//    static func create(with viewModel: MyPageViewModel) -> MyPageViewController {
+//        let vc = MyPageViewController()
+//        vc.viewModel = viewModel
+//        return vc
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

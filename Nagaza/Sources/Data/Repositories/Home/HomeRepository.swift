@@ -16,9 +16,7 @@ final class HomeRepository: ProviderProtocol, HomeRepositoryInterface{
         self.provider = Self.consProvider(isStub, sampleStatusCode, customEndpointClosure)
     }
     
-    convenience init() {
-        
-    }
+    init() { }
     
     func fetchCafesList() -> Single<CafesPage> {
         request(

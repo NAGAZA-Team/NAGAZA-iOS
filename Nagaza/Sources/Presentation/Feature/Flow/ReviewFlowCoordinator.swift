@@ -22,12 +22,21 @@ final class ReviewFlowCoordinator: BaseCoordinator {
 //        super.init(navigationController: navigationController)
 //    }
     
-    override func start() {
-        let actions = ReviewViewModelActions()
-        let vc = dependencies.makeReviewViewController(actions: actions)
-        viewController = vc
+    override func start(navigationController: UINavigationController) {
+        let reviewVC = DIContainer.shared.resolve(ReviewViewController.self)
+        
+        self.navigationController = navigationController
         
         navigationController.setNavigationBarHidden(true, animated: false)
-        navigationController.pushViewController(vc, animated: false)
+        navigationController.pushViewController(reviewVC, animated: false)
     }
+    
+//    override func start() {
+//        let actions = ReviewViewModelActions()
+//        let vc = dependencies.makeReviewViewController(actions: actions)
+//        viewController = vc
+//        
+//        navigationController.setNavigationBarHidden(true, animated: false)
+//        navigationController.pushViewController(vc, animated: false)
+//    }
 }

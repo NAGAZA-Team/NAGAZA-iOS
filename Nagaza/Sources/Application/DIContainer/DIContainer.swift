@@ -27,4 +27,8 @@ final class DIContainer {
         
         return value
     }
+    
+    func reset() {
+        dependencies = [:]
+    }
 }

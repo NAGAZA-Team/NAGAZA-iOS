@@ -29,17 +29,26 @@ final class HomeFlowCoordinator: BaseCoordinator {
 //        super.init(navigationController: navigationController)
 //    }
     
-    override func start() {
-        let actions = HomeViewModelActions(
-            showRegionSetting: showRegionSetting(with: didSelect:),
-            logoutTest: logoutTest
-        )
+    override func start(navigationController: UINavigationController) {
+        let homeVC = DIContainer.shared.resolve(HomeViewController.self)
         
-        let vc = dependencies.makeHomeViewController(actions: actions)
+        self.navigationController = navigationController
         
         navigationController.setNavigationBarHidden(false, animated: false)
-        navigationController.pushViewController(vc, animated: false)
+        navigationController.pushViewController(homeVC, animated: false)
     }
+    
+//    override func start() {
+//        let actions = HomeViewModelActions(
+//            showRegionSetting: showRegionSetting(with: didSelect:),
+//            logoutTest: logoutTest
+//        )
+//        
+//        let vc = dependencies.makeHomeViewController(actions: actions)
+//        
+//        navigationController.setNavigationBarHidden(false, animated: false)
+//        navigationController.pushViewController(vc, animated: false)
+//    }
     
     private func showRegionSetting(
         with subRegion: String,

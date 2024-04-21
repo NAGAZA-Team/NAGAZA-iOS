@@ -9,7 +9,6 @@ import UIKit
 
 class BaseCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
-    
     var navigationController: UINavigationController?
     weak var finishDelegate: CoordinatorFinishDelegate?
     
@@ -26,6 +25,7 @@ class BaseCoordinator: Coordinator {
         with window: UIWindow,
         navigationController: UINavigationController
     ) {
+        self.navigationController = navigationController
         print("----- start coordinator: \(self) -----")
     }
     

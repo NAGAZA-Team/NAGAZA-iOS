@@ -13,6 +13,7 @@ protocol Coordinator: AnyObject {
     var finishDelegate: CoordinatorFinishDelegate? { get set }
     
     func start(navigationController: UINavigationController)
+    
     func addChildCoordinator(_ coordinator: Coordinator)
     func removeChildCoordinator(_ coordinator: Coordinator)
     func removeChildCoordinators()

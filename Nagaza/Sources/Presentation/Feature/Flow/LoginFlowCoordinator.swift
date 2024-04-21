@@ -9,13 +9,19 @@ import UIKit
 
 final class LoginFlowCoordinator: BaseCoordinator {
     private var window: UIWindow?
+
     private var rootViewController: UIViewController? {
         didSet {
             window?.rootViewController = rootViewController
             window?.makeKeyAndVisible()
         }
     }
-        
+
+    override var navigationController: UINavigationController? {
+        get { return super.navigationController }
+        set { super.navigationController = newValue }
+    }
+    
     override func start(with window: UIWindow, navigationController: UINavigationController) {
         self.window = window
 

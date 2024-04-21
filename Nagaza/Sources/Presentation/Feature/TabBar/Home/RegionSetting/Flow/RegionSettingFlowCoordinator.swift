@@ -14,49 +14,38 @@ protocol RegionSettingFlowCoordinatorDependencies {
     ) -> RegionSettingViewController
 }
 
-final class RegionSettingFlowCoordinator: Coordinator {
-    var type: CoordinatorType { .regionSetting }
-    
-    var childCoordinators: [Coordinator] = []
-    
-    var navigationController: UINavigationController
-    
-    weak var finishDelegate: CoordinatorFinishDelegate?
+final class RegionSettingFlowCoordinator: BaseCoordinator {
     weak var tabBarDelegate: TabBarDelegate?
+
     
-    private let dependencies: RegionSettingFlowCoordinatorDependencies!
-    private weak var regionSettingVC: RegionSettingViewController?
-    
-    init(
-        navigationController: UINavigationController,
-        dependencies: RegionSettingFlowCoordinatorDependencies
-    ) {
-        self.navigationController = navigationController
-        self.dependencies = dependencies
-    }
-    
-    func start() {
-        let didSelectAction: RegionSettingViewModelDidSelectAction = { [weak self] region in
-             // 사용자가 지역을 선택했을 때 수행할 작업
-             print("선택된 지역: \(region)")
-             // 예를 들어, 다른 코디네이터를 시작하거나, 상태를 업데이트할 수 있습니다.
-         }
+    override func start(navigationController: UINavigationController) {
+        let regionSettingVC = DIContainer.shared.resolve(RegionSettingViewController.self)
         
-        let vc = dependencies.makeRegionSettingViewController(with: "전국", didSelect: didSelectAction)
-        
-        navigationController.pushViewController(vc, animated: false)
+        navigationController.pushViewController(regionSettingVC, animated: false)
     }
     
-    func start(
-        with subRegion: String,
-        didSelect: @escaping RegionSettingViewModelDidSelectAction
-    ) {
-        let vc = dependencies.makeRegionSettingViewController(with: subRegion, didSelect: didSelect)
-        
-        navigationController.pushViewController(vc, animated: false)
-    }
-    
-    private func dismiss() {
-        self.finish()
-    }
+//    func start() {
+//        let didSelectAction: RegionSettingViewModelDidSelectAction = { [weak self] region in
+//             // 사용자가 지역을 선택했을 때 수행할 작업
+//             print("선택된 지역: \(region)")
+//             // 예를 들어, 다른 코디네이터를 시작하거나, 상태를 업데이트할 수 있습니다.
+//         }
+//        
+//        let vc = dependencies.makeRegionSettingViewController(with: "전국", didSelect: didSelectAction)
+//        
+//        navigationController.pushViewController(vc, animated: false)
+//    }
+//    
+//    func start(
+//        with subRegion: String,
+//        didSelect: @escaping RegionSettingViewModelDidSelectAction
+//    ) {
+//        let vc = dependencies.makeRegionSettingViewController(with: subRegion, didSelect: didSelect)
+//        
+//        navigationController.pushViewController(vc, animated: false)
+//    }
+//    
+//    private func dismiss() {
+//        self.finish()
+//    }
 }

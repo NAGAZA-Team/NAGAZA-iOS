@@ -14,26 +14,36 @@ import UIKit
 
 final class MyPageFlowCoordinator: BaseCoordinator {
     
-    override func start() {
-        let actions = MyPageViewModelActions(moveAppSetting: moveAppSetting)
-        let vc = dependencies.makeMyPageViewController(actions: actions)
-        viewController = vc
+    override func start(navigationController: UINavigationController) {
+        
+        let myPageVC = DIContainer.shared.resolve(MyPageViewController.self)
+        
+        self.navigationController = navigationController
         
         navigationController.setNavigationBarHidden(true, animated: false)
-        navigationController.pushViewController(vc, animated: false)
+        navigationController.pushViewController(myPageVC, animated: false)
     }
+    
+//    override func start() {
+//        let actions = MyPageViewModelActions(moveAppSetting: moveAppSetting)
+//        let vc = dependencies.makeMyPageViewController(actions: actions)
+//        viewController = vc
+//        
+//        navigationController.setNavigationBarHidden(true, animated: false)
+//        navigationController.pushViewController(vc, animated: false)
+//    }
 }
 
 extension MyPageFlowCoordinator {
-    func moveAppSetting() {
-        let coordinator = MyPageAppSettingCoordinator(
-            navigationController: navigationController,
-            dependencies: dependencies
-        )
-        coordinator.start()
-        coordinator.finishDelegate = self
-        childCoordinators.append(coordinator)
-    }
+//    func moveAppSetting() {
+//        let coordinator = MyPageAppSettingCoordinator(
+//            navigationController: navigationController,
+//            dependencies: dependencies
+//        )
+//        coordinator.start()
+//        coordinator.finishDelegate = self
+//        childCoordinators.append(coordinator)
+//    }
 }
 
 extension MyPageFlowCoordinator: CoordinatorFinishDelegate {
