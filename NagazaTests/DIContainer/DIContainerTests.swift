@@ -40,8 +40,8 @@ final class DIContainerTests: XCTestCase {
             { [weak self] in self?.assertComponentIsRegistered(type: LoginFlowCoordinator.self)},
         ]
         
-        components.forEach { test in
-            test()
+        components.forEach { test_ComponentIsRegistered in
+            test_ComponentIsRegistered()
         }
     }
     
