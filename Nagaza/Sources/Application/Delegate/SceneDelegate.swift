@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let container = DIContainer.shared
     var window: UIWindow?
-    var appCoordinator: AppFlowCoordinator?
+    var appCoordinator: AppCoordinator?
 
     func scene(
         _ scene: UIScene,
@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func setupCoordinator() {
         if let window = self.window {
-            appCoordinator = container.resolve(AppFlowCoordinator.self)
+            appCoordinator = container.resolve(AppCoordinator.self)
             appCoordinator?.start(with: window)
         }
     }

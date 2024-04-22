@@ -11,10 +11,10 @@ import RxSwift
 import RxCocoa
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
-struct HomeViewModelActions {
-    let showRegionSetting: (String, @escaping (String) -> Void) -> Void
-    let logoutTest: () -> Void
-}
+//struct HomeViewModelActions {
+//    let showRegionSetting: (String, @escaping (String) -> Void) -> Void
+//    let logoutTest: () -> Void
+//}
 
 enum ScrollOffsetState {
     case top(value: Double)
@@ -42,7 +42,7 @@ enum ScrollOffsetState {
 // MARK: - HomeViewModel
 final class HomeViewModel: ViewModelType {
     private let homeUseCaseInterface: HomeUseCaseInterface
-    private let actions: HomeViewModelActions!
+//    private let actions: HomeViewModelActions!
     
     private var disposeBag = DisposeBag()
     
@@ -62,11 +62,11 @@ final class HomeViewModel: ViewModelType {
     }
     
     init(
-        homeUseCaseInterface: HomeUseCaseInterface,
-        actions: HomeViewModelActions
+        homeUseCaseInterface: HomeUseCaseInterface
+//        actions: HomeViewModelActions
     ) {
         self.homeUseCaseInterface = homeUseCaseInterface
-        self.actions = actions
+//        self.actions = actions
     }
     
     func transform(input: Input) -> Output {
@@ -107,7 +107,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     private func showRegionSetting(with subRegion: String) {
-        actions.showRegionSetting(subRegion, updateRegion(with:))
+//        actions.showRegionSetting(subRegion, updateRegion(with:))
     }
     
     private func updateRegion(with subRegion: String) {
@@ -116,8 +116,8 @@ final class HomeViewModel: ViewModelType {
 }
 
 // MARK: Coordinator Actions
-extension HomeViewModel {
-    func logoutTest() {
-        actions.logoutTest()
-    }
-}
+//extension HomeViewModel {
+//    func logoutTest() {
+//        actions.logoutTest()
+//    }
+//}

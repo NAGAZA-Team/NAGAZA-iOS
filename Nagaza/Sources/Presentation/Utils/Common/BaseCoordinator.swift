@@ -31,7 +31,7 @@ class BaseCoordinator: Coordinator {
     
     /// TabBarVC start type
     func start(
-        withViewControllers coordinators: [Coordinator],
+        withCoordinators coordinators: [Coordinator],
         with window: UIWindow
     ) {
         print("----- start coordinator: \(self) -----")

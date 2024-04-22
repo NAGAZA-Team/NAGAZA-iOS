@@ -7,35 +7,21 @@
 
 import Foundation
 
-/// 화면 전환 등 액션, coordinator에서 직접 주입
-protocol LoginCoordinatorActions {
-    func navigateToMainTabBar()
-}
+// TODO: LoginViewModel Coordinator protocol
 
-protocol LoginViewModelInput {
-    func didTappedLogin()
-}
-
-protocol LoginViewModelOutput {
+final class LoginViewModel: ViewModelType {
     
-}
-
-typealias LoginViewModelProtocol = LoginViewModelInput & LoginViewModelOutput
-
-final class LoginViewModel: LoginViewModelProtocol {
-    
-    // MARK: Output
-    
-    init(
-        actions: LoginViewModelActions
-    ) {
-        self.actions = actions
+    struct Input {
+        
     }
-}
-
-// MARK: Input
-extension LoginViewModel {
-    func didTappedLogin() {
-        actions?.showTabBar()
+    
+    struct Output {
+        
+    }
+    
+    init() { }
+    
+    func transform(input: Input) -> Output {
+        return Output()
     }
 }

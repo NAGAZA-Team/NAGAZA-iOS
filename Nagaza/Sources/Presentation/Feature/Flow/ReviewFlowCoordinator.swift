@@ -7,9 +7,9 @@
 
 import UIKit
 
-protocol ReviewFlowCoordinatorDependencies {
-    func makeReviewViewController(actions: ReviewViewModelActions) -> ReviewViewController
-}
+//protocol ReviewFlowCoordinatorDependencies {
+//    func makeReviewViewController(actions: ReviewViewModelActions) -> ReviewViewController
+//}
 
 final class ReviewFlowCoordinator: BaseCoordinator {
 //    private let dependencies: ReviewFlowCoordinatorDependencies!
@@ -22,8 +22,11 @@ final class ReviewFlowCoordinator: BaseCoordinator {
 //        super.init(navigationController: navigationController)
 //    }
     
+    init(viewController: UIViewController) {
+        
+    }
+    
     override func start(navigationController: UINavigationController) {
-        let reviewVC = DIContainer.shared.resolve(ReviewViewController.self)
         
         self.navigationController = navigationController
         

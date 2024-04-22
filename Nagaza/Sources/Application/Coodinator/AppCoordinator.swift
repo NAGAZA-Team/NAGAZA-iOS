@@ -7,11 +7,18 @@
 
 import UIKit
 
-final class AppFlowCoordinator: BaseCoordinator {
-    let container = DIContainer.shared
+final class AppCoordinator: BaseCoordinator {
 
+    private var splashVC: SplashViewController?
+    
+    init(splashVC: SplashViewController) {
+        self.splashVC = splashVC
+    }
+    
     func start(with window: UIWindow) {
-        window.rootViewController = container.resolve(SplashViewController.self)
+        guard let splashVC = splashVC else { return }
+        
+        window.rootViewController = splashVC
         window.makeKeyAndVisible()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -28,41 +35,34 @@ final class AppFlowCoordinator: BaseCoordinator {
     }
     
     private func showTabBar(with window: UIWindow) {
-        let tabBarCoordinator = container.resolve(TabBarFlowCoordinator.self)
-        let homeFlowCoordinator = container.resolve(HomeFlowCoordinator.self)
-        let mapFlowCoordinator = container.resolve(MapFlowCoordinator.self)
-        let reviewFlowCoordinator = container.resolve(ReviewFlowCoordinator.self)
-        let myPageFlowCoordinator = container.resolve(MyPageFlowCoordinator.self)
+        let provider = DIProvider.shared
+        let coordinators = provider.resolveCoordinatorsInTabBar()
+        
+        guard let tabBarCoordinator = coordinators
+            .compactMap({ $0 as? TabBarFlowCoordinator })
+            .first
+        else { return }
         
         addChildCoordinator(tabBarCoordinator)
-        
-        let coordinators = [
-            homeFlowCoordinator,
-            mapFlowCoordinator,
-            reviewFlowCoordinator,
-            myPageFlowCoordinator
-        ]
-        
         tabBarCoordinator.finishDelegate = self
-        tabBarCoordinator.start(
-            withViewControllers: coordinators,
-            with: window
-        )
         
+        let subCoordinators = coordinators.filter { $0 !== tabBarCoordinator }
+            
+        tabBarCoordinator.start(withCoordinators: subCoordinators, with: window)
     }
     
     private func showLogin(with window: UIWindow) {
-        
-        let loginFlowCoordinator = container.resolve(LoginFlowCoordinator.self)
+        let provider = DIProvider.shared
+        let loginCoordinator = provider.resolveLoginCoordinator()
 
-        addChildCoordinator(loginFlowCoordinator)
+        addChildCoordinator(loginCoordinator)
 
-        loginFlowCoordinator.finishDelegate = self
-        loginFlowCoordinator.start(with: window, navigationController: UINavigationController())
+        loginCoordinator.finishDelegate = self
+        loginCoordinator.start(with: window, navigationController: UINavigationController())
     }
 }
 
-extension AppFlowCoordinator: CoordinatorFinishDelegate {
+extension AppCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         removeChildCoordinator(childCoordinator)
 

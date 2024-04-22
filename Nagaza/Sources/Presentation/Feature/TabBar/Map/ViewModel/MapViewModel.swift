@@ -13,7 +13,7 @@ struct MapViewModelActions {
 }
 
 final class MapViewModel: ViewModelType {
-    private let actions: MapViewModelActions!
+//    private let actions: MapViewModelActions!
     let searchItem = PublishRelay<Place?>()
     
     struct Input {
@@ -25,9 +25,10 @@ final class MapViewModel: ViewModelType {
         let searchItem: Driver<Place?>
     }
     
-    init(actions: MapViewModelActions) {
-        self.actions = actions
-    }
+    init() { }
+//    init(actions: MapViewModelActions) {
+//        self.actions = actions
+//    }
     
     func transform(input: Input) -> Output {
         let mapSearch = input.searchViewTapTrigger
@@ -46,6 +47,6 @@ final class MapViewModel: ViewModelType {
 
 extension MapViewModel {
     func toMapSearchVC() {
-        actions.toMapSearchVC()
+//        actions.toMapSearchVC()
     }
 }

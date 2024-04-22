@@ -27,174 +27,265 @@ final class DIRegister {
             dependency: HomeRepository()
         )
         
+        
+        // map
+        container.register(
+            MapSearchRepository.self,
+            dependency: MapSearchRepository()
+        )
     }
     
     // MARK: - UseCase
     private func registerUseCase() {
+        guard let homeRepository = container.resolve(HomeRepository.self),
+              let mapSearchRepository = container.resolve(MapSearchRepository.self)
+        else { return }
+        
         // home
         container.register(
             DefaultHomeUseCase.self,
             dependency: DefaultHomeUseCase(
-                roomsRepository: container.resolve(HomeRepository.self)
+                roomsRepository: homeRepository
             )
         )
+        
         container.register(
             DefaultRegionSettingUseCase.self,
             dependency: DefaultRegionSettingUseCase()
         )
+        
+        // map
+        container.register(
+            DefaultMapSearchUseCase.self,
+            dependency: DefaultMapSearchUseCase(roomsRepository: mapSearchRepository)
+        )
     }
-
+    
     // MARK: - Presentation
-    private func registerPresentation() {
-        registerFirstPresentation()
-        registerLoginPresentation()
-        registerTabBarPresentation()
-        
-        registerHomePresentation()
-        registerRegionSettingPresentation()
-                
-        registerMapPresentation()
-        
-        registerReviewPresentation()
-        
-        registerMyPagePresentation()
-    }
-
     /// Splash / App Coordinator
-    private func registerFirstPresentation() {
+    private func registerPresentation() {
         container.register(
             SplashViewController.self,
             dependency: SplashViewController()
         )
+        
+        guard let splashVC = container.resolve(SplashViewController.self) else { return }
         container.register(
-            AppFlowCoordinator.self,
-            dependency: AppFlowCoordinator()
+            AppCoordinator.self,
+            dependency: AppCoordinator(splashVC: splashVC)
         )
+        
+        registerLoginPresentation()
+        registerTabBarPresentation()
     }
-
+    
     /// Login Presentation
-    private func registerLoginPresentation() {
+    func registerLoginPresentation() {
+        container.register(
+            LoginViewModel.self,
+            dependency: LoginViewModel()
+        )
+        
+        guard let loginViewModel = container.resolve(LoginViewModel.self) else { return }
+        container.register(
+            LoginViewController.self,
+            dependency: LoginViewController(
+                viewModel: loginViewModel
+            )
+        )
+        
+        guard let loginViewController = container.resolve(LoginViewController.self) else { return }
         container.register(
             LoginFlowCoordinator.self,
             dependency: LoginFlowCoordinator()
         )
-        container.register(
-            LoginViewModel.self,
-            dependency: LoginViewModel(actions: <#T##_#>)
-        )
-        container.register(
-            LoginViewController.self,
-            dependency: LoginViewController(
-                viewModel: container.resolve(LoginViewModel.self)
-            )
-        )
     }
     
     /// TabBar Presentation
-    private func registerTabBarPresentation() {
-        container.register(
-            TabBarFlowCoordinator.self,
-            dependency: TabBarFlowCoordinator()
-        )
+    func registerTabBarPresentation() {
         container.register(
             NagazaTabBarController.self,
             dependency: NagazaTabBarController()
         )
+        
+        guard let tabBarController = container.resolve(NagazaTabBarController.self) else { return }
+        container.register(
+            TabBarFlowCoordinator.self,
+            dependency: TabBarFlowCoordinator(
+                tabBarVC: tabBarController
+            )
+        )
+        
+        registerHomePresentation()
+        registerRegionSettingPresentation()
+        
+        registerMapPresentation()
+        registerMapSearchPresentation()
+        
+        registerReviewPresentation()
+        
+        registerMyPagePresentation()
+        registerAppSettingPresentation()
     }
-
+    
     /// Home Presentation
     private func registerHomePresentation() {
-        // Home Presentation
-        container.register(
-            HomeFlowCoordinator.self,
-            dependency: HomeFlowCoordinator()
-        )
+        guard let homeUseCase = container.resolve(DefaultHomeUseCase.self) else { return }
         container.register(
             HomeViewModel.self,
             dependency: HomeViewModel(
-                homeUseCaseInterface: <#T##any HomeUseCaseInterface#>,
-                actions: <#T##HomeViewModelActions#>
+                homeUseCaseInterface: homeUseCase
             )
         )
+        
+        guard let homeViewModel = container.resolve(HomeViewModel.self) else { return }
         container.register(
             HomeViewController.self,
             dependency: HomeViewController(
-                viewModel: container.resolve(HomeViewModel.self)
+                viewModel: homeViewModel
             )
+        )
+        
+        guard let homeViewController = container.resolve(HomeViewController.self) else { return }
+        container.register(
+            HomeFlowCoordinator.self,
+            dependency: HomeFlowCoordinator()
         )
     }
     
     /// RegionSetting Presentation
     private func registerRegionSettingPresentation() {
-        container.register(
-            RegionSettingFlowCoordinator.self,
-            dependency: RegionSettingFlowCoordinator()
-        )
+        guard let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self) else { return }
         container.register(
             RegionSettingViewModel.self,
             dependency: RegionSettingViewModel(
-                regionSettingUseCase: <#T##any RegionSettingUseCase#>,
-                didSelect: <#T##RegionSettingViewModelDidSelectAction##RegionSettingViewModelDidSelectAction##(String) -> Void#>
+                regionSettingUseCase: regionSettingUseCase
             )
         )
+        
+        guard let regionSettingViewModel = container.resolve(RegionSettingViewModel.self) else { return }
         container.register(
             RegionSettingViewController.self,
             dependency: RegionSettingViewController(
-                viewModel: container.resolve(RegionSettingViewModel.self)
+                viewModel: regionSettingViewModel
             )
+        )
+        
+        guard let regionSettingViewController = container.resolve(RegionSettingViewController.self) else { return }
+        container.register(
+            RegionSettingFlowCoordinator.self,
+            dependency: RegionSettingFlowCoordinator()
         )
     }
     
     /// Map Presentation
     private func registerMapPresentation() {
         container.register(
-            MapFlowCoordinator.self,
-            dependency: MapFlowCoordinator()
-        )
-        container.register(
             MapViewModel.self,
-            dependency: MapViewModel(actions: <#T##MapViewModelActions#>)
+            dependency: MapViewModel()
         )
+        
+        guard let mapViewModel = container.resolve(MapViewModel.self) else { return }
         container.register(
             MapViewController.self,
             dependency: MapViewController(
-                viewModel: container.resolve(MapViewModel.self)
+                viewModel: mapViewModel
             )
+        )
+        
+        guard let mapViewController = container.resolve(MapViewController.self) else { return }
+        container.register(
+            MapFlowCoordinator.self,
+            dependency: MapFlowCoordinator()
+        )
+    }
+    
+    /// Map Serach Presentation
+    private func registerMapSearchPresentation() {
+        guard let mapSearchUseCase = container.resolve(DefaultMapSearchUseCase.self) else { return }
+        container.register(
+            MapSearchViewModel.self,
+            dependency: MapSearchViewModel(
+                mapUseCase: mapSearchUseCase
+            )
+        )
+        
+        guard let mapSearchViewModel = container.resolve(MapSearchViewModel.self) else { return }
+        container.register(
+            MapSearchViewController.self,
+            dependency: MapSearchViewController()
+        )
+        
+        guard let mapSearchViewController = container.resolve(MapSearchViewController.self) else { return }
+        container.register(
+            MapSearchCoordinator.self,
+            dependency: MapSearchCoordinator(viewController: mapSearchViewController)
         )
     }
     
     /// Review Presentation
     private func registerReviewPresentation() {
         container.register(
-            ReviewFlowCoordinator.self,
-            dependency: ReviewFlowCoordinator()
-        )
-        container.register(
             ReviewViewModel.self,
-            dependency: ReviewViewModel(
-                actions: <#T##ReviewViewModelActions#>)
+            dependency: ReviewViewModel()
         )
+        
+        guard let reviewViewModel = container.resolve(ReviewViewModel.self) else { return }
         container.register(
             ReviewViewController.self,
-            dependency: container.resolve(ReviewViewModel.self)
+            dependency: ReviewViewController(viewModel: reviewViewModel)
+        )
+        
+        guard let reviewViewController = container.resolve(ReviewViewController.self) else { return }
+        container.register(
+            ReviewFlowCoordinator.self,
+            dependency: ReviewFlowCoordinator(viewController: reviewViewController)
         )
     }
     
     /// MyPage Presentation
     private func registerMyPagePresentation() {
         container.register(
-            MyPageFlowCoordinator.self,
-            dependency: MyPageFlowCoordinator()
-        )
-        container.register(
             MyPageViewModel.self,
-            dependency: MyPageViewModel(actions: <#T##MyPageViewModelActions#>)
+            dependency: MyPageViewModel()
         )
+        
+        guard let myPageViewModel = container.resolve(MyPageViewModel.self) else { return }
         container.register(
             MyPageViewController.self,
             dependency: MyPageViewController(
-                viewModel: container.resolve(MyPageViewModel.self)
+                viewModel: myPageViewModel
+            )
+        )
+        
+        container.register(
+            MyPageFlowCoordinator.self,
+            dependency: MyPageFlowCoordinator()
+        )
+    }
+    
+    /// App Setting Presentation
+    private func registerAppSettingPresentation() {
+        container.register(
+            MyPageAppSettingViewModel.self,
+            dependency: MyPageAppSettingViewModel()
+        )
+        
+        guard let appSettingViewModel = container.resolve(MyPageAppSettingViewModel.self) else { return }
+        container.register(
+            MyPageAppSettingViewController.self,
+            dependency: MyPageAppSettingViewController(
+                viewModel: appSettingViewModel
+            )
+        )
+        
+        guard let appSettingViewController = container.resolve(MyPageViewController.self) else { return }
+        container.register(
+            MyPageAppSettingCoordinator.self,
+            dependency: MyPageAppSettingCoordinator(
+                viewController: appSettingViewController
             )
         )
     }
+    
 }

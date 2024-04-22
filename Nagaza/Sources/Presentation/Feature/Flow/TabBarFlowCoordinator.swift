@@ -16,15 +16,14 @@ final class TabBarFlowCoordinator: BaseCoordinator {
         }
     }
     
-    override func start(withViewControllers coordinators: [Coordinator], 
+    init(tabBarVC: UIViewController) {
+        self.rootViewController = tabBarVC
+    }
+    
+    override func start(withCoordinators coordinators: [Coordinator],
                with window: UIWindow
     ) {
         self.window = window
-        
-        let tabBarVC = DIContainer.shared.resolve(NagazaTabBarController.self)
-        
-        rootViewController = tabBarVC
-        
         setupTabs(withViewControllers: coordinators)
     }
     

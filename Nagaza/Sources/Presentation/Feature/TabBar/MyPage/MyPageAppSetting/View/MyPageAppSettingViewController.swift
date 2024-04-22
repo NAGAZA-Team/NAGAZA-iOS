@@ -11,13 +11,21 @@ final class MyPageAppSettingViewController: NagazaBaseViewController {
     
     private var viewModel: MyPageAppSettingViewModel!
     
-    static func create(with viewModel: MyPageAppSettingViewModel) -> MyPageAppSettingViewController {
-        let vc = MyPageAppSettingViewController()
-        vc.viewModel = viewModel
-        
-        return vc
+    init(viewModel: MyPageAppSettingViewModel) {
+        self.viewModel = viewModel
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+//    static func create(with viewModel: MyPageAppSettingViewModel) -> MyPageAppSettingViewController {
+//        let vc = MyPageAppSettingViewController()
+//        vc.viewModel = viewModel
+//        
+//        return vc
+//    }
+//    
     private let backButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("뒤로가기", for: .normal)

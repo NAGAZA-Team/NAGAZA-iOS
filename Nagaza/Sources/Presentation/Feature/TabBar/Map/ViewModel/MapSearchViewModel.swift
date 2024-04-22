@@ -30,11 +30,9 @@ final class MapSearchViewModel: ViewModelType {
     }
     
     init(
-        mapUseCase: MapSearchUseCaseInterface,
-        actions: MapSearchViewModelActions
+        mapUseCase: MapSearchUseCaseInterface
     ) {
         self.mapSearchUseCase = mapUseCase
-        self.actions = actions
     }
     
     func transform(input: Input) -> Output {

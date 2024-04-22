@@ -29,11 +29,13 @@ final class MyPageViewModel {
         let sectionItems: Driver<[MyPageSection]>
     }
     
-    init(
-        actions: MyPageViewModelActions
-    ) {
-        self.actions = actions
-    }
+    init() { }
+
+//    init(
+//        actions: MyPageViewModelActions
+//    ) {
+//        self.actions = actions
+//    }
     
     func transform(input: Input) -> Output {
         let response = input.initialTrigger

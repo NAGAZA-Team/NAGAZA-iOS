@@ -13,9 +13,9 @@ struct MyPageAppSettingViewModelActions {
     var finishMyPageAppSettingVC: () -> Void
 }
 
-final class MyPageAppSettingViewModel {
+final class MyPageAppSettingViewModel: ViewModelType {
     
-    private let actions: MyPageAppSettingViewModelActions!
+//    private let actions: MyPageAppSettingViewModelActions!
     
     private var disposeBag = DisposeBag()
     
@@ -25,17 +25,19 @@ final class MyPageAppSettingViewModel {
     
     struct Output {
     }
+
+    init() { }
     
-    init(
-        actions: MyPageAppSettingViewModelActions
-    ) {
-        self.actions = actions
-    }
+//    init(
+//        actions: MyPageAppSettingViewModelActions
+//    ) {
+//        self.actions = actions
+//    }
     
     func transform(input: Input) -> Output {
         input.tapBackButton
             .drive(with: self, onNext: { owner, event in
-                owner.actions.finishMyPageAppSettingVC()
+//                owner.actions.finishMyPageAppSettingVC()
             })
             .disposed(by: disposeBag)
         

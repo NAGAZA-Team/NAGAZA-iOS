@@ -34,13 +34,13 @@ final class RegionSettingViewModel: ViewModelType {
     }
     
     init(
-        regionSettingUseCase: RegionSettingUseCase,
-        subRegionFromHomeVC: String = "",
-        didSelect: @escaping RegionSettingViewModelDidSelectAction
+        regionSettingUseCase: RegionSettingUseCase
+//        subRegionFromHomeVC: String = "",
+//        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
         self.regionSettingUseCase = regionSettingUseCase
-        self.subRegionFromHomeVC = subRegionFromHomeVC
-        self.didSelect = didSelect
+//        self.subRegionFromHomeVC = subRegionFromHomeVC
+//        self.didSelect = didSelect
     }
     
     func transform(input: Input) -> Output {
