@@ -16,36 +16,16 @@ import RxCocoa
 //    let logoutTest: () -> Void
 //}
 
-enum ScrollOffsetState {
-    case top(value: Double)
-    case bottom
-    
-    init(rawValue: Double) {
-        switch rawValue {
-        case -CGFloat.greatestFiniteMagnitude..<CGFloat.windowFrameheight / 3:
-            self = .top(value: rawValue)
-        default:
-            self = .bottom
-        }
-    }
-    
-    var alpha: Double {
-        switch self {
-        case .top(let value):
-            return value / (CGFloat.windowFrameheight / 3)
-        default:
-            return 1
-        }
-    }
+protocol HomeCoordinatorActions: CoordinatorActions {
+    func presentRegionSetting()
 }
 
 // MARK: - HomeViewModel
-final class HomeViewModel: ViewModelType {
+final class HomeViewModel: NagazaViewModel {
+    private weak var actions: HomeCoordinatorActions?
+    
     private let homeUseCaseInterface: HomeUseCaseInterface
-//    private let actions: HomeViewModelActions!
-    
-    private var disposeBag = DisposeBag()
-    
+        
     private let selectedRegion = PublishSubject<String>()
     
     struct Input {
@@ -67,6 +47,10 @@ final class HomeViewModel: ViewModelType {
     ) {
         self.homeUseCaseInterface = homeUseCaseInterface
 //        self.actions = actions
+    }
+    
+    func setCoordinatorActions(with actions: any CoordinatorActions) {
+        self.actions = actions as? HomeCoordinatorActions
     }
     
     func transform(input: Input) -> Output {
@@ -107,6 +91,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     private func showRegionSetting(with subRegion: String) {
+        actions?.presentRegionSetting()
 //        actions.showRegionSetting(subRegion, updateRegion(with:))
     }
     

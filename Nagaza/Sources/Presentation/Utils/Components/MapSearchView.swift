@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MapSearchView: NagazaBaseView {
+final class MapSearchView: NagazaView {
     lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "검색어를 입력하세요"

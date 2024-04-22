@@ -103,8 +103,8 @@ final class DIRegister {
         
         guard let loginVC = container.resolve(LoginViewController.self) else { return }
         container.register(
-            LoginFlowCoordinator.self,
-            dependency: LoginFlowCoordinator(loginVC: loginVC)
+            LoginCoordinator.self,
+            dependency: LoginCoordinator(loginVC: loginVC)
         )
     }
     
@@ -155,15 +155,15 @@ final class DIRegister {
         
         guard let homeVC = container.resolve(HomeViewController.self) else { return }
         container.register(
-            HomeFlowCoordinator.self,
-            dependency: HomeFlowCoordinator(
+            HomeCoordinator.self,
+            dependency: HomeCoordinator(
                 homeVC: homeVC
             )
         )
     }
     
     /// RegionSetting Presentation
-    private func registerRegionSettingPresentation() {
+    func registerRegionSettingPresentation() {
         guard let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self) else { return }
         container.register(
             RegionSettingViewModel.self,
@@ -182,8 +182,8 @@ final class DIRegister {
         
         guard let regionSettingVC = container.resolve(RegionSettingViewController.self) else { return }
         container.register(
-            RegionSettingFlowCoordinator.self,
-            dependency: RegionSettingFlowCoordinator(
+            RegionSettingCoordinator.self,
+            dependency: RegionSettingCoordinator(
                 regionSettingVC: regionSettingVC
             )
         )
@@ -206,8 +206,8 @@ final class DIRegister {
         
         guard let mapVC = container.resolve(MapViewController.self) else { return }
         container.register(
-            MapFlowCoordinator.self,
-            dependency: MapFlowCoordinator(
+            MapCoordinator.self,
+            dependency: MapCoordinator(
                 mapVC: mapVC
             )
         )
@@ -235,7 +235,7 @@ final class DIRegister {
         container.register(
             MapSearchCoordinator.self,
             dependency: MapSearchCoordinator(
-                viewController: mapSearchVC
+                mapSearchVC: mapSearchVC
             )
         )
     }
@@ -255,8 +255,8 @@ final class DIRegister {
         
         guard let reviewVC = container.resolve(ReviewViewController.self) else { return }
         container.register(
-            ReviewFlowCoordinator.self,
-            dependency: ReviewFlowCoordinator(
+            ReviewCoordinator.self,
+            dependency: ReviewCoordinator(
                 reviewVC: reviewVC
             )
         )
@@ -279,8 +279,8 @@ final class DIRegister {
         
         guard let myPageVC = container.resolve(MyPageViewController.self) else { return }
         container.register(
-            MyPageFlowCoordinator.self,
-            dependency: MyPageFlowCoordinator(
+            MyPageCoordinator.self,
+            dependency: MyPageCoordinator(
                 myPageVC: myPageVC
             )
         )
@@ -289,22 +289,22 @@ final class DIRegister {
     /// App Setting Presentation
     private func registerAppSettingPresentation() {
         container.register(
-            MyPageAppSettingViewModel.self,
-            dependency: MyPageAppSettingViewModel()
+            AppSettingViewModel.self,
+            dependency: AppSettingViewModel()
         )
         
-        guard let appSettingVM = container.resolve(MyPageAppSettingViewModel.self) else { return }
+        guard let appSettingVM = container.resolve(AppSettingViewModel.self) else { return }
         container.register(
-            MyPageAppSettingViewController.self,
-            dependency: MyPageAppSettingViewController(
+            AppSettingViewController.self,
+            dependency: AppSettingViewController(
                 viewModel: appSettingVM
             )
         )
         
         guard let appSettingVC = container.resolve(MyPageViewController.self) else { return }
         container.register(
-            MyPageAppSettingCoordinator.self,
-            dependency: MyPageAppSettingCoordinator(
+            AppSettingCoordinator.self,
+            dependency: AppSettingCoordinator(
                 appSettingVC: appSettingVC
             )
         )

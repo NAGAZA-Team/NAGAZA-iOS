@@ -10,9 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-typealias RegionSettingViewModelDidSelectAction = (String) -> Void
+protocol RegionSettingCoordinatorActions: CoordinatorActions {
+    
+}
 
-final class RegionSettingViewModel: ViewModelType {
+final class RegionSettingViewModel: NagazaViewModel {
+    private weak var actions: RegionSettingCoordinatorActions?
+    
     private let regionSettingUseCase: RegionSettingUseCase!
         
     private var subRegionFromHomeVC = ""
@@ -41,6 +45,10 @@ final class RegionSettingViewModel: ViewModelType {
         self.regionSettingUseCase = regionSettingUseCase
 //        self.subRegionFromHomeVC = subRegionFromHomeVC
 //        self.didSelect = didSelect
+    }
+    
+    func setCoordinatorActions(with actions: CoordinatorActions) {
+        self.actions = actions as? RegionSettingCoordinatorActions
     }
     
     func transform(input: Input) -> Output {

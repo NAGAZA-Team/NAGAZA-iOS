@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-final class MyPageViewController: NagazaBaseViewController {
+final class MyPageViewController: NagazaViewController {
     
     private var viewModel: MyPageViewModel!
     
@@ -114,6 +114,9 @@ final class MyPageViewController: NagazaBaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func setCoordinatorActions(with actions: any CoordinatorActions) {
+        viewModel.setCoordinatorActions(with: actions)
+    }
 //    static func create(with viewModel: MyPageViewModel) -> MyPageViewController {
 //        let vc = MyPageViewController()
 //        vc.viewModel = viewModel

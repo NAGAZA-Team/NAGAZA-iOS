@@ -11,7 +11,7 @@ import RxSwift
 import SnapKit
 
 // TODO: Haert Components 제거
-final class RecommendThemeView: NagazaBaseView {
+final class RecommendThemeView: NagazaView {
     //    private var viewModel: HomeViewModel!
     
     private lazy var recommandThemeBackgroundTopGradientView = UIView()

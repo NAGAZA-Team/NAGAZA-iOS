@@ -39,7 +39,7 @@ enum HomeSectionType: Int {
     }
 }
 
-final class HomeViewController: NagazaBaseViewController {
+final class HomeViewController: NagazaViewController {
     private let themesViewEstimatedHeight: CGFloat = 260
     private let themesViewGroupCount = 7
     
@@ -73,6 +73,10 @@ final class HomeViewController: NagazaBaseViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setCoordinatorActions(with actions: any CoordinatorActions) {
+        viewModel.setCoordinatorActions(with: actions)
     }
     
 //    static func create(with viewModel: HomeViewModel) -> HomeViewController {

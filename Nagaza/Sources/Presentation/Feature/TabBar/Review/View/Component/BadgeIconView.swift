@@ -69,7 +69,7 @@ enum BadgeIconType {
     }
 }
 
-final class BadgeIconView: NagazaBaseView {
+final class BadgeIconView: NagazaView {
     private let titleText: UILabel = {
         let label = UILabel()
         

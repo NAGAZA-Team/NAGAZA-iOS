@@ -1,5 +1,5 @@
 //
-//  ReviewViewModel.swift
+//  File.swift
 //  Nagaza
 //
 //  Created by 전성훈 on 2023/10/20.
@@ -7,12 +7,13 @@
 
 import Foundation
 
-protocol ReviewCoordinatorActions: CoordinatorActions {
-    
+// TODO: LoginViewModel Coordinator protocol
+protocol LoginCoordinatorActions: CoordinatorActions {
+    func login()
 }
 
-final class ReviewViewModel: NagazaViewModel {
-    private weak var actions: ReviewCoordinatorActions?
+final class LoginViewModel: NagazaViewModel {    
+    private weak var actions: LoginCoordinatorActions?
     
     struct Input {
         
@@ -22,11 +23,10 @@ final class ReviewViewModel: NagazaViewModel {
         
     }
     
-    // 의존성 주입
     init() { }
     
     func setCoordinatorActions(with actions: CoordinatorActions) {
-        self.actions = actions as? ReviewCoordinatorActions
+        self.actions = actions as? LoginCoordinatorActions
     }
     
     func transform(input: Input) -> Output {

@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class ReviewViewController: NagazaBaseViewController {
+final class ReviewViewController: NagazaViewController {
     
     private var viewModel: ReviewViewModel!
     

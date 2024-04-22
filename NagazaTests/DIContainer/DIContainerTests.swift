@@ -49,7 +49,7 @@ final class DIContainerTests: XCTestCase {
             // Login Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: LoginViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: LoginViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: LoginFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: LoginCoordinator.self)},
 
             // TabBar Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: NagazaTabBarController.self)},
@@ -58,17 +58,17 @@ final class DIContainerTests: XCTestCase {
             // Home Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: HomeViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: HomeViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: HomeFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: HomeCoordinator.self)},
 
             // Region Setting Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: RegionSettingViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: RegionSettingViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: RegionSettingFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: RegionSettingCoordinator.self)},
 
             // Map Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: MapViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: MapViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: MapFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: MapCoordinator.self)},
 
             // Map Search Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: MapSearchViewModel.self)},
@@ -78,17 +78,17 @@ final class DIContainerTests: XCTestCase {
             // Review Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: ReviewViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: ReviewViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: ReviewFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: ReviewCoordinator.self)},
 
             // My Page Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: MyPageViewModel.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: MyPageViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: MyPageFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: MyPageCoordinator.self)},
             
             // App Setting Presentation
-            { [weak self] in self?.assertComponentIsRegistered(type: MyPageAppSettingViewModel.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: MyPageAppSettingViewController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: MyPageAppSettingCoordinator.self)}
+            { [weak self] in self?.assertComponentIsRegistered(type: AppSettingViewModel.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: AppSettingViewController.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: AppSettingCoordinator.self)}
         ]
         
         components.forEach { test_ComponentIsRegistered in

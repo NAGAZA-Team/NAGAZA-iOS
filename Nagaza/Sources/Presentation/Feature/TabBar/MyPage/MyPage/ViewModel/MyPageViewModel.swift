@@ -10,12 +10,16 @@ import RxSwift
 import RxCocoa
 
 /// 화면 전환 등 액션, coordinator에서 직접 주입
-struct MyPageViewModelActions {
-    var moveAppSetting: () -> Void
+//struct MyPageViewModelActions {
+//    var moveAppSetting: () -> Void
+//}
+
+protocol MyPageCoordinatorActions: CoordinatorActions {
+    
 }
 
-final class MyPageViewModel {
-    
+final class MyPageViewModel: NagazaViewModel {
+    private weak var actions: MyPageCoordinatorActions?
 //    private let actions: MyPageViewModelActions!
     
     private var disposeBag = DisposeBag()
@@ -36,6 +40,10 @@ final class MyPageViewModel {
 //    ) {
 //        self.actions = actions
 //    }
+    
+    func setCoordinatorActions(with actions: CoordinatorActions) {
+        self.actions = actions as? MyPageCoordinatorActions
+    }
     
     func transform(input: Input) -> Output {
         let response = input.initialTrigger

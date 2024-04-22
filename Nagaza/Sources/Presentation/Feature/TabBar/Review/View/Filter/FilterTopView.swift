@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class FilterTopView: NagazaBaseView {
+final class FilterTopView: NagazaView {
     
     private lazy var filterTitleCollectionView: FilterTitleCollectionView = {
         let view = FilterTitleCollectionView()

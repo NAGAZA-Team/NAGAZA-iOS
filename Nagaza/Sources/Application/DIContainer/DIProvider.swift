@@ -18,10 +18,10 @@ final class DIProvider {
     func resolveCoordinatorsInTabBar() -> [BaseCoordinator] {
         let coordinatorTypes: [BaseCoordinator.Type] = [
                  TabBarFlowCoordinator.self,
-                 HomeFlowCoordinator.self,
-                 MapFlowCoordinator.self,
-                 ReviewFlowCoordinator.self,
-                 MyPageFlowCoordinator.self
+                 HomeCoordinator.self,
+                 MapCoordinator.self,
+                 ReviewCoordinator.self,
+                 MyPageCoordinator.self
              ]
                 
         return coordinatorTypes.compactMap { type in
@@ -34,13 +34,13 @@ final class DIProvider {
         }
     }
     
-    func resolveLoginCoordinator() -> LoginFlowCoordinator {
-        if let loginFlowCoordinator = container.resolve(LoginFlowCoordinator.self) {
+    func resolveLoginCoordinator() -> LoginCoordinator {
+        if let loginFlowCoordinator = container.resolve(LoginCoordinator.self) {
             return loginFlowCoordinator
         } else {
             register.registerLoginPresentation()
             
-            guard let reResolvedLoginCoordinator = container.resolve(LoginFlowCoordinator.self) else {
+            guard let reResolvedLoginCoordinator = container.resolve(LoginCoordinator.self) else {
                 fatalError("LoginFlowCoordinator 재등록 실패")
             }
             

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MyPageTableViewCell: NagazaBaseTableViewCell {
+final class MyPageTableViewCell: NagazaTableViewCell {
     
     static let identifier = MyPageTableViewCell.description()
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SplashView: NagazaBaseView {
+final class SplashView: NagazaView {
     let imageView: UIImageView = {
         let imageView = UIImageView(image: NagazaAsset.Images.imgLaunch.image)
         imageView.contentMode = .scaleAspectFit

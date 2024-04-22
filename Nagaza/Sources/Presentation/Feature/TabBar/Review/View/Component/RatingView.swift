@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RatingView: NagazaBaseView {
+final class RatingView: NagazaView {
     private let starImageView: UIImageView = {
         let imageView = UIImageView()
         
