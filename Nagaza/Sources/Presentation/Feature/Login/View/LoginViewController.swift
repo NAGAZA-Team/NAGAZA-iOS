@@ -29,6 +29,8 @@ final class LoginViewController: UIViewController, Alertable {
     
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -69,7 +71,7 @@ final class LoginViewController: UIViewController, Alertable {
     }
     
     @objc private func loginTapped(_ sender: UIButton) {
-        viewModel.didTappedLogin()
+//        viewModel.didTappedLogin()
     }
 }
 

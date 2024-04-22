@@ -10,8 +10,10 @@ import UIKit
 final class MyPageAppSettingCoordinator: BaseCoordinator {
 //    private var dependencies: MyPageFlowCoordinatorDependencies!
     
-    init(viewController: UIViewController) {
-        
+    private var appSettingVC: UIViewController
+    
+    init(appSettingVC: UIViewController) {
+        self.appSettingVC = appSettingVC
     }
     
 //    init(
@@ -23,9 +25,9 @@ final class MyPageAppSettingCoordinator: BaseCoordinator {
 //    }
     
     override func start(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+        navigationController.pushViewController(appSettingVC, animated: true)
         
-        navigationController.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: <#T##Bool#>)
+        self.navigationController = navigationController
     }
     
 //    override func start() {
@@ -39,7 +41,7 @@ final class MyPageAppSettingCoordinator: BaseCoordinator {
 
 extension MyPageAppSettingCoordinator {
     func finishView() {
-        navigationController.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

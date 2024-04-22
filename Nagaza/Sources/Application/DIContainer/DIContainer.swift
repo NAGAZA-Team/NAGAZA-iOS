@@ -7,21 +7,35 @@
 
 import Foundation
 
-final class DIContainer {
-    static let shared = DIContainer()
-    private var dependencies: [String: Weak<AnyObject>] = [:]
+protocol DIContainerProtocol {
+    static func sharedContainer() -> DIContainerProtocol
+    
+    func register<T: AnyObject>(_ type: T.Type, dependency: T)
+    func resolve<T: AnyObject>(_ type: T.Type) -> T?
+    
+    func reset() 
+}
+
+final class DIContainer: DIContainerProtocol {
+    static func sharedContainer() -> DIContainerProtocol {
+        return shared
+    }
+    
+    static private let shared = DIContainer()
+
+    private var dependencies: [String: AnyObject] = [:]
 
     private init() { }
         
     func register<T: AnyObject>(_ type: T.Type, dependency: T) {
         let key = String(describing: type)
-        dependencies[key] = Weak(value: dependency)
+        dependencies[key] = dependency
     }
     
     func resolve<T: AnyObject>(_ type: T.Type) -> T? {
         let key = String(describing: type)
         
-        guard let value = dependencies[key]?.value as? T else {
+        guard let value = dependencies[key] as? T else {
             print("---- 의존성 Key 값을 찾지 못했습니다!!: \(key) ----")
             
             return nil

@@ -14,14 +14,17 @@ import UIKit
 
 final class MyPageFlowCoordinator: BaseCoordinator {
     
+    private var myPageVC: UIViewController
+    
+    init(myPageVC: UIViewController) {
+        self.myPageVC = myPageVC
+    }
+    
     override func start(navigationController: UINavigationController) {
-        
-        let myPageVC = DIContainer.shared.resolve(MyPageViewController.self)
-        
-        self.navigationController = navigationController
-        
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(myPageVC, animated: false)
+        
+        self.navigationController = navigationController
     }
     
 //    override func start() {

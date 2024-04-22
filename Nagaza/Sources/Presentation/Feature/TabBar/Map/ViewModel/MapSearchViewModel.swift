@@ -15,7 +15,7 @@ struct MapSearchViewModelActions {
 
 final class MapSearchViewModel: ViewModelType {
     private let mapSearchUseCase: MapSearchUseCaseInterface
-    private let actions: MapSearchViewModelActions!
+//    private let actions: MapSearchViewModelActions!
     
     struct Input {
         let initialTrigger: Driver<Void>
@@ -63,6 +63,6 @@ final class MapSearchViewModel: ViewModelType {
 
 extension MapSearchViewModel {
     func moveToMapVC(item: Place) {
-        actions.toMapVC(item)
+//        actions.toMapVC(item)
     }
 }

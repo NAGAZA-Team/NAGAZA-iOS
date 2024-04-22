@@ -106,6 +106,8 @@ final class MyPageViewController: NagazaBaseViewController {
     
     init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

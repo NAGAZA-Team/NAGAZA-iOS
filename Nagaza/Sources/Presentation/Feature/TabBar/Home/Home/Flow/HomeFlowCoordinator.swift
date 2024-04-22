@@ -8,30 +8,24 @@
 import UIKit
 
 /// Flow Coordinator는 DICiontainer의 Presentation만 알아야 하기 때문에 해당 부분만 delegate 패턴으로 채택해줍니다.
-protocol HomeFlowCoordinaterDependencies {
-    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
-    func makeRegionSettingViewController(
-        with subRegion: String,
-        didSelect: @escaping RegionSettingViewModelDidSelectAction
-    ) -> RegionSettingViewController
-    func makeRegionSettingCoordinator(navigationController: UINavigationController) -> RegionSettingCoordinator
-}
-
+//protocol HomeFlowCoordinaterDependencies {
+//    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
+//    func makeRegionSettingViewController(
+//        with subRegion: String,
+//        didSelect: @escaping RegionSettingViewModelDidSelectAction
+//    ) -> RegionSettingViewController
+//    func makeRegionSettingCoordinator(navigationController: UINavigationController) -> RegionSettingCoordinator
+//}
+//
 final class HomeFlowCoordinator: BaseCoordinator {
     
-//    private let dependencies: HomeFlowCoordinaterDependencies!
+    private var homeVC: UIViewController
     
-//    init(
-//        navigationController: UINavigationController,
-//        dependencies: HomeFlowCoordinaterDependencies
-//    ) {
-//        self.dependencies = dependencies
-//        super.init(navigationController: navigationController)
-//    }
+    init(homeVC: UIViewController) {
+        self.homeVC = homeVC
+    }
     
     override func start(navigationController: UINavigationController) {
-        let homeVC = DIContainer.shared.resolve(HomeViewController.self)
-        
         self.navigationController = navigationController
         
         navigationController.setNavigationBarHidden(false, animated: false)
@@ -55,12 +49,12 @@ final class HomeFlowCoordinator: BaseCoordinator {
         didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
 
-        let regionSettingCoordinator = dependencies.makeRegionSettingCoordinator(
-            navigationController: navigationController
-        )
-        regionSettingCoordinator.start(with: subRegion, didSelect: didSelect)
-        
-        childCoordinators.append(regionSettingCoordinator)
+//        let regionSettingCoordinator = dependencies.makeRegionSettingCoordinator(
+//            navigationController: navigationController
+//        )
+//        regionSettingCoordinator.start(with: subRegion, didSelect: didSelect)
+//        
+//        childCoordinators.append(regionSettingCoordinator)
     }
     
     private func logoutTest() {

@@ -9,12 +9,26 @@ import RxSwift
 import Moya
 
 final class MapSearchRepository: ProviderProtocol {
+  
     typealias Target = MapSearchTarget
-    var provider: MoyaProvider<Target>
+    var provider: MoyaProvider<Target>?
     
-    init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Moya.Endpoint)?) {
-        self.provider = Self.consProvider(isStub, sampleStatusCode, customEndpointClosure)
+    init() {
+        
     }
+    
+    func configureProvider(isStub: Bool = false, sampleStatusCode: Int = 200, customEndpointClosure: ((Target) -> Moya.Endpoint)? = nil) {
+        provider = consProvider(isStub, sampleStatusCode, customEndpointClosure)
+    }
+    
+    func consProvider(_ isStub: Bool, _ sampleStatusCode: Int, _ customendpointClosure: ((MapSearchTarget) -> Moya.Endpoint)?) {
+        
+    }
+    
+    
+//    init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Moya.Endpoint)?) {
+//        self.provider = consProvider(isStub, sampleStatusCode, customEndpointClosure)
+//    }
 }
 
 extension MapSearchRepository: MapSearchRepositoryInterface {

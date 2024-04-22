@@ -12,17 +12,23 @@ import RxMoya
 import RxSwift
 
 protocol ProviderProtocol: AnyObject, Networkable {
-    var provider: MoyaProvider<Target> { get set }
-    init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Endpoint)?)
+    var provider: MoyaProvider<Target>? { get set }
+//    init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Endpoint)?)
+    
+    func consProvider(
+        _ isStub: Bool,
+        _ sampleStatusCode: Int,
+        _ customendpointClosure: ((Target) -> Endpoint)?
+    )
 }
 
 extension ProviderProtocol {
-    static func consProvider(
+    func consProvider(
         _ isStub: Bool = false,
         _ sampleStatusCode: Int = 200,
         _ customendpointClosure: ((Target) -> Endpoint)? = nil) -> MoyaProvider<Target> {
             if isStub == false {
-                return makeProvider()
+                return Self.makeProvider()
             } else {
                 let endPointClosure = { (target: Target) -> Endpoint in
                     let sampleResponseClosure: () -> EndpointSampleResponse = {
@@ -45,13 +51,13 @@ extension ProviderProtocol {
         }
     
     func request<D: Decodable>(type: D.Type, target: Target) -> Single<D> {
-        provider.rx.request(target)
+        Self.provider.rx.request(target)
             .map(type)
             .debug() // TODO: API 나오기 전 임시
     }
     
     func requestWithNoContent(target: Target) -> Single<Void> {
-        provider.rx.request(target)
+        Self.provider.rx.request(target)
             .map { _ in }
     }
 }

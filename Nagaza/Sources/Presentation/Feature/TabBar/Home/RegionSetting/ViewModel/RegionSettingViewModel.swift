@@ -16,7 +16,7 @@ final class RegionSettingViewModel: ViewModelType {
     private let regionSettingUseCase: RegionSettingUseCase!
         
     private var subRegionFromHomeVC = ""
-    private let didSelect: RegionSettingViewModelDidSelectAction
+//    private let didSelect: RegionSettingViewModelDidSelectAction
     
     struct Input {
         let viewWillAppearTrigger: Driver<Void>
@@ -87,7 +87,7 @@ final class RegionSettingViewModel: ViewModelType {
         let subRegionSelected = input.subRegionSelected
             .map { [weak self] subRegion in
                 
-                self?.didSelect(subRegion.region)
+//                self?.didSelect(subRegion.region)
                 
                 return
             }

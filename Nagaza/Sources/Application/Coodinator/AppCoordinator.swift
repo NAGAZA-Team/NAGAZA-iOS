@@ -37,7 +37,7 @@ final class AppCoordinator: BaseCoordinator {
     private func showTabBar(with window: UIWindow) {
         let provider = DIProvider.shared
         let coordinators = provider.resolveCoordinatorsInTabBar()
-        
+
         guard let tabBarCoordinator = coordinators
             .compactMap({ $0 as? TabBarFlowCoordinator })
             .first

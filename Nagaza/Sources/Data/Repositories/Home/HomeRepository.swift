@@ -8,15 +8,20 @@
 import RxSwift
 import Moya
 
-final class HomeRepository: ProviderProtocol, HomeRepositoryInterface{
+final class HomeRepository: ProviderProtocol, HomeRepositoryInterface {
+    
     typealias Target = HomeTarget
-    var provider: MoyaProvider<Target>
+    var provider: MoyaProvider<Target>?
     
     init(isStub: Bool, sampleStatusCode: Int, customEndpointClosure: ((Target) -> Moya.Endpoint)?) {
-        self.provider = Self.consProvider(isStub, sampleStatusCode, customEndpointClosure)
+        self.provider = consProvider(isStub, sampleStatusCode, customEndpointClosure)
     }
     
     init() { }
+    
+    func consProvider(_ isStub: Bool, _ sampleStatusCode: Int, _ customendpointClosure: ((HomeTarget) -> Moya.Endpoint)?) {
+        
+    }
     
     func fetchCafesList() -> Single<CafesPage> {
         request(

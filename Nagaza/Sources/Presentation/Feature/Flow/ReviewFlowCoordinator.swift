@@ -22,16 +22,17 @@ final class ReviewFlowCoordinator: BaseCoordinator {
 //        super.init(navigationController: navigationController)
 //    }
     
-    init(viewController: UIViewController) {
-        
+    private var reviewVC: UIViewController
+    
+    init(reviewVC: UIViewController) {
+        self.reviewVC = reviewVC
     }
     
     override func start(navigationController: UINavigationController) {
-        
-        self.navigationController = navigationController
-        
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(reviewVC, animated: false)
+        
+        self.navigationController = navigationController
     }
     
 //    override func start() {

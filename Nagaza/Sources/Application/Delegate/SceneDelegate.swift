@@ -8,7 +8,7 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    let container = DIContainer.shared
+    let container = DIContainer.sharedContainer()
     var window: UIWindow?
     var appCoordinator: AppCoordinator?
 

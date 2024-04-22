@@ -26,6 +26,8 @@ final class ReviewViewController: NagazaBaseViewController {
     
     init(viewModel: ReviewViewModel) {
         self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

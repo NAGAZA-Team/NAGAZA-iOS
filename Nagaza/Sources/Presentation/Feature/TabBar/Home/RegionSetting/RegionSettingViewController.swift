@@ -45,6 +45,8 @@ final class RegionSettingViewController: NagazaBaseViewController {
     
     init(viewModel: RegionSettingViewModel) {
         self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {

@@ -22,28 +22,31 @@ final class MapFlowCoordinator: BaseCoordinator {
 //        self.dependencies = dependencies
 //        super.init(navigationController: navigationController)
 //    }
+    private var mapVC: UIViewController
     
-    override func start() {
-        let actions = MapViewModelActions(toMapSearchVC: toMapSearchVC)
-        let vc = dependencies.makeMapViewController(actions: actions)
+    init(mapVC: UIViewController) {
+        self.mapVC = mapVC
+    }
+    
+    override func start(navigationController: UINavigationController) {
         
         navigationController.setNavigationBarHidden(false, animated: false)
-        navigationController = UINavigationController(rootViewController: vc)
+        navigationController.pushViewController(mapVC, animated: false)
         
-        viewController = vc
+        self.navigationController = navigationController
     }
     
     func toMapSearchVC() {
-        let actions = MapSearchViewModelActions(toMapVC: toMapVC)
-        let vc = dependencies.makeMapSearchViewController(actions: actions)
-        
-        navigationController.pushViewController(vc, animated: true)
+//        let actions = MapSearchViewModelActions(toMapVC: toMapVC)
+//        let vc = dependencies.makeMapSearchViewController(actions: actions)
+//        
+//        navigationController.pushViewController(vc, animated: true)
     }
     
     func toMapVC(item: Place) {
-        navigationController.popViewController(animated: true)
-        
-        guard let mapVC = navigationController.topViewController as? MapViewController else { return }
-        mapVC.viewModel.searchItem.accept(item)
+//        navigationController.popViewController(animated: true)
+//        
+//        guard let mapVC = navigationController.topViewController as? MapViewController else { return }
+//        mapVC.viewModel.searchItem.accept(item)
     }
 }

@@ -9,9 +9,14 @@ import Foundation
 
 final class DIRegister {
     static let shared = DIRegister()
-    let container = DIContainer.shared
+    
+    private var container = DIContainer.sharedContainer()
     
     private init() { }
+    
+    func setContainer(_ newContainer: DIContainerProtocol) {
+        container = newContainer
+    }
     
     func registerDIContainer() {
         registerRepository()
@@ -26,7 +31,6 @@ final class DIRegister {
             HomeRepository.self,
             dependency: HomeRepository()
         )
-        
         
         // map
         container.register(
@@ -64,6 +68,12 @@ final class DIRegister {
     // MARK: - Presentation
     /// Splash / App Coordinator
     private func registerPresentation() {
+        registerFirstAppPresentation()
+        registerLoginPresentation()
+        registerTabBarsPresentation()
+    }
+    
+    private func registerFirstAppPresentation() {
         container.register(
             SplashViewController.self,
             dependency: SplashViewController()
@@ -74,9 +84,6 @@ final class DIRegister {
             AppCoordinator.self,
             dependency: AppCoordinator(splashVC: splashVC)
         )
-        
-        registerLoginPresentation()
-        registerTabBarPresentation()
     }
     
     /// Login Presentation
@@ -86,33 +93,33 @@ final class DIRegister {
             dependency: LoginViewModel()
         )
         
-        guard let loginViewModel = container.resolve(LoginViewModel.self) else { return }
+        guard let loginVM = container.resolve(LoginViewModel.self) else { return }
         container.register(
             LoginViewController.self,
             dependency: LoginViewController(
-                viewModel: loginViewModel
+                viewModel: loginVM
             )
         )
         
-        guard let loginViewController = container.resolve(LoginViewController.self) else { return }
+        guard let loginVC = container.resolve(LoginViewController.self) else { return }
         container.register(
             LoginFlowCoordinator.self,
-            dependency: LoginFlowCoordinator()
+            dependency: LoginFlowCoordinator(loginVC: loginVC)
         )
     }
     
-    /// TabBar Presentation
-    func registerTabBarPresentation() {
+    /// TabBars Presentation
+    func registerTabBarsPresentation() {
         container.register(
             NagazaTabBarController.self,
             dependency: NagazaTabBarController()
         )
         
-        guard let tabBarController = container.resolve(NagazaTabBarController.self) else { return }
+        guard let tabBarVC = container.resolve(NagazaTabBarController.self) else { return }
         container.register(
             TabBarFlowCoordinator.self,
             dependency: TabBarFlowCoordinator(
-                tabBarVC: tabBarController
+                tabBarVC: tabBarVC
             )
         )
         
@@ -138,18 +145,20 @@ final class DIRegister {
             )
         )
         
-        guard let homeViewModel = container.resolve(HomeViewModel.self) else { return }
+        guard let homeVM = container.resolve(HomeViewModel.self) else { return }
         container.register(
             HomeViewController.self,
             dependency: HomeViewController(
-                viewModel: homeViewModel
+                viewModel: homeVM
             )
         )
         
-        guard let homeViewController = container.resolve(HomeViewController.self) else { return }
+        guard let homeVC = container.resolve(HomeViewController.self) else { return }
         container.register(
             HomeFlowCoordinator.self,
-            dependency: HomeFlowCoordinator()
+            dependency: HomeFlowCoordinator(
+                homeVC: homeVC
+            )
         )
     }
     
@@ -163,18 +172,20 @@ final class DIRegister {
             )
         )
         
-        guard let regionSettingViewModel = container.resolve(RegionSettingViewModel.self) else { return }
+        guard let regionSettingVM = container.resolve(RegionSettingViewModel.self) else { return }
         container.register(
             RegionSettingViewController.self,
             dependency: RegionSettingViewController(
-                viewModel: regionSettingViewModel
+                viewModel: regionSettingVM
             )
         )
         
-        guard let regionSettingViewController = container.resolve(RegionSettingViewController.self) else { return }
+        guard let regionSettingVC = container.resolve(RegionSettingViewController.self) else { return }
         container.register(
             RegionSettingFlowCoordinator.self,
-            dependency: RegionSettingFlowCoordinator()
+            dependency: RegionSettingFlowCoordinator(
+                regionSettingVC: regionSettingVC
+            )
         )
     }
     
@@ -185,18 +196,20 @@ final class DIRegister {
             dependency: MapViewModel()
         )
         
-        guard let mapViewModel = container.resolve(MapViewModel.self) else { return }
+        guard let mapVM = container.resolve(MapViewModel.self) else { return }
         container.register(
             MapViewController.self,
             dependency: MapViewController(
-                viewModel: mapViewModel
+                viewModel: mapVM
             )
         )
         
-        guard let mapViewController = container.resolve(MapViewController.self) else { return }
+        guard let mapVC = container.resolve(MapViewController.self) else { return }
         container.register(
             MapFlowCoordinator.self,
-            dependency: MapFlowCoordinator()
+            dependency: MapFlowCoordinator(
+                mapVC: mapVC
+            )
         )
     }
     
@@ -210,16 +223,20 @@ final class DIRegister {
             )
         )
         
-        guard let mapSearchViewModel = container.resolve(MapSearchViewModel.self) else { return }
+        guard let mapSearchVM = container.resolve(MapSearchViewModel.self) else { return }
         container.register(
             MapSearchViewController.self,
-            dependency: MapSearchViewController()
+            dependency: MapSearchViewController(
+                viewModel: mapSearchVM
+            )
         )
         
-        guard let mapSearchViewController = container.resolve(MapSearchViewController.self) else { return }
+        guard let mapSearchVC = container.resolve(MapSearchViewController.self) else { return }
         container.register(
             MapSearchCoordinator.self,
-            dependency: MapSearchCoordinator(viewController: mapSearchViewController)
+            dependency: MapSearchCoordinator(
+                viewController: mapSearchVC
+            )
         )
     }
     
@@ -230,16 +247,18 @@ final class DIRegister {
             dependency: ReviewViewModel()
         )
         
-        guard let reviewViewModel = container.resolve(ReviewViewModel.self) else { return }
+        guard let reviewVM = container.resolve(ReviewViewModel.self) else { return }
         container.register(
             ReviewViewController.self,
-            dependency: ReviewViewController(viewModel: reviewViewModel)
+            dependency: ReviewViewController(viewModel: reviewVM)
         )
         
-        guard let reviewViewController = container.resolve(ReviewViewController.self) else { return }
+        guard let reviewVC = container.resolve(ReviewViewController.self) else { return }
         container.register(
             ReviewFlowCoordinator.self,
-            dependency: ReviewFlowCoordinator(viewController: reviewViewController)
+            dependency: ReviewFlowCoordinator(
+                reviewVC: reviewVC
+            )
         )
     }
     
@@ -250,17 +269,20 @@ final class DIRegister {
             dependency: MyPageViewModel()
         )
         
-        guard let myPageViewModel = container.resolve(MyPageViewModel.self) else { return }
+        guard let myPageVM = container.resolve(MyPageViewModel.self) else { return }
         container.register(
             MyPageViewController.self,
             dependency: MyPageViewController(
-                viewModel: myPageViewModel
+                viewModel: myPageVM
             )
         )
         
+        guard let myPageVC = container.resolve(MyPageViewController.self) else { return }
         container.register(
             MyPageFlowCoordinator.self,
-            dependency: MyPageFlowCoordinator()
+            dependency: MyPageFlowCoordinator(
+                myPageVC: myPageVC
+            )
         )
     }
     
@@ -271,19 +293,19 @@ final class DIRegister {
             dependency: MyPageAppSettingViewModel()
         )
         
-        guard let appSettingViewModel = container.resolve(MyPageAppSettingViewModel.self) else { return }
+        guard let appSettingVM = container.resolve(MyPageAppSettingViewModel.self) else { return }
         container.register(
             MyPageAppSettingViewController.self,
             dependency: MyPageAppSettingViewController(
-                viewModel: appSettingViewModel
+                viewModel: appSettingVM
             )
         )
         
-        guard let appSettingViewController = container.resolve(MyPageViewController.self) else { return }
+        guard let appSettingVC = container.resolve(MyPageViewController.self) else { return }
         container.register(
             MyPageAppSettingCoordinator.self,
             dependency: MyPageAppSettingCoordinator(
-                viewController: appSettingViewController
+                appSettingVC: appSettingVC
             )
         )
     }

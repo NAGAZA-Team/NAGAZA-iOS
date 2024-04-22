@@ -15,11 +15,14 @@ protocol RegionSettingFlowCoordinatorDependencies {
 }
 
 final class RegionSettingFlowCoordinator: BaseCoordinator {
-    weak var tabBarDelegate: TabBarDelegate?
-
+    var regionSettingVC: UIViewController
+    
+    init(regionSettingVC: UIViewController) {
+        self.regionSettingVC = regionSettingVC
+    }
     
     override func start(navigationController: UINavigationController) {
-        let regionSettingVC = DIContainer.shared.resolve(RegionSettingViewController.self)
+        self.navigationController = navigationController
         
         navigationController.pushViewController(regionSettingVC, animated: false)
     }

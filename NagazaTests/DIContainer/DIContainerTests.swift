@@ -10,16 +10,16 @@ import XCTest
 @testable import Nagaza
 
 final class DIContainerTests: XCTestCase {
-    var register: DIRegister!
-    var container: DIContainer!
+    var container: DIContainerProtocol!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        register = DIRegister.shared
-        container = DIContainer.shared
+        let testContainer = MockDIContainer.sharedContainer()
+        container = testContainer
         
-        register.registerDIContainer()
+        DIRegister.shared.setContainer(testContainer)
+        DIRegister.shared.registerDIContainer()
     }
     
     override func tearDownWithError() throws {

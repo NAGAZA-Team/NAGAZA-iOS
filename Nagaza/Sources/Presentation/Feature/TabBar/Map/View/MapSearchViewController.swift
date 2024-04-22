@@ -40,12 +40,22 @@ final class MapSearchViewController: NagazaBaseViewController {
         return imageView
     }()
     
-    static func create(with viewModel: MapSearchViewModel) -> MapSearchViewController {
-        let vc = MapSearchViewController()
-        vc.viewModel = viewModel
+    init(viewModel: MapSearchViewModel) {
+        self.viewModel = viewModel
         
-        return vc
+        super.init(nibName: nil, bundle: nil)
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+//    static func create(with viewModel: MapSearchViewModel) -> MapSearchViewController {
+//        let vc = MapSearchViewController()
+//        vc.viewModel = viewModel
+//        
+//        return vc
+//    }
     
     override func loadView() {
         super.loadView()

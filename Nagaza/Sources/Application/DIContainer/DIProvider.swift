@@ -10,7 +10,7 @@ import Foundation
 final class DIProvider {
     static let shared = DIProvider()
 
-    let container = DIContainer.shared
+    let container = DIContainer.sharedContainer()
     let register = DIRegister.shared
 
     private init() { }
@@ -23,14 +23,12 @@ final class DIProvider {
                  ReviewFlowCoordinator.self,
                  MyPageFlowCoordinator.self
              ]
-        
-        var coordinators = [BaseCoordinator]()
-        
+                
         return coordinatorTypes.compactMap { type in
             if let coordinator = container.resolve(type) {
                 return coordinator
             } else {
-                register.registerTabBarPresentation()
+                register.registerTabBarsPresentation()
                 return container.resolve(type)
             }
         }

@@ -16,7 +16,7 @@ struct MyPageViewModelActions {
 
 final class MyPageViewModel {
     
-    private let actions: MyPageViewModelActions!
+//    private let actions: MyPageViewModelActions!
     
     private var disposeBag = DisposeBag()
     
@@ -92,7 +92,7 @@ final class MyPageViewModel {
 extension MyPageViewModel {
     /// 앱 설정으로 이동
     func moveAppSetting() {
-        actions.moveAppSetting()
+//        actions.moveAppSetting()
     }
 }
 

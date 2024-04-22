@@ -8,7 +8,7 @@
 import Foundation
 
 struct Weak<T: AnyObject> {
-    weak var value: T?
+    var value: T?
     
     init(value: T) {
         self.value = value

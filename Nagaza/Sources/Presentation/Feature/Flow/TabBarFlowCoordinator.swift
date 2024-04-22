@@ -9,15 +9,10 @@ import UIKit
 
 final class TabBarFlowCoordinator: BaseCoordinator {
     private var window: UIWindow?
-    private var rootViewController: UIViewController? {
-        didSet {
-            window?.rootViewController = rootViewController
-            window?.makeKeyAndVisible()
-        }
-    }
+    private var tabBarVC: UIViewController
     
     init(tabBarVC: UIViewController) {
-        self.rootViewController = tabBarVC
+        self.tabBarVC = tabBarVC
     }
     
     override func start(withCoordinators coordinators: [Coordinator],
@@ -29,7 +24,7 @@ final class TabBarFlowCoordinator: BaseCoordinator {
     
     private func setupTabs(withViewControllers coordinators: [Coordinator]) {
         let tabs: [TabBarType] = TabBarType.allCases
-        
+                
         for coordinator in coordinators {
             addChildCoordinator(coordinator)
             coordinator.start(navigationController: UINavigationController())
@@ -37,10 +32,13 @@ final class TabBarFlowCoordinator: BaseCoordinator {
         
         let viewControllers = coordinators.compactMap { $0.navigationController }
         
-        if let tabBarVC = rootViewController as? NagazaTabBarController {
+        if let tabBarVC = tabBarVC as? NagazaTabBarController {
             tabBarVC.setViewControllers(viewControllers, with: tabs)
             tabBarVC.selectedIndex = 0
         }
+        
+        self.window?.rootViewController = tabBarVC
+        self.window?.makeKeyAndVisible()
     }
 }
 
