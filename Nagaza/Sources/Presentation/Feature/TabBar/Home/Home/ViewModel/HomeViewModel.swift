@@ -24,29 +24,28 @@ protocol HomeCoordinatorActions: CoordinatorActions {
 final class HomeViewModel: NagazaViewModel {
     private weak var actions: HomeCoordinatorActions?
     
-    private let homeUseCaseInterface: HomeUseCaseInterface
-        
-    private let selectedRegion = PublishSubject<String>()
-    
+    private let homeUseCase: HomeUseCaseProtocol
+    private let regionSettingUseCase: RegionSettingUseCaseProtocol
+            
     struct Input {
-        let initialTrigger: Driver<Void>
+        let viewWillAppearTrigger: Driver<Void>
         let contentOffset: Driver<CGPoint>
-        let mapButtonTapped: Driver<String>
+        let didTappedMap: Driver<Void>
     }
     
     struct Output {
+        let selectedRegion: Driver<String>
         let roomsList: Driver<[[Room]]>
         let scrollOffsetState: Driver<ScrollOffsetState>
-        let mapButtonTapped: Driver<Void>
-        let selectedRegion: Driver<String>
+        let didTappedMap: Driver<Void>
     }
     
     init(
-        homeUseCaseInterface: HomeUseCaseInterface
-//        actions: HomeViewModelActions
+        homeUseCaseInterface: HomeUseCaseProtocol,
+        regionSettingUseCase: RegionSettingUseCaseProtocol
     ) {
-        self.homeUseCaseInterface = homeUseCaseInterface
-//        self.actions = actions
+        self.homeUseCase = homeUseCaseInterface
+        self.regionSettingUseCase = regionSettingUseCase
     }
     
     func setCoordinatorActions(with actions: any CoordinatorActions) {
@@ -54,9 +53,15 @@ final class HomeViewModel: NagazaViewModel {
     }
     
     func transform(input: Input) -> Output {
-        let cafesResponse = input.initialTrigger
+        let selectedRegionRelay = BehaviorRelay(value: "테스트")
+        
+        selectedRegionRelay
+            .accept(regionSettingUseCase.loadSelectedRegion())
+        
+        let cafesResponse = input.viewWillAppearTrigger
             .flatMapLatest { [unowned self] _ in
-                return homeUseCaseInterface.fetchCafesList().asDriver(onErrorJustReturn: .init(cafes: [], page: 0, totalPages: 0))
+                return homeUseCase.fetchCafesList()
+                    .asDriver(onErrorJustReturn:.init(cafes: [],page: 0,totalPages: 0))
             }
         
         let roomsList = cafesResponse
@@ -64,39 +69,33 @@ final class HomeViewModel: NagazaViewModel {
                 if cafesPage.cafes.isEmpty { return Driver<[[Room]]>.just([]) }
                 else {
                     let firstId = cafesPage.cafes[0].id
-                    return self.homeUseCaseInterface.fetchRoomsList(cafeId: firstId)
-                        .map { $0.roomsList }.asDriver(onErrorJustReturn: [])
+                    return self.homeUseCase.fetchRoomsList(cafeId: firstId)
+                        .map { $0.roomsList }
+                        .asDriver(onErrorJustReturn: [])
                 }
             }
         
         let scrollOffsetState = input.contentOffset
             .map { ScrollOffsetState(rawValue: $0.y) }
         
-        let mapButtonTapped = input.mapButtonTapped
-            .map { [weak self] subRegion in
-                self?.showRegionSetting(with: subRegion)
+        let mapButtonTapped = input.didTappedMap
+            .map { [weak self] in
+                self?.presentRegionSetting()
                 
                 return
             }
             .asDriver()
         
-        let selectedRegionDriver = selectedRegion.asDriver(onErrorJustReturn: "전국 전체")
-        
         return Output(
+            selectedRegion: selectedRegionRelay.asDriver(),
             roomsList: roomsList,
             scrollOffsetState: scrollOffsetState,
-            mapButtonTapped: mapButtonTapped,
-            selectedRegion: selectedRegionDriver
+            didTappedMap: mapButtonTapped
         )
     }
     
-    private func showRegionSetting(with subRegion: String) {
+    private func presentRegionSetting() {
         actions?.presentRegionSetting()
-//        actions.showRegionSetting(subRegion, updateRegion(with:))
-    }
-    
-    private func updateRegion(with subRegion: String) {
-        selectedRegion.onNext(subRegion)
     }
 }
 

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TabBarFlowCoordinator: BaseCoordinator {
+final class TabBarCoordinator: BaseCoordinator {
     private var window: UIWindow?
     private var tabBarVC: UIViewController
     
@@ -43,9 +43,11 @@ final class TabBarFlowCoordinator: BaseCoordinator {
 }
 
 // MARK: Logout 버튼 클릭 시 tabBar Flow Coordinator도 같이 삭제
-extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
+extension TabBarCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         removeChildCoordinators()
+        DIManager.shared.unregisterTabBarPresentation()
+        
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

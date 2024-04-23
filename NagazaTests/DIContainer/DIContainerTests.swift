@@ -53,7 +53,7 @@ final class DIContainerTests: XCTestCase {
 
             // TabBar Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: NagazaTabBarController.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: TabBarFlowCoordinator.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: TabBarCoordinator.self)},
 
             // Home Presentation
             { [weak self] in self?.assertComponentIsRegistered(type: HomeViewModel.self)},

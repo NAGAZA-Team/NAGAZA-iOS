@@ -21,7 +21,7 @@ final class DIRegister {
     func registerDIContainer() {
         registerRepository()
         registerUseCase()
-        registerPresentation()
+        registerFirstAppPresentation()
     }
     
     // MARK: - Repository
@@ -65,14 +65,17 @@ final class DIRegister {
         )
     }
     
-    // MARK: - Presentation
-    /// Splash / App Coordinator
-    private func registerPresentation() {
-        registerFirstAppPresentation()
-        registerLoginPresentation()
-        registerTabBarsPresentation()
+}
+
+// MARK: - Presentation
+extension DIRegister {
+    func unregisterPresentation(types: [AnyObject.Type]) {
+        types.forEach { type in
+            container.unregister(type)
+        }
     }
     
+    /// Splash / App Coordinator
     private func registerFirstAppPresentation() {
         container.register(
             SplashViewController.self,
@@ -86,7 +89,7 @@ final class DIRegister {
         )
     }
     
-    /// Login Presentation
+    // MARK: - Login
     func registerLoginPresentation() {
         container.register(
             LoginViewModel.self,
@@ -108,6 +111,7 @@ final class DIRegister {
         )
     }
     
+    // MARK: - TabBar
     /// TabBars Presentation
     func registerTabBarsPresentation() {
         container.register(
@@ -117,31 +121,28 @@ final class DIRegister {
         
         guard let tabBarVC = container.resolve(NagazaTabBarController.self) else { return }
         container.register(
-            TabBarFlowCoordinator.self,
-            dependency: TabBarFlowCoordinator(
+            TabBarCoordinator.self,
+            dependency: TabBarCoordinator(
                 tabBarVC: tabBarVC
             )
         )
         
         registerHomePresentation()
-        registerRegionSettingPresentation()
-        
         registerMapPresentation()
-        registerMapSearchPresentation()
-        
         registerReviewPresentation()
-        
         registerMyPagePresentation()
-        registerAppSettingPresentation()
     }
     
-    /// Home Presentation
+    // MARK: Home
     private func registerHomePresentation() {
-        guard let homeUseCase = container.resolve(DefaultHomeUseCase.self) else { return }
+        guard let homeUseCase = container.resolve(DefaultHomeUseCase.self),
+              let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self)
+        else { return }
         container.register(
             HomeViewModel.self,
             dependency: HomeViewModel(
-                homeUseCaseInterface: homeUseCase
+                homeUseCaseInterface: homeUseCase,
+                regionSettingUseCase: regionSettingUseCase
             )
         )
         
@@ -162,7 +163,77 @@ final class DIRegister {
         )
     }
     
-    /// RegionSetting Presentation
+    // MARK: Map
+    private func registerMapPresentation() {
+        container.register(
+            MapViewModel.self,
+            dependency: MapViewModel()
+        )
+        
+        guard let mapVM = container.resolve(MapViewModel.self) else { return }
+        container.register(
+            MapViewController.self,
+            dependency: MapViewController(
+                viewModel: mapVM
+            )
+        )
+        
+        guard let mapVC = container.resolve(MapViewController.self) else { return }
+        container.register(
+            MapCoordinator.self,
+            dependency: MapCoordinator(
+                mapVC: mapVC
+            )
+        )
+    }
+    
+    // MARK: Review
+    private func registerReviewPresentation() {
+        container.register(
+            ReviewViewModel.self,
+            dependency: ReviewViewModel()
+        )
+        
+        guard let reviewVM = container.resolve(ReviewViewModel.self) else { return }
+        container.register(
+            ReviewViewController.self,
+            dependency: ReviewViewController(viewModel: reviewVM)
+        )
+        
+        guard let reviewVC = container.resolve(ReviewViewController.self) else { return }
+        container.register(
+            ReviewCoordinator.self,
+            dependency: ReviewCoordinator(
+                reviewVC: reviewVC
+            )
+        )
+    }
+    
+    // MARK: MyPage
+    private func registerMyPagePresentation() {
+        container.register(
+            MyPageViewModel.self,
+            dependency: MyPageViewModel()
+        )
+        
+        guard let myPageVM = container.resolve(MyPageViewModel.self) else { return }
+        container.register(
+            MyPageViewController.self,
+            dependency: MyPageViewController(
+                viewModel: myPageVM
+            )
+        )
+        
+        guard let myPageVC = container.resolve(MyPageViewController.self) else { return }
+        container.register(
+            MyPageCoordinator.self,
+            dependency: MyPageCoordinator(
+                myPageVC: myPageVC
+            )
+        )
+    }
+    
+    // MARK: Region Setting
     func registerRegionSettingPresentation() {
         guard let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self) else { return }
         container.register(
@@ -189,32 +260,8 @@ final class DIRegister {
         )
     }
     
-    /// Map Presentation
-    private func registerMapPresentation() {
-        container.register(
-            MapViewModel.self,
-            dependency: MapViewModel()
-        )
-        
-        guard let mapVM = container.resolve(MapViewModel.self) else { return }
-        container.register(
-            MapViewController.self,
-            dependency: MapViewController(
-                viewModel: mapVM
-            )
-        )
-        
-        guard let mapVC = container.resolve(MapViewController.self) else { return }
-        container.register(
-            MapCoordinator.self,
-            dependency: MapCoordinator(
-                mapVC: mapVC
-            )
-        )
-    }
-    
-    /// Map Serach Presentation
-    private func registerMapSearchPresentation() {
+    // MARK: Map Search
+    func registerMapSearchPresentation() {
         guard let mapSearchUseCase = container.resolve(DefaultMapSearchUseCase.self) else { return }
         container.register(
             MapSearchViewModel.self,
@@ -240,54 +287,8 @@ final class DIRegister {
         )
     }
     
-    /// Review Presentation
-    private func registerReviewPresentation() {
-        container.register(
-            ReviewViewModel.self,
-            dependency: ReviewViewModel()
-        )
-        
-        guard let reviewVM = container.resolve(ReviewViewModel.self) else { return }
-        container.register(
-            ReviewViewController.self,
-            dependency: ReviewViewController(viewModel: reviewVM)
-        )
-        
-        guard let reviewVC = container.resolve(ReviewViewController.self) else { return }
-        container.register(
-            ReviewCoordinator.self,
-            dependency: ReviewCoordinator(
-                reviewVC: reviewVC
-            )
-        )
-    }
-    
-    /// MyPage Presentation
-    private func registerMyPagePresentation() {
-        container.register(
-            MyPageViewModel.self,
-            dependency: MyPageViewModel()
-        )
-        
-        guard let myPageVM = container.resolve(MyPageViewModel.self) else { return }
-        container.register(
-            MyPageViewController.self,
-            dependency: MyPageViewController(
-                viewModel: myPageVM
-            )
-        )
-        
-        guard let myPageVC = container.resolve(MyPageViewController.self) else { return }
-        container.register(
-            MyPageCoordinator.self,
-            dependency: MyPageCoordinator(
-                myPageVC: myPageVC
-            )
-        )
-    }
-    
-    /// App Setting Presentation
-    private func registerAppSettingPresentation() {
+    // MARK: App Setting
+    func registerAppSettingPresentation() {
         container.register(
             AppSettingViewModel.self,
             dependency: AppSettingViewModel()

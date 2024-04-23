@@ -8,7 +8,6 @@
 import Foundation
 
 final class MockDIContainer: DIContainerProtocol {
-
     static private let shared = MockDIContainer()
     
     private var dependencies: [String: AnyObject] = [:]
@@ -34,6 +33,11 @@ final class MockDIContainer: DIContainerProtocol {
         }
         
         return value
+    }
+    
+    func unregister(_ type: AnyObject.Type) {
+        let key = String(describing: type)
+        dependencies.removeValue(forKey: key)
     }
     
     func reset() {

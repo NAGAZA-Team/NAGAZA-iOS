@@ -7,16 +7,6 @@
 
 import UIKit
 
-/// Flow Coordinator는 DICiontainer의 Presentation만 알아야 하기 때문에 해당 부분만 delegate 패턴으로 채택해줍니다.
-//protocol HomeFlowCoordinaterDependencies {
-//    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
-//    func makeRegionSettingViewController(
-//        with subRegion: String,
-//        didSelect: @escaping RegionSettingViewModelDidSelectAction
-//    ) -> RegionSettingViewController
-//    func makeRegionSettingCoordinator(navigationController: UINavigationController) -> RegionSettingCoordinator
-//}
-//
 final class HomeCoordinator: BaseCoordinator {
     
     private var homeVC: NagazaViewController
@@ -58,14 +48,22 @@ final class HomeCoordinator: BaseCoordinator {
 ////        
 ////        childCoordinators.append(regionSettingCoordinator)
 //    }
-    
-    private func logoutTest() {
-        // TODO: 추후 작성
-    }
 }
 
 extension HomeCoordinator: HomeCoordinatorActions {
     func presentRegionSetting() {
+        guard let navigationController = navigationController else { return }
+        let regionSettingCoordinator = DIManager.shared.resolveRegionSettingPresentation()
+        
+        addChildCoordinator(regionSettingCoordinator)
+        
+        regionSettingCoordinator.finishDelegate = self
+        regionSettingCoordinator.start(navigationController: navigationController)
+    }
+}
+
+extension HomeCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: any Coordinator) {
         
     }
 }

@@ -17,7 +17,7 @@ protocol RegionSettingCoordinatorActions: CoordinatorActions {
 final class RegionSettingViewModel: NagazaViewModel {
     private weak var actions: RegionSettingCoordinatorActions?
     
-    private let regionSettingUseCase: RegionSettingUseCase!
+    private let regionSettingUseCase: RegionSettingUseCaseProtocol!
         
     private var subRegionFromHomeVC = ""
 //    private let didSelect: RegionSettingViewModelDidSelectAction
@@ -38,7 +38,7 @@ final class RegionSettingViewModel: NagazaViewModel {
     }
     
     init(
-        regionSettingUseCase: RegionSettingUseCase
+        regionSettingUseCase: RegionSettingUseCaseProtocol
 //        subRegionFromHomeVC: String = "",
 //        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
@@ -58,7 +58,7 @@ final class RegionSettingViewModel: NagazaViewModel {
         let viewWillAppearTrigger = input.viewWillAppearTrigger
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                let regions = self.regionSettingUseCase.loadMainRegions(with: subRegionFromHomeVC)
+                let regions = self.regionSettingUseCase.loadMainRegions()
                 mainRegions.accept(regions)
             })
             .asDriver()

@@ -7,13 +7,14 @@
 
 import Foundation
 
-protocol RegionSettingUseCase: AnyObject {
+protocol RegionSettingUseCaseProtocol: AnyObject {
     func loadMainRegions() -> [MainRegion]
-    func loadMainRegions(with subRegion: String) -> [MainRegion]
     func loadSubRegions(with mainRegion: Region) -> [SubRegion]
+    
+    func loadSelectedRegion() -> String
 }
 
-final class DefaultRegionSettingUseCase: RegionSettingUseCase {
+final class DefaultRegionSettingUseCase: RegionSettingUseCaseProtocol {
     
     init() {
         
@@ -23,19 +24,15 @@ final class DefaultRegionSettingUseCase: RegionSettingUseCase {
         return Region.allCases.map { MainRegion(region: $0, isSelected: $0.rawValue == 0)}
     }
     
-    func loadMainRegions(with subRegion: String) -> [MainRegion] {
-        return Region.allCases.map { region in
-            let isSelected = region.cities.contains(subRegion)
-            
-            return MainRegion(region: region, isSelected: isSelected)
-        }
-    }
-    
     func loadSubRegions(with mainRegion: Region) -> [SubRegion] {
         return fetchSubRegionsThemeCount(with: mainRegion)
     }
     
     private func fetchSubRegionsThemeCount(with mainRegion: Region) -> [SubRegion] {
         return mainRegion.cities.map { SubRegion(region: $0, themeCount: 50) }
+    }
+    
+    func loadSelectedRegion() -> String {
+        return "전국 전체"
     }
 }

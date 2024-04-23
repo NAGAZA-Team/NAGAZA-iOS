@@ -31,12 +31,8 @@ final class LoginCoordinator: BaseCoordinator {
 
 extension LoginCoordinator: LoginCoordinatorActions {
     func login() {
+        DIManager.shared.unregisterLoginPresentation()
+        
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }
-
-//extension LoginFlowCoordinator: LoginCoordinatorActions {
-//    func navigateToMainTabBar() {
-//        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
-//    }
-//}

@@ -12,8 +12,9 @@ protocol DIContainerProtocol {
     
     func register<T: AnyObject>(_ type: T.Type, dependency: T)
     func resolve<T: AnyObject>(_ type: T.Type) -> T?
+    func unregister(_ type: AnyObject.Type)
     
-    func reset() 
+    func reset()
 }
 
 final class DIContainer: DIContainerProtocol {
@@ -37,11 +38,21 @@ final class DIContainer: DIContainerProtocol {
         
         guard let value = dependencies[key] as? T else {
             print("---- 의존성 Key 값을 찾지 못했습니다!!: \(key) ----")
-            
             return nil
         }
         
         return value
+    }
+    
+    func unregister(_ type: AnyObject.Type) {
+        let key = String(describing: type)
+        dependencies.removeValue(forKey: key)
+        
+        print("----------삭제 시작---------")
+        dependencies.forEach { key, value in
+            print("key: ", key, " value: ", value)
+        }
+        print("----------삭제 종료---------")
     }
     
     func reset() {

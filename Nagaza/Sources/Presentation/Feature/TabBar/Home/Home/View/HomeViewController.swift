@@ -10,35 +10,6 @@ import UIKit
 import RxSwift
 import SnapKit
 
-enum HomeSectionType: Int {
-    case horror
-    case fantasy
-    case suspense
-    case comic
-    case drama
-    case sf
-    case rRtated
-    
-    var title: String {
-        switch self {
-        case .horror:
-            return "공포 순"
-        case .fantasy:
-            return "판타지 순"
-        case .suspense:
-            return "스릴러 순"
-        case .comic:
-            return "코믹 순"
-        case .drama:
-            return "드라마 순"
-        case .sf:
-            return "공상과학 순"
-        case .rRtated:
-            return "별점 순"
-        }
-    }
-}
-
 final class HomeViewController: NagazaViewController {
     private let themesViewEstimatedHeight: CGFloat = 260
     private let themesViewGroupCount = 7
@@ -79,13 +50,6 @@ final class HomeViewController: NagazaViewController {
         viewModel.setCoordinatorActions(with: actions)
     }
     
-//    static func create(with viewModel: HomeViewModel) -> HomeViewController {
-//        let vc = HomeViewController()
-//        vc.viewModel = viewModel
-//        
-//        return vc
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setDataSource()
@@ -105,17 +69,6 @@ final class HomeViewController: NagazaViewController {
         navigationItem.leftBarButtonItem = mapButtonItem
         navigationItem.rightBarButtonItem = searchButtonItem
     }
-    
-//    // TODO: DIContainer / FlowCoordinator 연결 예정
-//    @objc private func test(_ sender: UIButton) {
-//        let action = RegionSettingViewModelActions()
-//        let useCase = RegionSettingUseCase()
-//        let viewModel = RegionSettingViewModel(regionSettingUseCase: useCase, actions: action)
-//        
-//        let VC = RegionSettingViewController.create(with: viewModel)
-//        
-//        self.present(VC, animated: true)
-//    }
     
     override func makeUI() {
         view.addSubview(scrollView)
@@ -138,28 +91,21 @@ final class HomeViewController: NagazaViewController {
     
     // MARK: Binding
     override func bindViewModel() {
-        let initialTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
-        
+        let viewWillAppearTrigger = rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
         let contentOffset = scrollView.rx.contentOffset.asDriver()
-        
-        let mapButtonTapSubject = PublishSubject<String>()
-        
-        let mapButtonTapTrigger = mapButtonTapSubject.asDriverOnErrorJustEmpty()
-        
-        mapButtonItem.rx.tap
-            .map { [weak self] in
-                self?.navigationItem.title ?? ""
-            }
-            .bind(to: mapButtonTapSubject)
-            .disposed(by: disposeBag)
+        let didTappedMap = mapButtonItem.rx.tap.asDriver()
         
         let input = HomeViewModel.Input(
-            initialTrigger: initialTrigger,
+            viewWillAppearTrigger: viewWillAppearTrigger,
             contentOffset: contentOffset,
-            mapButtonTapped: mapButtonTapTrigger
+            didTappedMap: didTappedMap
         )
         
         let output = viewModel.transform(input: input)
+        
+        output.selectedRegion
+            .drive(self.rx.navigationTitleSetValue)
+            .disposed(by: disposeBag)
         
         output.roomsList
             .drive(with: self, onNext: { this, roomslist in
@@ -192,12 +138,8 @@ final class HomeViewController: NagazaViewController {
             .drive(self.rx.scrollOffsetState)
             .disposed(by: disposeBag)
         
-        output.mapButtonTapped
+        output.didTappedMap
             .drive()
-            .disposed(by: disposeBag)
-        
-        output.selectedRegion
-            .drive(self.rx.navigationTitleSetValue)
             .disposed(by: disposeBag)
     }
     

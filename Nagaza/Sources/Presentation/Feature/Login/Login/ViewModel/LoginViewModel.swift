@@ -5,7 +5,8 @@
 //  Created by 전성훈 on 2023/10/20.
 //
 
-import Foundation
+import RxSwift
+import RxCocoa
 
 // TODO: LoginViewModel Coordinator protocol
 protocol LoginCoordinatorActions: CoordinatorActions {
@@ -16,11 +17,11 @@ final class LoginViewModel: NagazaViewModel {
     private weak var actions: LoginCoordinatorActions?
     
     struct Input {
-        
+        let didTappedLogin: Driver<Void>
     }
     
     struct Output {
-        
+        let didTappedLogin: Driver<Void>
     }
     
     init() { }
@@ -30,6 +31,19 @@ final class LoginViewModel: NagazaViewModel {
     }
     
     func transform(input: Input) -> Output {
-        return Output()
+        let didTappedLogin = input.didTappedLogin
+            .map { [weak self] _ in
+                self?.presentTabBar()
+                
+                return
+            }
+            .asDriver()
+        
+        return Output(didTappedLogin: didTappedLogin)
+    }
+    
+    private func presentTabBar() {
+        actions?.login()
     }
 }
+

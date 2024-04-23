@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
 import SnapKit
 
 final class LoginViewController: NagazaViewController, Alertable {
@@ -18,11 +20,6 @@ final class LoginViewController: NagazaViewController, Alertable {
         
         btn.setTitle("로그인", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.addTarget(
-            self,
-            action: #selector(loginTapped(_:)),
-            for: .touchUpInside
-        )
         
         return btn
     }()
@@ -74,8 +71,18 @@ final class LoginViewController: NagazaViewController, Alertable {
         ])
     }
     
-    @objc private func loginTapped(_ sender: UIButton) {
-//        viewModel.didTappedLogin()
+    override func bindViewModel() {
+        let didTappedLogin = loginButton.rx.tap
+            .map { _ in }
+            .asDriverOnErrorJustEmpty()
+        
+        let input = LoginViewModel.Input(didTappedLogin: didTappedLogin)
+        
+        let output = viewModel.transform(input: input)
+        
+        output.didTappedLogin
+            .drive()
+            .disposed(by: disposeBag)
     }
 }
 

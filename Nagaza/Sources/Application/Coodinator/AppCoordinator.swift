@@ -27,6 +27,8 @@ final class AppCoordinator: BaseCoordinator {
     }
     
     private func checkAccessToken(with window: UIWindow) {
+        Keychain.shared.delete(.accessToken)
+        
         if let _ = Keychain.shared.get(.accessToken) {
             showTabBar(with: window)
         } else {
@@ -35,11 +37,11 @@ final class AppCoordinator: BaseCoordinator {
     }
     
     private func showTabBar(with window: UIWindow) {
-        let provider = DIProvider.shared
-        let coordinators = provider.resolveCoordinatorsInTabBar()
+        let diManager = DIManager.shared
+        let coordinators = diManager.resolveTabBarPresentation()
 
         guard let tabBarCoordinator = coordinators
-            .compactMap({ $0 as? TabBarFlowCoordinator })
+            .compactMap({ $0 as? TabBarCoordinator })
             .first
         else { return }
         
@@ -52,8 +54,8 @@ final class AppCoordinator: BaseCoordinator {
     }
     
     private func showLogin(with window: UIWindow) {
-        let provider = DIProvider.shared
-        let loginCoordinator = provider.resolveLoginCoordinator()
+        let diManager = DIManager.shared
+        let loginCoordinator = diManager.resolveLoginPresentation()
 
         addChildCoordinator(loginCoordinator)
 
@@ -66,7 +68,7 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         removeChildCoordinator(childCoordinator)
 
-        if childCoordinator is TabBarFlowCoordinator {
+        if childCoordinator is TabBarCoordinator {
             // TODO: 토큰 삭제
             Keychain.shared.delete(.accessToken)
             
