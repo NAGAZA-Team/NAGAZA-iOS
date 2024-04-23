@@ -36,12 +36,15 @@ class NagazaViewController: UIViewController {
     /// Set up Navigation Bar
     func navigationSetting() {
         navigationController?.navigationBar.tintColor = NagazaAsset.Colors.gray3.color
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: "test",
+        
+        let backButton = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.backward"),
             style: .plain,
             target: nil,
             action: nil
         )
+        
+        navigationItem.leftBarButtonItem = backButton
         
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()

@@ -15,7 +15,7 @@ import RxCocoa
 //}
 
 protocol MyPageCoordinatorActions: CoordinatorActions {
-    
+    func pushAppSetting()
 }
 
 final class MyPageViewModel: NagazaViewModel {
@@ -65,7 +65,7 @@ final class MyPageViewModel: NagazaViewModel {
                     break
                     // TODO: 찜으로 이동
                 case .appSetting:
-                    owner.moveAppSetting()
+                    owner.pushAppSetting()
                 case .inquiry:
                     break
                     // TODO: 문의로 이동
@@ -94,38 +94,8 @@ final class MyPageViewModel: NagazaViewModel {
         
         return sectionItems
     }
-}
-
-// MARK: - 화면 전환 함수
-extension MyPageViewModel {
-    /// 앱 설정으로 이동
-    func moveAppSetting() {
-//        actions.moveAppSetting()
-    }
-}
-
-enum MyPageRowType {
-    case myReview
-    case like
-    case appSetting
-    case inquiry
     
-    var title: String {
-        switch self {
-        case .myReview:
-            "내가 작성한 리뷰"
-        case .like:
-            "찜 목록"
-        case .appSetting:
-            "앱 설정"
-        case .inquiry:
-            "문의/제안하기"
-        }
+    private func pushAppSetting() {
+        actions?.pushAppSetting()
     }
-}
-
-enum MyPageSectionType {
-    case myData
-    case appSetting
-    case inquiry
 }

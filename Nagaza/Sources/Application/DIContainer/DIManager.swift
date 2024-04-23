@@ -155,4 +155,22 @@ final class DIManager {
         
         unregisterPresentation(types: mapSearchPresentations)
     }
+    
+    // MARK: - App Setting Presentation
+    func resolveAppSettingPresentation() -> AppSettingCoordinator {
+        resolveCoordinator(
+            type: AppSettingCoordinator.self,
+            registerAction: register.registerAppSettingPresentation
+        )
+    }
+    
+    func unregisterAppSettingPresentation() {
+        let appSettingPresentation: [AnyObject.Type] = [
+            AppSettingViewModel.self,
+            AppSettingViewController.self,
+            AppSettingCoordinator.self
+        ]
+        
+        unregisterPresentation(types: appSettingPresentation)
+    }
 }

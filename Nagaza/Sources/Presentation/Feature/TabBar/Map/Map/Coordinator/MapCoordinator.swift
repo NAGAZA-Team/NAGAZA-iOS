@@ -57,8 +57,9 @@ extension MapCoordinator: MapCoordinatorActions {
         guard let navigationController = navigationController else { return }
         
         let mapSearchCoordinator = DIManager.shared.resolveMapSearchPresentation()
+
         addChildCoordinator(mapSearchCoordinator)
-        
+
         mapSearchCoordinator.finishDelegate = self
         mapSearchCoordinator.start(navigationController: navigationController)
     }

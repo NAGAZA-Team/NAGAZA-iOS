@@ -40,6 +40,17 @@ final class MyPageCoordinator: BaseCoordinator {
 }
 
 extension MyPageCoordinator: MyPageCoordinatorActions {
+    func pushAppSetting() {
+        guard let navigationController = navigationController else { return }
+        
+        let appSettingCoordinator = DIManager.shared.resolveAppSettingPresentation()
+        
+        addChildCoordinator(appSettingCoordinator)
+        
+        appSettingCoordinator.finishDelegate = self
+        appSettingCoordinator.start(navigationController: navigationController)
+    }
+    
 //    func moveAppSetting() {
 //        let coordinator = MyPageAppSettingCoordinator(
 //            navigationController: navigationController,

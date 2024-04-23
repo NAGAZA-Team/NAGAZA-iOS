@@ -296,7 +296,7 @@ extension DIRegister {
             )
         )
         
-        guard let appSettingVC = container.resolve(MyPageViewController.self) else { return }
+        guard let appSettingVC = container.resolve(AppSettingViewController.self) else { return }
         container.register(
             AppSettingCoordinator.self,
             dependency: AppSettingCoordinator(

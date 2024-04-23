@@ -14,12 +14,11 @@ import RxCocoa
 //}
 
 protocol AppSettingCoordinatorActions: CoordinatorActions {
-    
+    func popViewController()
 }
 
 final class AppSettingViewModel: NagazaViewModel {
     private weak var actions: AppSettingCoordinatorActions?
-//    private let actions: MyPageAppSettingViewModelActions!
     
     private var disposeBag = DisposeBag()
     
@@ -36,19 +35,17 @@ final class AppSettingViewModel: NagazaViewModel {
         self.actions = actions as? AppSettingCoordinatorActions
     }
     
-//    init(
-//        actions: MyPageAppSettingViewModelActions
-//    ) {
-//        self.actions = actions
-//    }
-    
     func transform(input: Input) -> Output {
         input.tapBackButton
             .drive(with: self, onNext: { owner, event in
-//                owner.actions.finishMyPageAppSettingVC()
+                owner.actions?.popViewController()
             })
             .disposed(by: disposeBag)
         
         return Output()
+    }
+    
+    private func popViewController() {
+        actions?.popViewController()
     }
 }
