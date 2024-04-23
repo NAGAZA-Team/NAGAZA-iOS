@@ -53,6 +53,10 @@ final class RegionSettingViewController: NagazaViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func setCoordinatorActions(with actions: CoordinatorActions) {
+        viewModel.setCoordinatorActions(with: actions)
+    }
+    
 //    static func create(with viewModel: RegionSettingViewModel) -> RegionSettingViewController {
 //        let vc = RegionSettingViewController()
 //        
@@ -62,6 +66,8 @@ final class RegionSettingViewController: NagazaViewController {
 //    }
     
     override func navigationSetting() {
+        super.navigationSetting()
+        
         navigationItem.title = "지역 선택"
     }
     
@@ -95,6 +101,10 @@ final class RegionSettingViewController: NagazaViewController {
             .map { _ in }
             .asDriverOnErrorJustEmpty()
         
+        let popViewController = navigationItem.leftBarButtonItem!.rx.tap
+            .map { _ in }
+            .asDriverOnErrorJustEmpty()
+                
         let mainRegionSelected = mainRegionTableView.rx.itemSelected
              .map {
                 return $0.row
@@ -107,7 +117,8 @@ final class RegionSettingViewController: NagazaViewController {
         let input = RegionSettingViewModel.Input(
             viewWillAppearTrigger: viewWillAppearTrigger,
             mainRegionSelected: mainRegionSelected,
-            subRegionSelected: subRegionSelectied
+            subRegionSelected: subRegionSelectied,
+            popViewControler: popViewController
         )
         
         let output = viewModel.transform(input: input)
@@ -146,6 +157,10 @@ final class RegionSettingViewController: NagazaViewController {
         
         output.subRegionSelected
             .drive(self.rx.closeViewController)
+            .disposed(by: disposeBag)
+        
+        output.popViewController
+            .drive()
             .disposed(by: disposeBag)
     }
     

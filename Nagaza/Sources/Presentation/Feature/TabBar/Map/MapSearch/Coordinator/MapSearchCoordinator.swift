@@ -15,6 +15,10 @@ final class MapSearchCoordinator: BaseCoordinator {
         self.mapSerachVC = mapSearchVC
     }
     
+    deinit {
+        print("MapSearchCoordinator deinit")
+    }
+    
     override func start(navigationController: UINavigationController) {
         self.navigationController = navigationController
         
@@ -25,5 +29,11 @@ final class MapSearchCoordinator: BaseCoordinator {
 }
 
 extension MapSearchCoordinator: MapSearchCoordinatorActions {
-    
+    func popViewController() {
+        guard let navigationController = navigationController else { return }
+
+        navigationController.popViewController(animated: true)
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+        DIManager.shared.unregisterMapSearchPresentation()
+    }
 }

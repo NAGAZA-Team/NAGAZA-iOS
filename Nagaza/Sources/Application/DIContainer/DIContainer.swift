@@ -46,13 +46,10 @@ final class DIContainer: DIContainerProtocol {
     
     func unregister(_ type: AnyObject.Type) {
         let key = String(describing: type)
+        print("key : ", key, " value: ", dependencies[key])
         dependencies.removeValue(forKey: key)
-        
-        print("----------삭제 시작---------")
-        dependencies.forEach { key, value in
-            print("key: ", key, " value: ", value)
-        }
-        print("----------삭제 종료---------")
+        print(dependencies.count)
+
     }
     
     func reset() {

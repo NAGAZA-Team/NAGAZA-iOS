@@ -17,7 +17,7 @@ import RxCocoa
 //}
 
 protocol HomeCoordinatorActions: CoordinatorActions {
-    func presentRegionSetting()
+    func pushRegionSetting()
 }
 
 // MARK: - HomeViewModel
@@ -80,7 +80,7 @@ final class HomeViewModel: NagazaViewModel {
         
         let mapButtonTapped = input.didTappedMap
             .map { [weak self] in
-                self?.presentRegionSetting()
+                self?.pushRegionSetting()
                 
                 return
             }
@@ -94,8 +94,8 @@ final class HomeViewModel: NagazaViewModel {
         )
     }
     
-    private func presentRegionSetting() {
-        actions?.presentRegionSetting()
+    private func pushRegionSetting() {
+        actions?.pushRegionSetting()
     }
 }
 

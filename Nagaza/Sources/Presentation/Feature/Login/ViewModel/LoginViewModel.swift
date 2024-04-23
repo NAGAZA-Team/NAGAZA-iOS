@@ -10,7 +10,7 @@ import RxCocoa
 
 // TODO: LoginViewModel Coordinator protocol
 protocol LoginCoordinatorActions: CoordinatorActions {
-    func login()
+    func pushTabBar()
 }
 
 final class LoginViewModel: NagazaViewModel {    
@@ -33,7 +33,7 @@ final class LoginViewModel: NagazaViewModel {
     func transform(input: Input) -> Output {
         let didTappedLogin = input.didTappedLogin
             .map { [weak self] _ in
-                self?.presentTabBar()
+                self?.pushTabBar()
                 
                 return
             }
@@ -42,8 +42,8 @@ final class LoginViewModel: NagazaViewModel {
         return Output(didTappedLogin: didTappedLogin)
     }
     
-    private func presentTabBar() {
-        actions?.login()
+    private func pushTabBar() {
+        actions?.pushTabBar()
     }
 }
 

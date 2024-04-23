@@ -50,16 +50,13 @@ final class MapSearchViewController: NagazaViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        print("MapSearchViewController Deinit")
+    }
+    
     override func setCoordinatorActions(with actions: any CoordinatorActions) {
         viewModel.setCoordinatorActions(with: actions)
     }
-    
-//    static func create(with viewModel: MapSearchViewModel) -> MapSearchViewController {
-//        let vc = MapSearchViewController()
-//        vc.viewModel = viewModel
-//        
-//        return vc
-//    }
     
     override func loadView() {
         super.loadView()
@@ -72,6 +69,8 @@ final class MapSearchViewController: NagazaViewController {
     }
     
     override func navigationSetting() {
+        super.navigationSetting()
+        
         navigationController?.navigationBar.isHidden = false
         
         let searchButtonItem = UIBarButtonItem(customView: searchButtonImageView)
@@ -81,7 +80,9 @@ final class MapSearchViewController: NagazaViewController {
     }
     
     override func bindViewModel() {
-        let initialTrigger = self.rx.viewWillAppear.map { _ in }.asDriverOnErrorJustEmpty()
+        let viewWillAppearTrigger = self.rx.viewWillAppear
+            .map { _ in }
+            .asDriverOnErrorJustEmpty()
         
         let searchText = searchTextField.rx.text
         
@@ -94,10 +95,15 @@ final class MapSearchViewController: NagazaViewController {
             .asDriver()
             .debug()
         
+        let popViewController = navigationItem.leftBarButtonItem!.rx.tap
+            .map { _ in }
+            .asDriverOnErrorJustEmpty()
+        
         let input = MapSearchViewModel.Input(
-            initialTrigger: initialTrigger,
-            searchButtonTapTrigger: searchButtonTapTrigger, 
-            itemSelectedTrigger: itemSelectedTrigger
+            viewWillAppearTrigger: viewWillAppearTrigger,
+            searchButtonTapTrigger: searchButtonTapTrigger,
+            itemSelectedTrigger: itemSelectedTrigger,
+            popViewController: popViewController
         )
         
         let output = viewModel.transform(input: input)
@@ -120,7 +126,11 @@ final class MapSearchViewController: NagazaViewController {
             }
             .disposed(by: disposeBag)
         
-        output.itemSelectedActionTrigger
+        output.itemSelectedTrigger
+            .drive()
+            .disposed(by: disposeBag)
+        
+        output.popViewController
             .drive()
             .disposed(by: disposeBag)
     }

@@ -56,5 +56,12 @@ final class RegionSettingCoordinator: BaseCoordinator {
 }
 
 extension RegionSettingCoordinator: RegionSettingCoordinatorActions {
-    
+    func popViewController() {
+        guard let navigationController = navigationController else { return }
+        
+        navigationController.popViewController(animated: true)
+        
+        DIManager.shared.unregisterRegionSettingPresentation()
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+    }
 }

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol RegionSettingCoordinatorActions: CoordinatorActions {
-    
+    func popViewController()
 }
 
 final class RegionSettingViewModel: NagazaViewModel {
@@ -26,6 +26,7 @@ final class RegionSettingViewModel: NagazaViewModel {
         let viewWillAppearTrigger: Driver<Void>
         let mainRegionSelected: Driver<Int>
         let subRegionSelected: Driver<SubRegion>
+        let popViewControler: Driver<Void>
     }
     
     struct Output {
@@ -35,6 +36,7 @@ final class RegionSettingViewModel: NagazaViewModel {
         let mainRegionSelected: Driver<Void>
         let subRegionsUpdated: Driver<Void>
         let subRegionSelected: Driver<Void>
+        let popViewController: Driver<Void>
     }
     
     init(
@@ -101,6 +103,12 @@ final class RegionSettingViewModel: NagazaViewModel {
             }
             .asDriver()
         
+        let popViewControler = input.popViewControler
+            .do(onNext: { [weak self] in
+                self?.popViewController()
+            })
+            .asDriver()
+        
         let mainRegionsDriver = mainRegions.asDriver()
         let subRegionsDriver = subRegions.asDriver()
         
@@ -110,8 +118,12 @@ final class RegionSettingViewModel: NagazaViewModel {
             subRegions: subRegionsDriver,
             mainRegionSelected: mainRegionSelected,
             subRegionsUpdated: subRegionsUpdated,
-            subRegionSelected: subRegionSelected
+            subRegionSelected: subRegionSelected,
+            popViewController: popViewControler
         )
     }
     
+    private func popViewController() {
+        actions?.popViewController()
+    }
 }

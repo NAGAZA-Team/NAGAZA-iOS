@@ -51,10 +51,9 @@ final class HomeCoordinator: BaseCoordinator {
 }
 
 extension HomeCoordinator: HomeCoordinatorActions {
-    func presentRegionSetting() {
+    func pushRegionSetting() {
         guard let navigationController = navigationController else { return }
         let regionSettingCoordinator = DIManager.shared.resolveRegionSettingPresentation()
-        
         addChildCoordinator(regionSettingCoordinator)
         
         regionSettingCoordinator.finishDelegate = self
@@ -63,7 +62,7 @@ extension HomeCoordinator: HomeCoordinatorActions {
 }
 
 extension HomeCoordinator: CoordinatorFinishDelegate {
-    func coordinatorDidFinish(childCoordinator: any Coordinator) {
-        
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        removeChildCoordinator(childCoordinator)
     }
 }

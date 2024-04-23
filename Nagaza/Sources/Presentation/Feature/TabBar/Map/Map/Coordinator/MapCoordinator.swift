@@ -53,5 +53,19 @@ final class MapCoordinator: BaseCoordinator {
 }
 
 extension MapCoordinator: MapCoordinatorActions {
-    
+    func pushMapSearch() {
+        guard let navigationController = navigationController else { return }
+        
+        let mapSearchCoordinator = DIManager.shared.resolveMapSearchPresentation()
+        addChildCoordinator(mapSearchCoordinator)
+        
+        mapSearchCoordinator.finishDelegate = self
+        mapSearchCoordinator.start(navigationController: navigationController)
+    }
+}
+
+extension MapCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        removeChildCoordinator(childCoordinator)
+    }
 }

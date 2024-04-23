@@ -30,7 +30,7 @@ final class LoginCoordinator: BaseCoordinator {
 }
 
 extension LoginCoordinator: LoginCoordinatorActions {
-    func login() {
+    func pushTabBar() {
         DIManager.shared.unregisterLoginPresentation()
         
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)

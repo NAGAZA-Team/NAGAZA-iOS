@@ -13,7 +13,7 @@ import RxCocoa
 //}
 
 protocol MapCoordinatorActions: CoordinatorActions {
-    
+    func pushMapSearch()
 }
 
 final class MapViewModel: NagazaViewModel {
@@ -44,7 +44,7 @@ final class MapViewModel: NagazaViewModel {
         let mapSearch = input.searchViewTapTrigger
             .do { [weak self] _ in
                 guard let self = self else { return }
-                self.toMapSearchVC()
+                self.pushMapSearch()
             }
             .asDriver()
         
@@ -52,6 +52,10 @@ final class MapViewModel: NagazaViewModel {
             mapSearch: mapSearch,
             searchItem: searchItem.asDriverOnErrorJustEmpty()
         )
+    }
+    
+    private func pushMapSearch() {
+        actions?.pushMapSearch()
     }
 }
 

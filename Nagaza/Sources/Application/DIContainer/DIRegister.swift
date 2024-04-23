@@ -68,13 +68,7 @@ final class DIRegister {
 }
 
 // MARK: - Presentation
-extension DIRegister {
-    func unregisterPresentation(types: [AnyObject.Type]) {
-        types.forEach { type in
-            container.unregister(type)
-        }
-    }
-    
+extension DIRegister {    
     /// Splash / App Coordinator
     private func registerFirstAppPresentation() {
         container.register(

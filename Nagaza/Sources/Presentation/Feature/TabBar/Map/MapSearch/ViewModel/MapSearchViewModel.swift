@@ -14,7 +14,7 @@ import RxCocoa
 //}
 
 protocol MapSearchCoordinatorActions: CoordinatorActions {
-    
+    func popViewController()
 }
 
 final class MapSearchViewModel: NagazaViewModel {
@@ -24,15 +24,17 @@ final class MapSearchViewModel: NagazaViewModel {
 //    private let actions: MapSearchViewModelActions!
     
     struct Input {
-        let initialTrigger: Driver<Void>
+        let viewWillAppearTrigger: Driver<Void>
         let searchButtonTapTrigger: Driver<String>
         let itemSelectedTrigger: Driver<IndexPath>
+        let popViewController: Driver<Void>
     }
     
     struct Output {
 //        let recentKeywordList: Driver<[RecentKeyword]>
         let keywordList: Driver<[Place]>
-        let itemSelectedActionTrigger: Driver<Void>
+        let itemSelectedTrigger: Driver<Void>
+        let popViewController: Driver<Void>
     }
     
     init(
@@ -41,12 +43,16 @@ final class MapSearchViewModel: NagazaViewModel {
         self.mapSearchUseCase = mapUseCase
     }
     
+    deinit {
+        print("MapSearchViewModel Deinit")
+    }
+    
     func setCoordinatorActions(with actions: CoordinatorActions) {
         self.actions = actions as? MapSearchCoordinatorActions
     }
     
     func transform(input: Input) -> Output {
-//        let recentKeywordList = input.initialTrigger
+//        let recentKeywordList = input.viewWillAppearTrigger
 //            .flatMapLatest { [weak self] _ in
 //                guard let self = self else { return Driver<[RecentKeyword]>.just([]) }
 //                return self.mapSearchUseCase.fetchRecentKeywordList().map { $0.keywordList }
@@ -62,12 +68,23 @@ final class MapSearchViewModel: NagazaViewModel {
             .withLatestFrom(keywordList) { [weak self] indexPath, list in
                 let item = list[indexPath.item]
                 self?.moveToMapVC(item: item)
+                self?.popViewController()
             }
+        
+        let popViewController = input.popViewController
+            .do(onNext: { [weak self] in
+                self?.popViewController()
+            })
         
         return Output(
             keywordList: keywordList,
-            itemSelectedActionTrigger: itemSelectedActionTrigger
+            itemSelectedTrigger: itemSelectedActionTrigger,
+            popViewController: popViewController
         )
+    }
+    
+    private func popViewController() {
+        actions?.popViewController()
     }
 }
 

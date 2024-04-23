@@ -36,8 +36,8 @@ class NagazaViewController: UIViewController {
     /// Set up Navigation Bar
     func navigationSetting() {
         navigationController?.navigationBar.tintColor = NagazaAsset.Colors.gray3.color
-        navigationItem.backBarButtonItem = UIBarButtonItem(
-            title: nil,
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "test",
             style: .plain,
             target: nil,
             action: nil
@@ -45,7 +45,10 @@ class NagazaViewController: UIViewController {
         
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.titleTextAttributes = [.font: UIFont.ngaH3M, .foregroundColor: NagazaAsset.Colors.black.color]
+        navBarAppearance.titleTextAttributes = [
+            .font: UIFont.ngaH3M,
+            .foregroundColor: NagazaAsset.Colors.black.color
+        ]
         navBarAppearance.shadowColor = nil
         navigationItem.standardAppearance = navBarAppearance
         navigationItem.scrollEdgeAppearance = navBarAppearance
