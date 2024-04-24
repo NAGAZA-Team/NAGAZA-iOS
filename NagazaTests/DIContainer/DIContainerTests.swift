@@ -38,7 +38,7 @@ final class DIContainerTests: XCTestCase {
             
             // MARK: - Use Case
             { [weak self] in self?.assertComponentIsRegistered(type: DefaultHomeUseCase.self)},
-            { [weak self] in self?.assertComponentIsRegistered(type: DefaultRegionSettingUseCase.self)},
+            { [weak self] in self?.assertComponentIsRegistered(type: RegionSettingUseCase.self)},
             { [weak self] in self?.assertComponentIsRegistered(type: DefaultMapSearchUseCase.self)}
         ]
         

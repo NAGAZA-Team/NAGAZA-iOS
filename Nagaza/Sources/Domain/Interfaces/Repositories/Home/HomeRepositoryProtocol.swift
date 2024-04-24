@@ -7,7 +7,7 @@
 
 import RxSwift
 
-protocol HomeRepositoryInterface: AnyObject {
+protocol HomeRepositoryProtocol: AnyObject {
     func fetchCafesList() -> Single<CafesPage>
     func fetchRoomsList(cafeId: Int) -> Single<RoomsPage>
 }

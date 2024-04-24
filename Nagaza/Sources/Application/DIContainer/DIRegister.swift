@@ -32,6 +32,14 @@ final class DIRegister {
             dependency: HomeRepository()
         )
         
+        // regionSetting
+        container.register(
+            RegionSettingRepository.self,
+            dependency: RegionSettingRepository(
+                regionSettingStorage: UserDefaultsRegionSettingStorage()
+            )
+        )
+        
         // map
         container.register(
             MapSearchRepository.self,
@@ -42,7 +50,8 @@ final class DIRegister {
     // MARK: - UseCase
     private func registerUseCase() {
         guard let homeRepository = container.resolve(HomeRepository.self),
-              let mapSearchRepository = container.resolve(MapSearchRepository.self)
+              let mapSearchRepository = container.resolve(MapSearchRepository.self),
+              let regionSettingRepository = container.resolve(RegionSettingRepository.self)
         else { return }
         
         // home
@@ -54,8 +63,10 @@ final class DIRegister {
         )
         
         container.register(
-            DefaultRegionSettingUseCase.self,
-            dependency: DefaultRegionSettingUseCase()
+            RegionSettingUseCase.self,
+            dependency: RegionSettingUseCase(
+                regionSettingRepository: regionSettingRepository
+            )
         )
         
         // map
@@ -130,7 +141,7 @@ extension DIRegister {
     // MARK: Home
     private func registerHomePresentation() {
         guard let homeUseCase = container.resolve(DefaultHomeUseCase.self),
-              let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self)
+              let regionSettingUseCase = container.resolve(RegionSettingUseCase.self)
         else { return }
         container.register(
             HomeViewModel.self,
@@ -229,7 +240,7 @@ extension DIRegister {
     
     // MARK: Region Setting
     func registerRegionSettingPresentation() {
-        guard let regionSettingUseCase = container.resolve(DefaultRegionSettingUseCase.self) else { return }
+        guard let regionSettingUseCase = container.resolve(RegionSettingUseCase.self) else { return }
         container.register(
             RegionSettingViewModel.self,
             dependency: RegionSettingViewModel(

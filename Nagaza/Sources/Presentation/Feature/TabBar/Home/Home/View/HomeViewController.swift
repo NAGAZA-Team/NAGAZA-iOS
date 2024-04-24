@@ -103,7 +103,7 @@ final class HomeViewController: NagazaViewController {
         
         let output = viewModel.transform(input: input)
         
-        output.selectedRegion
+        output.regionTitle
             .drive(self.rx.navigationTitleSetValue)
             .disposed(by: disposeBag)
         

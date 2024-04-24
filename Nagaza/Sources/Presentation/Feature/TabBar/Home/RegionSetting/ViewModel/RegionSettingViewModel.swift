@@ -18,9 +18,6 @@ final class RegionSettingViewModel: NagazaViewModel {
     private weak var actions: RegionSettingCoordinatorActions?
     
     private let regionSettingUseCase: RegionSettingUseCaseProtocol!
-        
-    private var subRegionFromHomeVC = ""
-//    private let didSelect: RegionSettingViewModelDidSelectAction
     
     struct Input {
         let viewWillAppearTrigger: Driver<Void>
@@ -34,19 +31,17 @@ final class RegionSettingViewModel: NagazaViewModel {
         let mainRegins: Driver<[MainRegion]>
         let subRegions: Driver<[SubRegion]>
         let mainRegionSelected: Driver<Void>
-        let subRegionsUpdated: Driver<Void>
         let subRegionSelected: Driver<Void>
         let popViewController: Driver<Void>
     }
     
+    private let mainRegions = BehaviorRelay<[MainRegion]>(value: [])
+    private let subRegions = BehaviorRelay<[SubRegion]>(value: [])
+    
     init(
         regionSettingUseCase: RegionSettingUseCaseProtocol
-//        subRegionFromHomeVC: String = "",
-//        didSelect: @escaping RegionSettingViewModelDidSelectAction
     ) {
         self.regionSettingUseCase = regionSettingUseCase
-//        self.subRegionFromHomeVC = subRegionFromHomeVC
-//        self.didSelect = didSelect
     }
     
     func setCoordinatorActions(with actions: CoordinatorActions) {
@@ -54,54 +49,31 @@ final class RegionSettingViewModel: NagazaViewModel {
     }
     
     func transform(input: Input) -> Output {
-        let mainRegions = BehaviorRelay<[MainRegion]>(value: [])
-        let subRegions = BehaviorRelay<[SubRegion]>(value: [])
-        
         let viewWillAppearTrigger = input.viewWillAppearTrigger
-            .do(onNext: { [weak self] in
-                guard let self = self else { return }
-                let regions = self.regionSettingUseCase.loadMainRegions()
-                mainRegions.accept(regions)
-            })
-            .asDriver()
+            .flatMapLatest { [weak self] _ -> Driver<Void> in
+                 guard let self = self else { return .just(()) }
+                 return self.fetchRegions()
+             }
         
         let mainRegionSelected = input.mainRegionSelected
-            .do(onNext: { index in
-                var regions = mainRegions.value
-                
-                for i in 0..<regions.count {
-                    regions[i].isSelected = i == index
-                }
-                
-                mainRegions.accept(regions)
-            })
-            .map { _ in }
-            .asDriver()
-        
-        let subRegionsUpdated = mainRegions.asDriver()
-            .map { [weak self] mainRegions in
-                guard let self = self,
-                      let selectedRegion = mainRegions
-                          .first(where: { $0.isSelected })
-                else { return }
-                
-                let regions = self.regionSettingUseCase
-                    .loadSubRegions(with: selectedRegion.region)
-                
-                subRegions.accept(regions)
-                
-                return
-            }
-            .asDriver()
+             .withLatestFrom(mainRegions.asDriver()) { index, regions -> [MainRegion] in
+                 regions.enumerated().map { (i, region) in
+                     var region = region
+                     region.isSelected = i == index
+                     return region
+                 }
+             }
+             .do(onNext: { [weak self] regions in
+                 self?.mainRegions.accept(regions)
+                 self?.updateSubRegions(for: regions)
+             })
+             .map { _ in }
         
         let subRegionSelected = input.subRegionSelected
-            .map { [weak self] subRegion in
-                
-//                self?.didSelect(subRegion.region)
-                
-                return
+            .flatMapLatest { [weak self] subRegion -> Driver<Void> in
+                guard let self = self else { return .just(()) }
+                return self.saveSelectedRegion(subRegion: subRegion)
             }
-            .asDriver()
         
         let popViewControler = input.popViewControler
             .do(onNext: { [weak self] in
@@ -117,12 +89,57 @@ final class RegionSettingViewModel: NagazaViewModel {
             mainRegins: mainRegionsDriver,
             subRegions: subRegionsDriver,
             mainRegionSelected: mainRegionSelected,
-            subRegionsUpdated: subRegionsUpdated,
             subRegionSelected: subRegionSelected,
             popViewController: popViewControler
         )
     }
     
+    private func fetchRegions() -> Driver<Void> {
+        Observable.create { [weak self] observer in
+            self?.regionSettingUseCase.fetchRegionsNoThemeCount { result in
+                switch result {
+                case .success(let regions):
+                    self?.mainRegions.accept(regions.mainRegion)
+                    self?.updateSubRegions(for: regions.mainRegion)
+                    observer.onCompleted()                
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+        .observe(on: MainScheduler.instance)
+        .asDriverOnErrorJustEmpty()
+    }
+    
+    private func updateSubRegions(for regions: [MainRegion]) {
+        if let selectedRegion = regions.first(where: { $0.isSelected }) {
+            subRegions.accept(selectedRegion.subRegions)
+        }
+    }
+    
+    private func saveSelectedRegion(subRegion: SubRegion) -> Driver<Void> {
+        let selectedMainRegion = mainRegions.value.first(where: { $0.isSelected })?.region ?? "전국"
+        
+        return Observable.create { [weak self] observer in
+            let region = Region(mainRegion: selectedMainRegion, subRegion: subRegion.region)
+            self?.regionSettingUseCase.saveRegion(newRegion: region) { result in
+                switch result {
+                case .success(_):
+                    observer.onCompleted()
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+        .observe(on: MainScheduler.instance)
+        .do(onCompleted: { [weak self] in
+            self?.popViewController()
+        })
+        .asDriverOnErrorJustEmpty()
+    }
+        
     private func popViewController() {
         actions?.popViewController()
     }

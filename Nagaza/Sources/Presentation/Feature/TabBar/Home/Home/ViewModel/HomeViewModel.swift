@@ -34,7 +34,7 @@ final class HomeViewModel: NagazaViewModel {
     }
     
     struct Output {
-        let selectedRegion: Driver<String>
+        let regionTitle: Driver<String>
         let roomsList: Driver<[[Room]]>
         let scrollOffsetState: Driver<ScrollOffsetState>
         let didTappedMap: Driver<Void>
@@ -53,10 +53,11 @@ final class HomeViewModel: NagazaViewModel {
     }
     
     func transform(input: Input) -> Output {
-        let selectedRegionRelay = BehaviorRelay(value: "테스트")
-        
-        selectedRegionRelay
-            .accept(regionSettingUseCase.loadSelectedRegion())
+        let fetchRegionResult = input.viewWillAppearTrigger
+            .flatMapLatest { [weak self] _ -> Driver<String> in
+                guard let self = self else { return Driver.just("테테스트")}
+                return self.fetchRegionTitle()
+            }
         
         let cafesResponse = input.viewWillAppearTrigger
             .flatMapLatest { [unowned self] _ in
@@ -87,11 +88,27 @@ final class HomeViewModel: NagazaViewModel {
             .asDriver()
         
         return Output(
-            selectedRegion: selectedRegionRelay.asDriver(),
+            regionTitle: fetchRegionResult,
             roomsList: roomsList,
             scrollOffsetState: scrollOffsetState,
             didTappedMap: mapButtonTapped
         )
+    }
+    
+    private func fetchRegionTitle() -> Driver<String> {
+        return Observable<String>.create { [weak self] observer in
+            self?.regionSettingUseCase.fetchRegion { result in
+                switch result {
+                case .success(let region):
+                    observer.onNext(region.subRegion)
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+        .observe(on: MainScheduler.instance)
+        .asDriverOnErrorJustEmpty()
     }
     
     private func pushRegionSetting() {

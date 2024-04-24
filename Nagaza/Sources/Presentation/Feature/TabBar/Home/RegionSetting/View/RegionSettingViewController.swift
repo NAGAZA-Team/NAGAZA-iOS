@@ -151,10 +151,6 @@ final class RegionSettingViewController: NagazaViewController {
             .drive()
             .disposed(by: disposeBag)
         
-        output.subRegionsUpdated
-            .drive()
-            .disposed(by: disposeBag)
-        
         output.subRegionSelected
             .drive(self.rx.closeViewController)
             .disposed(by: disposeBag)

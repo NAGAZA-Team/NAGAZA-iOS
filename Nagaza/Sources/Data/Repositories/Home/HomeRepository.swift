@@ -8,7 +8,7 @@
 import RxSwift
 import Moya
 
-final class HomeRepository: ProviderProtocol, HomeRepositoryInterface {
+final class HomeRepository: ProviderProtocol, HomeRepositoryProtocol {
     
     typealias Target = HomeTarget
     var provider: MoyaProvider<Target>?

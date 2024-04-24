@@ -53,7 +53,7 @@ final class MainRegionTableViewCell: UITableViewCell {
     }
     
     func bind(region: MainRegion) {
-        regionLabel.text = region.region.title
+        regionLabel.text = region.region
         
         self.backgroundColor = region.isSelected ? NagazaAsset.Colors.white.color :  NagazaAsset.Colors.gray8.color
     }
