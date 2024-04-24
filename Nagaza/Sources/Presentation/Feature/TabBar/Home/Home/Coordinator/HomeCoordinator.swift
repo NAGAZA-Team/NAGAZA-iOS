@@ -24,18 +24,6 @@ final class HomeCoordinator: BaseCoordinator {
         navigationController.pushViewController(homeVC, animated: false)
     }
     
-//    override func start() {
-//        let actions = HomeViewModelActions(
-//            showRegionSetting: showRegionSetting(with: didSelect:),
-//            logoutTest: logoutTest
-//        )
-//        
-//        let vc = dependencies.makeHomeViewController(actions: actions)
-//        
-//        navigationController.setNavigationBarHidden(false, animated: false)
-//        navigationController.pushViewController(vc, animated: false)
-//    }
-    
 //    private func showRegionSetting(
 //        with subRegion: String,
 //        didSelect: @escaping RegionSettingViewModelDidSelectAction
