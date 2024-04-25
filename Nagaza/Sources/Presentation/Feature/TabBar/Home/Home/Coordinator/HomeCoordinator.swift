@@ -42,6 +42,7 @@ extension HomeCoordinator: HomeCoordinatorActions {
     func pushRegionSetting() {
         guard let navigationController = navigationController else { return }
         let regionSettingCoordinator = DIManager.shared.resolveRegionSettingPresentation()
+
         addChildCoordinator(regionSettingCoordinator)
         
         regionSettingCoordinator.finishDelegate = self

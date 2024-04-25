@@ -48,7 +48,7 @@ final class HomeViewModel: NagazaViewModel {
         self.regionSettingUseCase = regionSettingUseCase
     }
     
-    func setCoordinatorActions(with actions: any CoordinatorActions) {
+    func setCoordinatorActions(with actions: CoordinatorActions) {
         self.actions = actions as? HomeCoordinatorActions
     }
     

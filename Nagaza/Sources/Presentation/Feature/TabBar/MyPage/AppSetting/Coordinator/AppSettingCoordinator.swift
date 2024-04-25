@@ -25,7 +25,11 @@ final class AppSettingCoordinator: BaseCoordinator {
 
 extension AppSettingCoordinator: AppSettingCoordinatorActions {
     func popViewController() {
-        navigationController?.popViewController(animated: true)
+        guard let navigationController = navigationController else { return }
+        
+        DIManager.shared.unregisterAppSettingPresentation()
+        
+        navigationController.popViewController(animated: true)
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

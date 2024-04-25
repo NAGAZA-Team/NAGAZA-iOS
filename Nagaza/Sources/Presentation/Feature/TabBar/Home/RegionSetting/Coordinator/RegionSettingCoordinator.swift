@@ -64,4 +64,10 @@ extension RegionSettingCoordinator: RegionSettingCoordinatorActions {
         DIManager.shared.unregisterRegionSettingPresentation()
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
+    
+    func dismissController() {
+        guard let navigationController = navigationController else { return }
+
+        navigationController.dismiss(animated: true)
+    }
 }

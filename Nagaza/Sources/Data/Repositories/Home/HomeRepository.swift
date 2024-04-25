@@ -40,21 +40,3 @@ final class HomeRepository: ProviderProtocol, HomeRepositoryProtocol {
     }
 
 }
-
-//extension HomeRepository: HomeRepositoryInterface {
-////    func fetchCafesList() -> Single<CafesPage> {
-////        request(
-////            type: CafeResponse.self,
-////            target: .fetchCafesList
-////        )
-////        .map { $0.toDomain() }
-////    }
-////    
-////    func fetchRoomsList(cafeId: Int) -> Single<RoomsPage> {
-////        request(
-////            type: RoomsResponse.self,
-////            target: .fetchRoomsList(cafeId: cafeId)
-////        )
-////        .map { $0.toDomain() }
-////    }
-//}
