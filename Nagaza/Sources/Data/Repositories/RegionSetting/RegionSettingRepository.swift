@@ -52,12 +52,20 @@ extension RegionSettingRepository: RegionSettingRepositoryProtocol {
         regionSettingStorage.fetchRegion { [weak self] result in
             switch result {
             case .success(let region):
-                self?.fetchRegions(region: region, isRequestThemesCount: isRequestThemesCount, completion: completion)
+                self?.fetchRegions(
+                    region: region,
+                    isRequestThemesCount: isRequestThemesCount,
+                    completion: completion
+                )
             case .failure(_):
                 self?.saveRegion(newRegion: defaultRegion, completion: { result in
                     switch result {
                     case .success(let region):
-                        self?.fetchRegions(region: region, isRequestThemesCount: isRequestThemesCount, completion: completion)
+                        self?.fetchRegions(
+                            region: region,
+                            isRequestThemesCount: isRequestThemesCount,
+                            completion: completion
+                        )
                     case .failure(let error):
                         completion(.failure(error))
                     }
@@ -75,13 +83,24 @@ extension RegionSettingRepository: RegionSettingRepositoryProtocol {
 }
 
 extension RegionSettingRepository: ProviderProtocol {
-    func consProvider(_ isStub: Bool, _ sampleStatusCode: Int, _ customendpointClosure: ((RegionSettingTarget) -> Moya.Endpoint)?) {
+    func consProvider(
+        _ isStub: Bool,
+        _ sampleStatusCode: Int,
+        _ customendpointClosure: ((RegionSettingTarget) -> Moya.Endpoint)?
+    ) {
         
     }
     
-    private func fetchRegions(region: Region, isRequestThemesCount: Bool, completion: @escaping (Result<Regions, Error>) -> Void) {
+    private func fetchRegions(
+        region: Region,
+        isRequestThemesCount: Bool,
+        completion: @escaping (Result<Regions, Error>) -> Void
+    ) {
         if isRequestThemesCount {
-            request(RegionsResponse.self, target: .fetchRegionsThemeCount) { result in
+            request(
+                RegionsResponse.self,
+                target: .fetchRegionsThemeCount
+            ) { result in
                 switch result {
                 case .success(let regions):
                     let regions = regions.toDomain(with: region.mainRegion)
@@ -91,7 +110,6 @@ extension RegionSettingRepository: ProviderProtocol {
                     completion(.failure(error))
                 }
             }
-            
         } else {
             let regions = region.toRegions()
             
