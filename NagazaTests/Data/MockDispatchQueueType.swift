@@ -7,6 +7,8 @@
 
 import Foundation
 
+@testable import Nagaza
+
 class MockDispatchQueueType: DispatchQueueType {
     func async(execute work: @escaping () -> Void) {
         work()

@@ -7,8 +7,6 @@
 
 import Foundation
 
-// 테스트 코드 작성을 위해
-
 protocol DispatchQueueType {
     func async(execute work: @escaping () -> Void)
 }

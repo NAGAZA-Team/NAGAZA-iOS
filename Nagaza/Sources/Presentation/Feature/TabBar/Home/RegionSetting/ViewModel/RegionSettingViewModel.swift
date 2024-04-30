@@ -96,7 +96,7 @@ final class RegionSettingViewModel: NagazaViewModel {
     
     private func fetchRegions() -> Driver<Void> {
         Observable.create { [weak self] observer in
-            self?.regionSettingUseCase.fetchRegionsNoThemeCount { result in
+            self?.regionSettingUseCase.fetchRetions(isRequestThemesCount: true) { result in
                 switch result {
                 case .success(let regions):
                     self?.mainRegions.accept(regions.mainRegion)

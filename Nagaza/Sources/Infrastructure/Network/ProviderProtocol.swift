@@ -60,5 +60,32 @@ extension ProviderProtocol {
         Self.provider.rx.request(target)
             .map { _ in }
     }
+    
+    func request<D: Decodable>(_ type: D.Type, target: Target, completion: @escaping (Result<D, Error>) -> Void) {
+        provider?.request(target) { result in
+            switch result {
+            case .success(let response):
+                do {
+                    let decodedData = try JSONDecoder().decode(type, from: response.data)
+                    completion(.success(decodedData))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func requestWithNoContent(target: Target, completion: @escaping (Result<Void, Error>) -> Void) {
+        provider?.request(target) { result in
+            switch result {
+            case .success(_):
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
 

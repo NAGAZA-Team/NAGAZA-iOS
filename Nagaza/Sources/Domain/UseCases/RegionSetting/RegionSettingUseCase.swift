@@ -9,8 +9,7 @@ import Foundation
 
 protocol RegionSettingUseCaseProtocol: AnyObject {
     func fetchRegion(completion: @escaping (Result<Region, Error>) -> Void)
-    func fetchRegionsNoThemeCount(completion: @escaping (Result<Regions, Error>) -> Void)
-    func fetchRegionsThemeCount(completion: @escaping (Result<Regions, Error>) -> Void)
+    func fetchRetions(isRequestThemesCount: Bool, completion: @escaping (Result<Regions, Error>) -> Void)
     
     func saveRegion(newRegion: Region, completion: @escaping (Result<Region, Error>) -> Void)
 }
@@ -30,12 +29,8 @@ extension RegionSettingUseCase: RegionSettingUseCaseProtocol {
         regionSettingRepository.fetchRegion(defaultRegion: defaultRegion, completion: completion)
     }
     
-    func fetchRegionsNoThemeCount(completion: @escaping (Result<Regions, Error>) -> Void) {
-        regionSettingRepository.fetchRegionsNoThemeCount(defaultRegion: defaultRegion, completion: completion)
-    }
-    
-    func fetchRegionsThemeCount(completion: @escaping (Result<Regions, Error>) -> Void) {
-        regionSettingRepository.fetchRegionsThemeCount(defaultRegion: defaultRegion, completion: completion)
+    func fetchRetions(isRequestThemesCount: Bool, completion: @escaping (Result<Regions, any Error>) -> Void) {
+        regionSettingRepository.fetchRegions(defaultRegion: defaultRegion, isRequestThemesCount: isRequestThemesCount, completion: completion)
     }
     
     func saveRegion(newRegion: Region, completion: @escaping (Result<Region, any Error>) -> Void) {
