@@ -22,7 +22,7 @@ final class RegionSettingViewModel: NagazaViewModel {
     struct Input {
         let viewWillAppearTrigger: Driver<Void>
         let mainRegionSelected: Driver<Int>
-        let subRegionSelected: Driver<SubRegion>
+        let regionSelectedModel: Driver<Region>
         let popViewControler: Driver<Void>
     }
     
@@ -31,16 +31,22 @@ final class RegionSettingViewModel: NagazaViewModel {
         let mainRegins: Driver<[MainRegion]>
         let subRegions: Driver<[SubRegion]>
         let mainRegionSelected: Driver<Void>
-        let subRegionSelected: Driver<Void>
+        let regionSelected: Driver<Void>
         let popViewController: Driver<Void>
+        let error: Driver<Error>
     }
     
     private let mainRegions = BehaviorRelay<[MainRegion]>(value: [])
     private let subRegions = BehaviorRelay<[SubRegion]>(value: [])
+    private var isRequestThemeCount: Bool!
+    
+    private let errorSubject = PublishSubject<Error>()
     
     init(
+        isRequestThemeCount: Bool,
         regionSettingUseCase: RegionSettingUseCaseProtocol
     ) {
+        self.isRequestThemeCount = isRequestThemeCount
         self.regionSettingUseCase = regionSettingUseCase
     }
     
@@ -52,7 +58,9 @@ final class RegionSettingViewModel: NagazaViewModel {
         let viewWillAppearTrigger = input.viewWillAppearTrigger
             .flatMapLatest { [weak self] _ -> Driver<Void> in
                  guard let self = self else { return .just(()) }
-                 return self.fetchRegions()
+                return self.fetchRegions(
+                    isRequest: self.isRequestThemeCount
+                )
              }
         
         let mainRegionSelected = input.mainRegionSelected
@@ -69,10 +77,11 @@ final class RegionSettingViewModel: NagazaViewModel {
              })
              .map { _ in }
         
-        let subRegionSelected = input.subRegionSelected
-            .flatMapLatest { [weak self] subRegion -> Driver<Void> in
+        let regionSelected = input.regionSelectedModel
+            .flatMapLatest { [weak self] region -> Driver<Void> in
                 guard let self = self else { return .just(()) }
-                return self.saveSelectedRegion(subRegion: subRegion)
+                
+                return self.saveSelectedRegion(region: region)
             }
         
         let popViewControler = input.popViewControler
@@ -89,20 +98,22 @@ final class RegionSettingViewModel: NagazaViewModel {
             mainRegins: mainRegionsDriver,
             subRegions: subRegionsDriver,
             mainRegionSelected: mainRegionSelected,
-            subRegionSelected: subRegionSelected,
-            popViewController: popViewControler
+            regionSelected: regionSelected,
+            popViewController: popViewControler,
+            error: errorSubject.asDriverOnErrorJustEmpty()
         )
     }
     
-    private func fetchRegions() -> Driver<Void> {
+    private func fetchRegions(isRequest: Bool) -> Driver<Void> {
         Observable.create { [weak self] observer in
-            self?.regionSettingUseCase.fetchRetions(isRequestThemesCount: true) { result in
+            self?.regionSettingUseCase.fetchRegions(isRequestThemesCount: isRequest) { result in
                 switch result {
                 case .success(let regions):
                     self?.mainRegions.accept(regions.mainRegion)
                     self?.updateSubRegions(for: regions.mainRegion)
                     observer.onCompleted()                
                 case .failure(let error):
+                    self?.errorSubject.onNext(error)
                     observer.onError(error)
                 }
             }
@@ -118,19 +129,20 @@ final class RegionSettingViewModel: NagazaViewModel {
         }
     }
     
-    private func saveSelectedRegion(subRegion: SubRegion) -> Driver<Void> {
-        let selectedMainRegion = mainRegions.value.first(where: { $0.isSelected })?.region ?? "전국"
-        
+    private func saveSelectedRegion(region: Region) -> Driver<Void> {
         return Observable.create { [weak self] observer in
-            let region = Region(mainRegion: selectedMainRegion, subRegion: subRegion.region)
-            self?.regionSettingUseCase.saveRegion(newRegion: region) { result in
+            self?.regionSettingUseCase.saveRegion(
+                newRegion: region
+            ) { result in
                 switch result {
                 case .success(_):
-                    observer.onCompleted()
+                    observer.onNext(())
                 case .failure(let error):
+                    self?.errorSubject.onNext(error)
                     observer.onError(error)
                 }
             }
+            
             return Disposables.create()
         }
         .observe(on: MainScheduler.instance)

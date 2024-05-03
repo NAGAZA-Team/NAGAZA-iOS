@@ -10,9 +10,6 @@ import Foundation
 @testable import Nagaza
 
 final class MockRegionSettingRepository: RegionSettingRepositoryProtocol {
-    let mockRegion = region
-    let mockRegions = regions
-    let mockRegionsWithThemeCount = regionsWithThemeCount
     var isReturnError = false
     
     private func handleRequest<T>(

@@ -23,7 +23,7 @@ final class MockRegionSettingUseCase: RegionSettingUseCaseProtocol {
         }
     }
     
-    func fetchRetions(
+    func fetchRegions(
         isRequestThemesCount: Bool,
         completion: @escaping (Result<Regions, Error>) -> Void
     ) {

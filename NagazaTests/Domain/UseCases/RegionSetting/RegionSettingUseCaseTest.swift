@@ -52,12 +52,12 @@ final class RegionSettingUseCaseTest: XCTestCase {
     // MARK: 태마 개수가 추가된 모든 지역 불러오기
     func test_태마개수가_추가된_모든지역_불러오기() {
         // given
-        let expectedResult = regionsWithThemeCount
+        let expectedResult = mockRegionsWithThemeCount
         
         var regionsResult: Regions!
         
         // when
-        usecase.fetchRetions(isRequestThemesCount: true) { result in
+        usecase.fetchRegions(isRequestThemesCount: true) { result in
             switch result {
             case .success(let regions):
                 regionsResult = regions
@@ -73,12 +73,12 @@ final class RegionSettingUseCaseTest: XCTestCase {
     // MARK: 태마 개수 없이 모든 지역 불러오기
     func test_태마개수_없이_모든지역_불러오기() {
         // given
-        let expectedResult = regions
+        let expectedResult = mockRegions
         
         var regionsResult: Regions!
         
         // when
-        usecase.fetchRetions(isRequestThemesCount: false) { result in
+        usecase.fetchRegions(isRequestThemesCount: false) { result in
             switch result {
             case .success(let regions):
                 regionsResult = regions

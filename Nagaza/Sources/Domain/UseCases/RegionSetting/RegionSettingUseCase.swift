@@ -11,7 +11,7 @@ protocol RegionSettingUseCaseProtocol: AnyObject {
     func fetchRegion(
         completion: @escaping (Result<Region, Error>) -> Void
     )
-    func fetchRetions(
+    func fetchRegions(
         isRequestThemesCount: Bool,
         completion: @escaping (Result<Regions, Error>) -> Void
     )
@@ -41,7 +41,7 @@ extension RegionSettingUseCase: RegionSettingUseCaseProtocol {
         )
     }
     
-    func fetchRetions(
+    func fetchRegions(
         isRequestThemesCount: Bool,
         completion: @escaping (Result<Regions, any Error>) -> Void
     ) {
