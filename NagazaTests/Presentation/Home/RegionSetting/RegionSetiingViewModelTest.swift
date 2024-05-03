@@ -7,13 +7,39 @@
 
 import XCTest
 
-final class RegionSetiingViewModelTest: XCTestCase {
+import RxSwift
+import RxCocoa
+import RxTest
 
+@testable import Nagaza
+
+final class RegionSetiingViewModelTest: XCTestCase {
+    
+    private var viewModel: RegionSettingViewModel!
+    private var useCase: MockRegionSettingUseCase!
+    
+    private var scheduler: TestScheduler!
+    private var disposeBag: DisposeBag!
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        try super.setUpWithError()
+        
+        useCase = MockRegionSettingUseCase()
+        viewModel = RegionSettingViewModel(regionSettingUseCase: useCase)
+        
+        scheduler = TestScheduler(initialClock: 0)
+        disposeBag = DisposeBag()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        useCase = nil
+        viewModel = nil
+        
+        scheduler = nil
+        disposeBag = nil
+        
+        try super.tearDownWithError()
     }
+    
+    
 }

@@ -197,5 +197,4 @@ final class RegionSettingRepositoryTest: XCTestCase {
         // then
         XCTAssertNotNil(resultRegions?.mainRegion.first?.subRegions.first?.themeCount)
     }
-    
 }

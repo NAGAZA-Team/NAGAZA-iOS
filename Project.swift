@@ -119,7 +119,11 @@ final class BaseProjectFactory: ProjectFactory {
                    bundleId: "\(bundleID).Tests",
                    infoPlist: .extendingDefault(with: infoPlist),
                    sources: ["\(projectName)Tests/**"],
-                   dependencies: [.target(name: projectName)],
+                   dependencies: [
+                    .target(name: projectName),
+                    .external(name: "RxTest"),
+                    .external(name: "RxBlocking")
+                   ],
                    settings: projectSettings
                   ),
             
@@ -129,7 +133,11 @@ final class BaseProjectFactory: ProjectFactory {
                    bundleId: "\(bundleID).UITests",
                    infoPlist: .extendingDefault(with: infoPlist),
                    sources: ["\(projectName)UITests/**"],
-                   dependencies: [.target(name: projectName)],
+                   dependencies: [
+                    .target(name: projectName),
+                    .external(name: "RxTest"),
+                    .external(name: "RxBlocking")
+                   ],
                    settings: projectSettings
                   ),
         ]
