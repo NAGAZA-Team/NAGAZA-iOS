@@ -38,6 +38,7 @@ final class UserDefaultsRegionSettingStorageTests: XCTestCase {
         try super.tearDownWithError()
     }
     
+    // MARK: 지역 저장하기
     func test_지역_저장하기() {
         // given
         let defaultRegionTitle = Region(mainRegion: "전국", subRegion: "전국")
@@ -66,6 +67,7 @@ final class UserDefaultsRegionSettingStorageTests: XCTestCase {
         XCTAssertEqual(savedRegionTitleUDS, defaultRegionTitleUDS)
     }
     
+    // MARK: 지역 저장된 값 불러오기
     func test_지역_저장된값_불러오기() {
         // given
         let defaultRegionTitle = Region(mainRegion: "전국", subRegion: "전국")
@@ -91,6 +93,7 @@ final class UserDefaultsRegionSettingStorageTests: XCTestCase {
         XCTAssertEqual(resultRegionTitle, defaultRegionTitle)
     }
     
+    // MARK: 초기값이 없을 때 에러
     func test_초기값이_없을때_에러() {
         // given
         
@@ -98,7 +101,7 @@ final class UserDefaultsRegionSettingStorageTests: XCTestCase {
         storage.fetchRegion { result in
             // then
             switch result {
-            case .success(let region):
+            case .success(_):
                 XCTFail("초기값이 있으면 앙대요")
             case .failure(let error as StorageError):
                 XCTAssertEqual(error, StorageError.dataNotFound)

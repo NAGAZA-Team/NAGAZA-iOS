@@ -244,6 +244,7 @@ extension DIRegister {
         container.register(
             RegionSettingViewModel.self,
             dependency: RegionSettingViewModel(
+                isRequestThemeCount: true,
                 regionSettingUseCase: regionSettingUseCase
             )
         )

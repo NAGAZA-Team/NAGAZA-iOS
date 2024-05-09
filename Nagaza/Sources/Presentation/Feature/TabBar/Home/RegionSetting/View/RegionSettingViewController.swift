@@ -57,14 +57,6 @@ final class RegionSettingViewController: NagazaViewController {
         viewModel.setCoordinatorActions(with: actions)
     }
     
-//    static func create(with viewModel: RegionSettingViewModel) -> RegionSettingViewController {
-//        let vc = RegionSettingViewController()
-//        
-//        vc.viewModel = viewModel
-//        
-//        return vc
-//    }
-    
     override func navigationSetting() {
         super.navigationSetting()
         
@@ -110,14 +102,21 @@ final class RegionSettingViewController: NagazaViewController {
                 return $0.row
              }
              .asDriver(onErrorJustReturn: 0)
+
+        let mainRegionSelectedModel = mainRegionTableView.rx.modelSelected(MainRegion.self)
         
-        let subRegionSelectied = subReginTableView.rx.modelSelected(SubRegion.self)
-            .asDriver()
+        let subRegionSelectedModel = subReginTableView.rx.modelSelected(SubRegion.self)
+        
+        let regionSelectedModel = Observable.combineLatest(mainRegionSelectedModel, subRegionSelectedModel)
+            .map { mainRegion, subRegion in
+                Region(mainRegion: mainRegion.region, subRegion: subRegion.region)
+            }
+            .asDriverOnErrorJustEmpty()
                 
         let input = RegionSettingViewModel.Input(
             viewWillAppearTrigger: viewWillAppearTrigger,
             mainRegionSelected: mainRegionSelected,
-            subRegionSelected: subRegionSelectied,
+            regionSelectedModel: regionSelectedModel,
             popViewControler: popViewController
         )
         
@@ -151,12 +150,19 @@ final class RegionSettingViewController: NagazaViewController {
             .drive()
             .disposed(by: disposeBag)
         
-        output.subRegionSelected
+        output.regionSelected
             .drive(self.rx.closeViewController)
             .disposed(by: disposeBag)
         
         output.popViewController
             .drive()
+            .disposed(by: disposeBag)
+        
+        // MARK: Erorr 핸들링 로직 필요
+        output.error
+            .drive(onNext: { error in
+                print(error.localizedDescription)
+            })
             .disposed(by: disposeBag)
     }
     
@@ -172,21 +178,3 @@ extension Reactive where Base: RegionSettingViewController {
         }
     }
 }
-
-//
-//#if DEBUG
-//
-//import SwiftUI
-//
-//struct MainViewControllerPreview: PreviewProvider {
-//    static var previews: some View {
-//        let action = RegionFilterViewModelActions()
-//        let viewModel = RegionFilterViewModel(actions: action)
-//        let viewController = RegionFilterViewController.create(with: viewModel)
-//        
-//        let navigationVC = UINavigationController(rootViewController: viewController)
-//        
-//        return navigationVC.toPreView()
-//    }
-//}
-//#endif

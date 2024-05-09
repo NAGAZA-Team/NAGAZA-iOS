@@ -7,6 +7,8 @@
 
 import Foundation
 
+@testable import Nagaza
+
 final class MockDIContainer: DIContainerProtocol {
     static private let shared = MockDIContainer()
     

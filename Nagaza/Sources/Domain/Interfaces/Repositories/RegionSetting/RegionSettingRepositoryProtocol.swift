@@ -12,12 +12,10 @@ protocol RegionSettingRepositoryProtocol {
         defaultRegion: Region,
         completion: @escaping (Result<Region, Error>) -> Void
     )
-    func fetchRegionsNoThemeCount(
+    
+    func fetchRegions(
         defaultRegion: Region,
-        completion: @escaping (Result<Regions, Error>) -> Void
-    )
-    func fetchRegionsThemeCount(
-        defaultRegion: Region,
+        isRequestThemesCount: Bool,
         completion: @escaping (Result<Regions, Error>) -> Void
     )
 

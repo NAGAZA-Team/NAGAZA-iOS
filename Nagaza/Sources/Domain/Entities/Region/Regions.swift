@@ -7,17 +7,21 @@
 
 import Foundation
 
-struct Regions {
+struct Regions: Equatable {
     let mainRegion: [MainRegion]
+    
+    static func == (lhs: Regions, rhs: Regions) -> Bool {
+        return lhs.mainRegion == rhs.mainRegion
+    }
 }
 
-struct MainRegion {
+struct MainRegion: Equatable {
     let region: String
     let subRegions: [SubRegion]
     var isSelected: Bool
 }
 
-struct SubRegion {
+struct SubRegion: Equatable {
     let region: String
     var themeCount: Int?
 }
