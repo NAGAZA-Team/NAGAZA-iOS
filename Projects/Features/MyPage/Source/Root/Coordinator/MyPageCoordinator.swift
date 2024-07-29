@@ -19,10 +19,23 @@ public final class MyPageCoordinator: BaseCoordinator, MyPageCoordinating {
     
     public func homeFlow() {
         let viewModel = MyPageViewModel()
-        //        viewModel.delegate = self
-        
+        viewModel.setCoordinatorActions(with: self)
         let viewController = MyPageViewController(viewModel: viewModel)
-        
-        self.viewControllable.setViewControllers([viewController])
+        viewControllable.setViewControllers([viewController])
+    }
+}
+
+extension MyPageCoordinator: MyPageCoordinatorActions {
+    func pushAppSetting() {
+        let coordinator = AppSettingBuilder().build(rootViewControllable: self.viewControllable)
+        coordinator.finishDelegate = self
+        attachChild(coordinator)
+    }
+}
+
+extension MyPageCoordinator: CoordinatorFinishDelegate {
+    public func coordinatorDidFinish(childCoordinator: Coordinator) {
+        viewControllable.popViewController(animated: true)
+        detachChild(childCoordinator)
     }
 }

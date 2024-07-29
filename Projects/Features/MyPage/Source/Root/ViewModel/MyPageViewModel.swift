@@ -12,11 +12,6 @@ import RxSwift
 import RxCocoa
 import Domain
 
-/// 화면 전환 등 액션, coordinator에서 직접 주입
-//struct MyPageViewModelActions {
-//    var moveAppSetting: () -> Void
-//}
-
 protocol MyPageCoordinatorActions: CoordinatorActions {
     func pushAppSetting()
 }
@@ -37,12 +32,6 @@ final class MyPageViewModel: NagazaViewModel {
     }
     
     init() { }
-
-//    init(
-//        actions: MyPageViewModelActions
-//    ) {
-//        self.actions = actions
-//    }
     
     func setCoordinatorActions(with actions: CoordinatorActions) {
         self.actions = actions as? MyPageCoordinatorActions

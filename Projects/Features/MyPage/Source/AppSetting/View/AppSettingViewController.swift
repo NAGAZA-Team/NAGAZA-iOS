@@ -28,13 +28,6 @@ final class AppSettingViewController: NagazaViewController {
         viewModel.setCoordinatorActions(with: actions)
     }
     
-//    static func create(with viewModel: MyPageAppSettingViewModel) -> MyPageAppSettingViewController {
-//        let vc = MyPageAppSettingViewController()
-//        vc.viewModel = viewModel
-//        
-//        return vc
-//    }
-//    
     private let backButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("뒤로가기", for: .normal)

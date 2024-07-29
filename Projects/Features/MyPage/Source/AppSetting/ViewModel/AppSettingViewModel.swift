@@ -12,10 +12,6 @@ import MyPageInterface
 import RxSwift
 import RxCocoa
 
-//struct MyPageAppSettingViewModelActions {
-//    var finishMyPageAppSettingVC: () -> Void
-//}
-
 protocol AppSettingCoordinatorActions: CoordinatorActions {
     func popViewController()
 }
@@ -46,9 +42,5 @@ final class AppSettingViewModel: NagazaViewModel {
             .disposed(by: disposeBag)
         
         return Output()
-    }
-    
-    private func popViewController() {
-        actions?.popViewController()
     }
 }
