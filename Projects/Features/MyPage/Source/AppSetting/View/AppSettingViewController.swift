@@ -10,7 +10,7 @@ import UIKit
 import Core
 import DSKit
 
-final class AppSettingViewController: NagazaViewController {
+final class AppSettingViewController: BaseSettingViewController {
     
     private var viewModel: AppSettingViewModel!
     
@@ -28,22 +28,8 @@ final class AppSettingViewController: NagazaViewController {
         viewModel.setCoordinatorActions(with: actions)
     }
     
-    private let backButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle("뒤로가기", for: .normal)
-        button.backgroundColor = .black
-        return button
-    }()
-    
     override func makeUI() {
         super.makeUI()
-        view.backgroundColor = .yellow
-        
-        view.addSubview(backButton)
-        
-        backButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
     }
     
     override func bindViewModel() {
@@ -51,5 +37,11 @@ final class AppSettingViewController: NagazaViewController {
         
         let input = AppSettingViewModel.Input(tapBackButton: backButtonEvent)
         let output = viewModel.transform(input: input)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        configure(title: "앱 설정", list: ["테스트1","테스트2","테스트3"])
     }
 }
