@@ -35,13 +35,25 @@ final class AppSettingViewController: BaseSettingViewController {
     override func bindViewModel() {
         let backButtonEvent = backButton.rx.tap.asDriver()
         
-        let input = AppSettingViewModel.Input(tapBackButton: backButtonEvent)
+        let viewDidLoadTrigger = rx.viewWillAppear.mapToVoid().asDriverOnErrorJustEmpty()
+        
+        let input = AppSettingViewModel.Input(
+            tapBackButton: backButtonEvent,
+            viewDidLoadTrigger: viewDidLoadTrigger
+        )
+        
         let output = viewModel.transform(input: input)
+        
+        output.tableViewData
+            .drive(with: self, onNext: { owner, list in
+                owner.tableViewData.accept(list)
+            })
+            .disposed(by: disposeBag)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        configure(title: "앱 설정", list: ["테스트1","테스트2","테스트3"])
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        
+//        configure(title: "앱 설정", list: ["테스트1","테스트2","테스트3"])
+//    }
 }

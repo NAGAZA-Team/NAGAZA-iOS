@@ -11,7 +11,7 @@ import DSKit
 import RxSwift
 
 class BaseSettingViewController: NagazaViewController {
-    private var tableViewData = PublishRelay<[String]>()
+    var tableViewData = PublishRelay<[String]>()
     
     private let naviView = UIView()
     
@@ -40,6 +40,11 @@ class BaseSettingViewController: NagazaViewController {
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
         return tableView
     }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupDelegate()
+    }
     
     override func makeUI() {
         super.makeUI()
@@ -89,10 +94,8 @@ class BaseSettingViewController: NagazaViewController {
         setTableView()
     }
     
+    
     private func setTableView() {
-        tableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
         tableViewData.asObservable()
             .subscribe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(
@@ -102,13 +105,11 @@ class BaseSettingViewController: NagazaViewController {
                 cell.configure(text: data)
             }.disposed(by: disposeBag)
     }
-    
-    func configure(title: String, list: [String]) {
-        titleLabel.text = title
-        tableViewData.accept(list)
-    }
 }
 
 extension BaseSettingViewController: UITableViewDelegate {
-    
+    private func setupDelegate() {
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
 }
