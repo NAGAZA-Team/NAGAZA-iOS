@@ -7,19 +7,19 @@
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import NAGAZAIOS
+import MyPlugin
 
 let project = Project.designSystem(
   name: Feature.DesignSystem.rawValue,
   dependencies: [
     .core,
-    .package(product: "RxSwift"),
-    .package(product: "RxCocoa"),
-    .package(product: "SnapKit"),
-    .package(product: "Then"),
-    .package(product: "RxGesture"),
-//    .package(product: "Kingfisher"),
-    .package(product: "Lottie"),
+    .external(.RxSwift),
+    .external(.RxCocoa),
+    .external(.SnapKit),
+    .external(.Then),
+    .external(.RxGesture),
+//    .external(.Kingfisher),
+    .external(.Lottie),
   ],
   infoPlist: .extendingDefault(with: infoPlistExtension(name: Feature.DesignSystem.rawValue))
 )
