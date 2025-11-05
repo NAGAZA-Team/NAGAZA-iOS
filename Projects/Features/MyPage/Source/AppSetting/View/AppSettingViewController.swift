@@ -10,7 +10,7 @@ import UIKit
 import Core
 import DSKit
 
-final class AppSettingViewController: NagazaViewController {
+final class AppSettingViewController: BaseSettingViewController {
     
     private var viewModel: AppSettingViewModel!
     
@@ -28,35 +28,32 @@ final class AppSettingViewController: NagazaViewController {
         viewModel.setCoordinatorActions(with: actions)
     }
     
-//    static func create(with viewModel: MyPageAppSettingViewModel) -> MyPageAppSettingViewController {
-//        let vc = MyPageAppSettingViewController()
-//        vc.viewModel = viewModel
-//        
-//        return vc
-//    }
-//    
-    private let backButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle("뒤로가기", for: .normal)
-        button.backgroundColor = .black
-        return button
-    }()
-    
     override func makeUI() {
         super.makeUI()
-        view.backgroundColor = .yellow
-        
-        view.addSubview(backButton)
-        
-        backButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
     }
     
     override func bindViewModel() {
         let backButtonEvent = backButton.rx.tap.asDriver()
         
-        let input = AppSettingViewModel.Input(tapBackButton: backButtonEvent)
+        let viewDidLoadTrigger = rx.viewWillAppear.mapToVoid().asDriverOnErrorJustEmpty()
+        
+        let input = AppSettingViewModel.Input(
+            tapBackButton: backButtonEvent,
+            viewDidLoadTrigger: viewDidLoadTrigger
+        )
+        
         let output = viewModel.transform(input: input)
+        
+        output.tableViewData
+            .drive(with: self, onNext: { owner, list in
+                owner.tableViewData.accept(list)
+            })
+            .disposed(by: disposeBag)
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        
+//        configure(title: "앱 설정", list: ["테스트1","테스트2","테스트3"])
+//    }
 }

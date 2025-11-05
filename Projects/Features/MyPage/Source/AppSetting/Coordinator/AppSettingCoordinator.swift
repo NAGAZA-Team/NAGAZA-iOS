@@ -18,11 +18,15 @@ public final class AppSettingCoordinator: BaseCoordinator, AppSettingCoordinatin
     }
     
     public func homeFlow() {
-        let viewModel = MyPageViewModel()
-        //        viewModel.delegate = self
-        
-        let viewController = MyPageViewController(viewModel: viewModel)
-        
-        self.viewControllable.setViewControllers([viewController])
+        let viewModel = AppSettingViewModel()
+        viewModel.setCoordinatorActions(with: self)
+        let viewController = AppSettingViewController(viewModel: viewModel)
+        viewControllable.pushViewController(viewController, animated: true)
+    }
+}
+
+extension AppSettingCoordinator: AppSettingCoordinatorActions {
+    func popViewController() {
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
 }

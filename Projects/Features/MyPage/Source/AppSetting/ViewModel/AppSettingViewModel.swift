@@ -12,10 +12,6 @@ import MyPageInterface
 import RxSwift
 import RxCocoa
 
-//struct MyPageAppSettingViewModelActions {
-//    var finishMyPageAppSettingVC: () -> Void
-//}
-
 protocol AppSettingCoordinatorActions: CoordinatorActions {
     func popViewController()
 }
@@ -27,9 +23,11 @@ final class AppSettingViewModel: NagazaViewModel {
     
     struct Input {
         let tapBackButton: Driver<Void>
+        let viewDidLoadTrigger: Driver<Void>
     }
     
     struct Output {
+        let tableViewData: Driver<[String]>
     }
 
     init() { }
@@ -45,10 +43,11 @@ final class AppSettingViewModel: NagazaViewModel {
             })
             .disposed(by: disposeBag)
         
-        return Output()
-    }
-    
-    private func popViewController() {
-        actions?.popViewController()
+        let tableViewData = input.viewDidLoadTrigger
+            .flatMapLatest { _ in
+                return Driver.just(["테스트1","테스트2","테스트3"])
+            }
+        
+        return Output(tableViewData: tableViewData)
     }
 }
