@@ -5,13 +5,11 @@
 //  Created by SeungMin on 5/15/24.
 //
 
-@preconcurrency import ProjectDescription
-//import MyPlugin
-import NAGAZAIOS
+import ProjectDescription
+import MyPlugin
 
 private let rootPackagesName = "com.nagaza."
-private let basicDeployment: Deployment = .iOS("15.0")
-//private let basicDeployment: DeploymentTarget = .iOS(targetVersion: "15.0", devices: .iphone)
+private let basicDeployment: DeploymentTarget = .iOS(targetVersion: "15.0", devices: .iphone)
 //private let projectSettings: Settings = .settings(
 //    base: [
 //        "OTHER_LDFLAGS": "-ObjC",
@@ -34,12 +32,12 @@ public extension Target {
         sources: ProjectDescription.SourceFilesList,
         dependencies: [ProjectDescription.TargetDependency]
     ) -> Target {
-        .target(
+        Target(
             name: name,
-            destinations: .iOS,
+            platform: .iOS,
             product: .app,
             bundleId: makeBundleID(with: "app"),
-            deploymentTargets: basicDeployment,
+            deploymentTarget: basicDeployment,
             infoPlist: .extendingDefault(with: infoPlistExtension),
             sources: sources,
             resources:  [.glob(pattern: .relativeToRoot("Projects/App/Resource/**"))],
@@ -54,12 +52,12 @@ public extension Target {
     resources: ResourceFileElements? = [],
     dependencies: [TargetDependency]
   ) -> Target {
-    .target(
+    Target(
       name: name,
-      destinations: .iOS,
+      platform: .iOS,
       product: .app,
       bundleId: makeBundleID(with: "demo." + name + "app"),
-      deploymentTargets: basicDeployment,
+      deploymentTarget: basicDeployment,
       infoPlist: .extendingDefault(with: infoPlistExtension(name: "Demo\(name)")),
       sources: sources,
       resources:  resources,
@@ -74,12 +72,12 @@ public extension Target {
         dependencies: [ProjectDescription.TargetDependency] = [],
         resources: ProjectDescription.ResourceFileElements? = []
     ) -> Target {
-        .target(
+        Target(
             name: name,
-            destinations: .iOS,
+            platform: .iOS,
             product: defaultPackageType,
             bundleId: makeBundleID(with: name + ".framework"),
-            deploymentTargets: basicDeployment,
+            deploymentTarget: basicDeployment,
             sources: sources,
             resources: resources,
             dependencies: dependencies

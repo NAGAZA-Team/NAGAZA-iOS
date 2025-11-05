@@ -7,23 +7,23 @@
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import NAGAZAIOS
+import MyPlugin
 
 let project = Project.dynamicFramework(
     name: Feature.ThirdPartyLibs.rawValue,
     dependencies: [
-//        .package(product: "SnapKit"),
-        .package(product: "Moya"),
-        .package(product: "RxMoya"),
-//        .package(product: "Then"),
-        //        .package(product: "Starscream"),
-        .package(product: "RxSwift"),
-        .package(product: "RxCocoa"),
-//        .package(product: "RxKeyboard"),
-//        .package(product: "Kingfisher"),
-//        .package(product: "Lottie"),
-        //        .package(product: "Fierbase"),
-//        .package(product: "RxGesture"),
-        .package(product: "RxDataSources")
+//        .external(.SnapKit),
+        .external(.Moya),
+        .external(.RxMoya),
+//        .external(.Then),
+        //        .external(.Starscream),
+        .external(.RxSwift),
+        .external(.RxCocoa),
+//        .external(.RxKeyboard),
+//        .external(.Kingfisher),
+//        .external(.Lottie),
+        //        .external(.Fierbase),
+//        .external(.RxGesture),
+        .external(.RxDataSources)
     ]
 )
